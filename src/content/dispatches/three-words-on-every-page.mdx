@@ -1,0 +1,47 @@
+---
+slug: three-words-on-every-page
+num: "012"
+title: Three words on every page
+dek: On the discipline of a one-line alert &mdash; and the dashboards we burned to defend it.
+date: 2026-03-27
+time: "12:00"
+author: "@ren"
+authorRole: Designer · platform
+authorImage: /images/portraits/1.webp
+category: Practice
+readMin: 5
+filedFrom: Berlin
+coverImage: https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=1600&q=80
+coverCaption: Three words, set in mono, on the only screen that mattered.
+chapters:
+  - On the rule.
+  - On the three words.
+  - On what we cut.
+  - On the page in the dark.
+---
+
+## Lede
+
+Every page we send is three words long. Sometimes four. Never more than five. It is the most contested rule in our design system, and the one we have argued the hardest to keep.
+
+## The rule
+
+The rule reads: a page must be readable on a Watch face, in the dark, by a person who has been asleep for forty minutes. The rule was written by an oncall who had failed to meet exactly this standard at exactly this hour. Everything else in our pager design follows from it.
+
+## The three words
+
+The three words are, almost always, the same shape: `service · severity · symptom`. The page that woke us on the night of the 03:14 incident read `billing-core · L3 · 5.6 mag`. The page that did not need to wake us, on the night the system handled itself, never made it past a soft note that read `auth-edge · transient · resolved`. There is no five-paragraph email. There is no link to a dashboard, because in the dark there is no browser.
+
+> A page is not an article. It is the smallest thing that gets a hand on a keyboard.
+
+## What we cut
+
+To keep the three-word rule, we had to cut a lot. We cut the &ldquo;helpful&rdquo; paragraph that explained, in plain English, what the alert thought was happening. We cut the link to the runbook, because we no longer had a runbook. We cut the chart preview, because a chart on a Watch face is a smudge.
+
+What we kept was a deep link &mdash; one tap &mdash; to the post-mortem the system was already writing. That deep link is the only thing past the three words. It is rarely tapped at the moment of the page. It is almost always tapped in the morning.
+
+## The page in the dark
+
+The page that woke me last week read `feed-relay · L2 · queue 4x`. I read it at 03:51 from a face I held about six inches away. I rolled over, opened a laptop, and found that the queue had cleared on its own at 03:54. I went back to bed. The morning post-mortem was waiting in the queue at 09:00.
+
+That is the test. Three words, one Watch, one decision. Everything else is for the morning.

@@ -1,0 +1,17 @@
+---
+import ProductCTA from "@/components/sections/product/cta";
+import ProductFunnel from "@/components/sections/product/funnel";
+import Oracle from "@/components/sections/product/oracle";
+import ProductScene from "@/components/sections/product/scene";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout
+  title="Product"
+  description="Logs, metrics, and traces in one keyboard-first console. ⌘K to anywhere, SLO-native paging, auto-drafted post-mortems shipped to Linear."
+>
+  <ProductScene client:load />
+  <ProductFunnel client:idle />
+  <Oracle client:idle />
+  <ProductCTA client:idle />
+</DefaultLayout>

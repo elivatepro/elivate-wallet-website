@@ -1,0 +1,53 @@
+---
+slug: burning-the-runbook
+num: "007"
+title: Burning the runbook
+dek: We replaced two hundred pages with one paragraph &mdash; and the paragraph wrote itself.
+date: 2026-02-06
+time: "08:20"
+author: "@ren"
+authorRole: Designer · platform
+authorImage: /images/portraits/1.webp
+category: Design notes
+readMin: 6
+filedFrom: Berlin
+coverImage: https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80
+coverCaption: Two hundred pages of past decisions. None of them had been read this year.
+chapters:
+  - On the binder.
+  - On the audit.
+  - On the paragraph.
+  - On the weeks after.
+---
+
+## Lede
+
+The runbook was two hundred and fourteen pages long. The current version is a paragraph. We did not lose anything we needed.
+
+## The binder
+
+The runbook had grown the way runbooks grow &mdash; one tragedy at a time. After every incident a paragraph was appended that explained, in apologetic detail, what should have happened. After enough quarters, the runbook was a kind of folk history of the team&apos;s mistakes. It was thorough. It was also, by any honest reading, unread.
+
+## The audit
+
+We instrumented the runbook the way we had instrumented the dashboards. We logged which sections were opened during incidents, how long they were read, and whether the engineer reading them changed their behavior as a result. After ninety days, the verdict was unambiguous:
+
+- Six pages had been opened during an incident
+- Two of those had been read for longer than ten seconds
+- One had changed an engineer&apos;s decision
+
+Every other page was historical comfort &mdash; useful when the runbook was being written, useless when the system was on fire.
+
+## The paragraph
+
+We deleted the binder. In its place we kept a paragraph that the system writes for each incident in real time. It contains four things, in this order:
+
+> The service that is on fire. The decision the system has already made. The thing a human can do that the system cannot. The page of the binder that we know we are violating, if any.
+
+The paragraph is not a runbook. It is a note from the system to the human, written at the moment the human is needed. The runbook had tried to anticipate every situation; the paragraph admits that nothing useful can be said about a situation until the situation has begun.
+
+## The weeks after
+
+For three weeks the paragraph was met with suspicion. Engineers would, mid-incident, ask in chat where the runbook had gone. We would point them at the paragraph. They would read it, look around for the rest, and slowly realize that the rest had been the problem.
+
+By the fourth week the paragraph was being trusted. By the eighth, an engineer admitted, with some embarrassment, that the only thing she missed about the binder was the smell. We have not reprinted it.

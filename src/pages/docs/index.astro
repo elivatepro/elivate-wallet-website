@@ -1,0 +1,168 @@
+---
+import { DocsSidebar } from "@/components/docs/docs-sidebar";
+import { LiveDot } from "@/components/docs/live-dot";
+import { DottedBackdrop } from "@/components/layout/dotted-backdrop";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { getDocNav } from "@/lib/docs";
+
+const nav = await getDocNav();
+const total = nav.reduce((acc, group) => acc + group.entries.length, 0);
+const totalPadded = String(total).padStart(2, "0");
+
+const ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+const romanize = (n: number) => ROMAN[n] ?? `${n}`;
+---
+
+<DefaultLayout
+  title="Documentation"
+  description="Install the agent, shape your OTLP pipelines, and let Meridian draft the post-mortem before you open the laptop."
+>
+  <div class="flex w-full">
+    <aside
+      aria-label="Docs sidebar"
+      class="hidden h-svh w-[286px] shrink-0 border-r md:sticky md:top-0 md:block md:overflow-y-auto"
+    >
+      <div class="px-5 pt-6 pb-10">
+        <DocsSidebar nav={nav} client:load />
+      </div>
+    </aside>
+
+    <main class="relative min-w-0 flex-1">
+      <DottedBackdrop />
+
+      <div
+        class="hero-padding relative mx-auto w-full max-w-[1280px] px-6 md:px-10 lg:px-14"
+      >
+        <div class="max-w-4xl">
+          <nav
+            aria-label="Breadcrumb"
+            class="text-meta text-muted-foreground flex items-center justify-between border-b pb-4"
+          >
+            <span>Manual</span>
+            <span class="hidden md:inline-flex">
+              <LiveDot
+                label="Edition MMXXVI · revised quarterly"
+                client:visible
+              />
+            </span>
+            <span>{totalPadded} chapters</span>
+          </nav>
+
+          <header class="not-prose mt-10 md:mt-14 lg:mt-20">
+            <div class="text-meta-xs text-muted-foreground">The manual</div>
+            <h1
+              class="mt-2 text-5xl leading-[1.05] tracking-tight text-balance md:text-6xl md:leading-[0.95] lg:text-7xl"
+            >
+              Run Meridian. <em class="text-muted-foreground">Calmly.</em>
+            </h1>
+            <p
+              class="font-display text-muted-foreground mt-5 max-w-2xl text-lg leading-snug tracking-tight md:text-xl"
+            >
+              Install the agent, shape your OTLP pipelines, and teach the
+              workflow your team&apos;s voice. Five chapters, written for the
+              engineer who&apos;d rather be in a meeting they cancelled.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a
+                href="/docs/installation"
+                class="bg-foreground text-background inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-opacity hover:opacity-90"
+              >
+                Install the agent
+              </a>
+              <a
+                href="/docs/core-concepts"
+                class="border-foreground bg-background text-foreground hover:bg-muted inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-sm font-medium transition-colors"
+              >
+                Read core concepts
+              </a>
+            </div>
+          </header>
+
+          <section class="mt-14 space-y-12">
+            {
+              nav.map((group, gi) => (
+                <div>
+                  <div class="flex items-baseline justify-between border-b pb-3">
+                    <h2 class="font-display text-xl tracking-tight">
+                      {group.group}.
+                    </h2>
+                    <span class="text-meta-xs text-muted-foreground">
+                      Part {romanize(gi + 1)}
+                    </span>
+                  </div>
+                  <ol class="mt-6 space-y-px">
+                    {group.entries.map((entry, ei) => {
+                      const num = String(ei + 1).padStart(2, "0");
+                      return (
+                        <li>
+                          <a
+                            href={`/docs/${entry.slug}`}
+                            class="group/row relative grid grid-cols-[3rem_1fr_auto] items-baseline gap-4 border-b py-5 last:border-b-0"
+                          >
+                            <span
+                              aria-hidden
+                              class="bg-muted/50 pointer-events-none absolute inset-0 origin-right scale-x-0 transition-transform duration-500 ease-out group-hover/row:origin-left group-hover/row:scale-x-100"
+                            />
+                            <span class="text-muted-foreground group-hover/row:text-foreground relative font-mono text-xs tabular-nums transition-[color,transform] duration-300 group-hover/row:translate-x-3">
+                              {num}
+                            </span>
+                            <div class="relative min-w-0 transition-transform duration-300 group-hover/row:translate-x-3">
+                              <div class="font-display text-foreground text-lg tracking-tight">
+                                {entry.title}
+                              </div>
+                              <p class="text-muted-foreground mt-1 max-w-2xl text-sm">
+                                {entry.description}
+                              </p>
+                            </div>
+                            <span class="text-meta-xs text-muted-foreground group-hover/row:text-foreground relative hidden items-center gap-1.5 transition-[color,transform] duration-300 group-hover/row:-translate-x-3 md:inline-flex">
+                              Read
+                              <span class="inline-block transition-transform duration-300 group-hover/row:translate-x-1">
+                                →
+                              </span>
+                            </span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              ))
+            }
+          </section>
+
+          <footer class="mt-20 border-t pt-8">
+            <div
+              class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            >
+              <div class="max-w-md">
+                <div class="text-meta-xs text-muted-foreground">
+                  Need a different door
+                </div>
+                <p
+                  class="font-display mt-3 text-xl leading-snug tracking-tight"
+                >
+                  Searching for an answer that isn&apos;t in here? The team
+                  reads every email.
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <a
+                  href="mailto:hello@meridian.systems"
+                  class="bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors"
+                >
+                  Email the team
+                </a>
+                <a
+                  href="/blog"
+                  class="text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors"
+                >
+                  Read the dispatches
+                </a>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </main>
+  </div>
+</DefaultLayout>

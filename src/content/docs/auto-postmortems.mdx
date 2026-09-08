@@ -1,0 +1,134 @@
+---
+title: Auto-postmortems
+description: How Meridian drafts the post-mortem before you open the laptop — and how to teach it your team's voice.
+group: Workflows
+order: 1
+---
+
+## What it does
+
+When a budget event closes, Meridian collects the relevant signals,
+diffs against the last known-good window, and drafts a post-mortem in
+your team's standard format. The draft sits in `Incidents › Drafts` for
+review before anything is published.
+
+It's never sent to a customer without a human pressing the button.
+
+<Callout variant="note">
+  The point of the auto-draft isn't to replace the post-mortem. It's to remove
+  the blank page so the human can start with editing rather than remembering.
+</Callout>
+
+## The lifecycle
+
+<Steps>
+
+<Step title="Burn">
+  A budget event fires. The window context, the responsible service, and the
+  on-call engineer are recorded into the incident record.
+</Step>
+
+<Step title="Collect">
+  Meridian pulls every signal that touched the affected service during the burn
+  window — logs, traces, deploys, feature-flag flips, pipeline edits, runbook
+  openings. Nothing is filtered yet.
+</Step>
+
+<Step title="Diff">
+  Each signal stream is diffed against the same window from the previous seven
+  days. Anything outside two standard deviations is tagged as a candidate cause.
+</Step>
+
+<Step title="Draft">
+  A natural-language draft is written into your team's template. Sections that
+  the system can't fill confidently are left as a `TODO` with the candidate
+  evidence linked.
+</Step>
+
+<Step title="Review">
+  The on-call engineer opens the draft, edits, signs off. The published copy
+  goes to the channel of your choice (Slack, GitHub Discussions, Notion, email).
+</Step>
+
+</Steps>
+
+## Configuring your team's template
+
+The default template covers Summary / Timeline / Contributing causes /
+What went well / Action items. To use your own, drop a markdown file at
+`templates/postmortem.md` in your workspace config repo with `{{...}}`
+placeholders for the system to fill.
+
+```markdown title="templates/postmortem.md"
+# {{title}}
+
+**Severity:** {{severity}} · **Window:** {{start}} → {{end}}
+**Service:** {{service}} · **On-call:** {{oncall}}
+
+## What happened
+
+{{summary}}
+
+## Timeline
+
+{{timeline}}
+
+## Contributing causes
+
+{{causes}}
+
+## Action items
+
+{{action_items}}
+```
+
+## What it can fill, and what it can't
+
+<Tabs>
+
+<Tab title="Reliable">
+  - The exact start and end of the burn window - The service and budget that
+  crossed the threshold - The deploys, flag flips, and pipeline edits in the
+  window - The traces with the largest duration deltas vs the baseline - The log
+  levels and counts that diverged from baseline
+</Tab>
+
+<Tab title="Drafted, needs human">
+  - The narrative summary (drafted from the timeline, but always edit it) -
+  Severity (suggested from blast radius, but you sign off) - Customer impact
+  statement (suggested only — facts vary)
+</Tab>
+
+<Tab title="Always TODO">
+  - Action items — these come from the conversation in review, not from the
+  data. The draft leaves a `TODO` with the candidate causes linked. - Lessons
+  learned — same. Write it yourself.
+</Tab>
+
+</Tabs>
+
+## Tuning the model's voice
+
+Meridian uses a small fine-tuned model that runs inside your tenant. To
+adjust its voice, drop reviewed post-mortems into `templates/voice/` —
+the model retrains nightly against the latest 50 examples.
+
+```bash
+meridian voice add ./latest-incident.md
+# → added · 50 examples in voice corpus · retrain queued for 02:00 UTC
+```
+
+<Callout variant="warn">
+  Voice tuning never sees data outside your workspace. The model weights live in
+  your tenant's KMS, the training data never leaves your region, and we don't
+  keep a copy.
+</Callout>
+
+## Guarantees
+
+- The draft is **never auto-published**. A human signs every release.
+- The model is **tenant-isolated**. It does not learn across workspaces.
+- The data used in drafting is **inside your retention window** — if you
+  shortened retention to 7 days, the model has 7 days of context.
+
+<Badge>Workflow ready</Badge>

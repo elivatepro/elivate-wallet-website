@@ -1,0 +1,13 @@
+---
+import Ledger from "@/components/sections/pricing/ledger";
+import PricingQuote from "@/components/sections/pricing/quote";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout
+  title="Pricing"
+  description="Three plans, one console. Lookout, Bridge, Atlas — flat pricing, no per-seat tax."
+>
+  <Ledger asHero client:load className="hero-padding" />
+  <PricingQuote client:idle />
+</DefaultLayout>

@@ -1,0 +1,85 @@
+---
+title: Installation
+description: Get the Meridian agent running on your hosts in under five minutes.
+group: Foundations
+order: 1
+---
+
+## Prerequisites
+
+Before installing the Meridian agent, make sure each host has:
+
+- A 64-bit Linux kernel ≥ 5.4, macOS 12+, or Windows Server 2019+
+- Outbound HTTPS access to `ingest.meridian.systems` on port 443
+- A workspace API key from your Meridian admin console
+
+## Quick start
+
+<Card title="Install via the bootstrap script" subtitle="The recommended path for new hosts">
+
+```bash
+curl -sSL https://get.meridian.systems | \
+  MERIDIAN_KEY="$KEY" sh
+```
+
+</Card>
+
+The bootstrap script detects your OS, drops the daemon binary at
+`/usr/local/bin/meridian-agent`, writes a starter config to
+`/etc/meridian/agent.toml`, and registers a systemd unit (or launchd plist
+on macOS).
+
+## Manual install
+
+If you prefer not to pipe a script into `sh`, you can install by hand.
+
+1. Download the binary for your platform:
+
+```bash
+curl -L https://dl.meridian.systems/agent/v1/linux-amd64.tar.gz \
+  | tar -xz -C /usr/local/bin meridian-agent
+```
+
+2. Create the workspace config:
+
+```bash
+sudo install -d /etc/meridian
+sudo tee /etc/meridian/agent.toml <<'TOML'
+workspace = "acme-prod"
+ingest    = "ingest.meridian.systems:443"
+key       = "${MERIDIAN_KEY}"
+TOML
+```
+
+3. Start the daemon:
+
+```bash
+sudo systemctl enable --now meridian-agent
+```
+
+## Verify
+
+Within thirty seconds of the first boot, the daemon should register with
+the control plane. To check:
+
+```bash
+meridian-agent status
+```
+
+A healthy host reports `connected · ingest=ok · clock-skew<25ms`. Anything
+else (`backoff`, `key-rejected`, `clock-skew>1s`) is documented in
+[Troubleshooting](#troubleshooting).
+
+> The agent never blocks the application process. If ingest is unreachable,
+> spans buffer to disk for up to 12h before the oldest are dropped.
+
+## Next steps
+
+- Read [Core concepts](/docs/core-concepts) to understand how Meridian
+  models a service.
+- Configure your first [OTLP pipeline](/docs/otlp-pipelines) to start
+  forwarding traces.
+- Set up [Auto-postmortems](/docs/auto-postmortems) so the next incident
+  drafts itself.
+
+<Badge>Agent ready</Badge>

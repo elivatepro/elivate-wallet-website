@@ -1,0 +1,56 @@
+---
+slug: when-the-alert-was-right
+num: "011"
+title: When the alert was right
+dek: An incident the human ignored, the system insisted on, and the eighty-three minutes between the two.
+date: 2026-03-13
+time: "04:02"
+author: "@yass"
+authorRole: Founding engineer · oncall, 2026.Q1
+authorImage: /images/portraits/2.webp
+category: Postmortem
+readMin: 8
+filedFrom: us-east-1
+coverImage: https://images.unsplash.com/photo-1551808525-51a94da548ce?w=1600&q=80
+coverCaption: The console at 04:02. The alert had been right for eighty-three minutes.
+chapters:
+  - On the alert that fired.
+  - On the human who dismissed it.
+  - On the second page.
+  - On the eighty-three minutes.
+  - On the lesson.
+---
+
+## Lede
+
+This is the dispatch about the time we suppressed an alert that turned out to be right. It is not a story about a broken system. It is a story about a calibrated one, ignored.
+
+## The alert
+
+At 02:39 UTC the system raised a soft note about an unusual error pattern in `index-writer`. Not a page. A note: &ldquo;a thing the oncall might want to look at when convenient.&rdquo; The note named the symptom &mdash; a 0.3% increase in retry depth on a single shard &mdash; and proposed a one-line investigation. It was, by the system&apos;s own assessment, a borderline case.
+
+## The dismissal
+
+The oncall read the note at 02:41, dismissed it as a known transient, and went back to bed. This was not unreasonable. We had, in the previous quarter, seen forty-one notes of this exact shape, and forty of them had self-resolved within ten minutes. Forty-out-of-forty-one is the kind of number that earns the right to be ignored.
+
+The forty-first did not self-resolve.
+
+## The page
+
+At 04:02 the system paged. The page was not a soft note this time. The retry depth had not gone away; it had spread to a second shard, then a third, and the index-writer had begun to drop messages. The page read: `index-writer · message loss · 1.4% · acknowledged note at 02:41`.
+
+That last clause &mdash; `acknowledged note at 02:41` &mdash; is the one that took us a moment to read. The system was not blaming the oncall. It was, by design, surfacing the prior context: a soft note had been raised; the oncall had seen it; here is what happened next. There is no correct way to read that line for the first time.
+
+## The eighty-three minutes
+
+The eighty-three minutes between the note and the page were not, technically, an outage. The error rate had stayed below the SLO threshold. The customer-facing services had not flinched. But during those eighty-three minutes the system had been writing degraded messages into a queue, and the cleanup &mdash; the part the oncall did wake up for &mdash; took the rest of the night.
+
+> A soft note dismissed is not a quiet system. It is a debt the system is collecting on your behalf.
+
+## The lesson
+
+The lesson is not that we should never dismiss soft notes. Forty-out-of-forty-one is still a real number; treating every soft note as a page would mean a hundred pages a week, which is the world we deliberately walked away from. The lesson, instead, was about the tail.
+
+We changed two things. First, the system now keeps a thread on every dismissed soft note, watching for the symptom to spread; if it does, the page that fires carries the prior dismissal as context. Second, we added a small ceremony: any soft note dismissed at night is reviewed in the morning by a human, even if it self-resolved. The review takes about ninety seconds per note. It is the cheapest piece of the system.
+
+The forty-first soft note was right. The fortieth was right too &mdash; right to dismiss. We had to build a system that could tell the difference, given enough time. The eighty-three minutes was the price of building it.

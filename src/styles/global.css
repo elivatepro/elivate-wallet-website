@@ -1,0 +1,364 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --display-weight: 600;
+  --text-weight: 400;
+  --font-heading: var(--font-family-display);
+  --font-display: var(--font-family-display);
+  --font-text: var(--font-family-sans);
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --animate-marquee: marquee var(--duration) linear infinite;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+:root {
+  color-scheme: light;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-weight-text;
+  }
+  html {
+    @apply font-text;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-weight-display;
+  }
+  /* Space Grotesk ships no italic cut — keep <em> upright in display
+     contexts so synth-slanted glyphs don't read as a typo. */
+  h1 em,
+  h2 em,
+  h3 em,
+  h4 em,
+  h5 em,
+  h6 em,
+  .font-display em {
+    font-style: normal;
+  }
+}
+
+@utility font-weight-display {
+  font-weight: var(--display-weight);
+}
+
+@utility font-weight-text {
+  font-weight: var(--text-weight);
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  /* Editorial meta-line typography — small caps mono labels used for
+     section headers/footers, fig numbers, dates, attribution, etc. */
+  .text-meta {
+    @apply font-mono text-[0.625rem] tracking-widest uppercase;
+  }
+  .text-meta-xs {
+    @apply font-mono text-[0.55rem] tracking-widest uppercase;
+  }
+  .text-meta-2xs {
+    @apply font-mono text-[0.5rem] tracking-widest uppercase;
+  }
+
+  /* Vertical rhythm utilities — mirror the echo template's tiered scale
+     so sections share a consistent breathing space across the site. */
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+  .hero-padding {
+    @apply pt-24 pb-16 md:pt-32 md:pb-24 lg:pt-36 lg:pb-32;
+  }
+
+  /* Chrome text — liquid metal gradient fill for display type. */
+  .text-chrome {
+    background: linear-gradient(
+      180deg,
+      oklch(0.98 0 0) 0%,
+      oklch(0.78 0 0) 45%,
+      oklch(0.42 0 0) 55%,
+      oklch(0.92 0 0) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .dark .text-chrome {
+    background: linear-gradient(
+      180deg,
+      oklch(1 0 0) 0%,
+      oklch(0.88 0 0) 40%,
+      oklch(0.55 0 0) 60%,
+      oklch(0.98 0 0) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Legal-doc article markers — § N. lives inline above the heading on
+     mobile, and absolutely-positioned in the left gutter on desktop.
+     Scoped to .legal-articles so other pages aren't surprised by ::before. */
+  .legal-articles {
+    counter-reset: article;
+  }
+  .legal-articles h2 {
+    counter-increment: article;
+    position: relative;
+  }
+  .legal-articles h2::before {
+    content: "§ " counter(article) ".";
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  @media (min-width: 768px) {
+    .legal-articles h2::before {
+      position: absolute;
+      left: -7rem;
+      top: 0.65rem;
+      width: 5.5rem;
+      margin-bottom: 0;
+      text-align: right;
+    }
+  }
+}
+
+/* Shared max-width container — mirrors echo's pattern: fluid padding on
+   small viewports, capped at 1280px on desktop so long lines stay
+   readable without the page feeling empty. */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+/* Theme toggle — circular reveal expanding from the toggle's click point,
+   matching the "pill" motif. The new theme paints in a growing circle while
+   the old theme stays underneath. */
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+  to {
+    clip-path: circle(
+      var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%)
+    );
+  }
+}
+
+/* Shiki dual-theme output. We render with `defaultColor: false`, which
+   produces inline `--shiki-light` and `--shiki-dark` CSS vars on every
+   token plus their *-bg and *-font-style siblings. The rules below pick
+   the right side of the pair based on the .dark class on <html>, so the
+   syntax theme follows the global theme toggle without a flash. */
+.shiki-wrapper .shiki,
+.shiki-wrapper .shiki span {
+  color: var(--shiki-light);
+  background-color: transparent !important;
+  font-style: var(--shiki-light-font-style, normal);
+  font-weight: var(--shiki-light-font-weight, 400);
+  text-decoration: var(--shiki-light-text-decoration, none);
+}
+
+.dark .shiki-wrapper .shiki,
+.dark .shiki-wrapper .shiki span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style, normal);
+  font-weight: var(--shiki-dark-font-weight, 400);
+  text-decoration: var(--shiki-dark-text-decoration, none);
+}
+
+.shiki-wrapper .shiki {
+  background: transparent !important;
+}
+
+/* Subtle pulse for the live indicator dot — accent-color halo with a
+   short attack and a long decay, looped. */
+@keyframes meridian-pulse {
+  0% {
+    box-shadow: 0 0 0 0 oklch(0.65 0.15 60 / 0.55);
+  }
+  60% {
+    box-shadow: 0 0 0 6px oklch(0.65 0.15 60 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.65 0.15 60 / 0);
+  }
+}
+
+.meridian-pulse {
+  animation: meridian-pulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meridian-pulse,
+  .animate-marquee,
+  .animate-marquee-vertical {
+    animation: none;
+  }
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.theme-transition::view-transition-old(root) {
+  z-index: 1;
+}
+html.theme-transition::view-transition-new(root) {
+  z-index: 9999;
+  animation: theme-reveal 0.55s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}

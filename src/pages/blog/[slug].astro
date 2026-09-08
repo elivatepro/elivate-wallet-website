@@ -1,0 +1,335 @@
+---
+import { getCollection, render } from "astro:content";
+
+import ReadingProgress from "@/components/blog/reading-progress";
+import { DottedBackdrop } from "@/components/layout/dotted-backdrop";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { getAllDispatches } from "@/lib/dispatches";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("dispatches");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const all = await getAllDispatches();
+
+const data = entry.data;
+const dateIso =
+  data.date instanceof Date
+    ? data.date.toISOString().slice(0, 10)
+    : String(data.date);
+
+const ROMAN = [
+  "",
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "VI",
+  "VII",
+  "VIII",
+  "IX",
+  "X",
+  "XI",
+  "XII",
+  "XIII",
+  "XIV",
+  "XV",
+  "XVI",
+  "XVII",
+  "XVIII",
+  "XIX",
+  "XX",
+];
+const toRoman = (n: number) => ROMAN[n] ?? `${n}`;
+
+const MONTHS_ROMAN: Record<string, string> = {
+  "01": "January MMXXVI",
+  "02": "February MMXXVI",
+  "03": "March MMXXVI",
+  "04": "April MMXXVI",
+  "05": "May MMXXVI",
+  "06": "June MMXXVI",
+  "07": "July MMXXVI",
+  "08": "August MMXXVI",
+  "09": "September MMXXVI",
+  "10": "October MMXXVI",
+  "11": "November MMXXVI",
+  "12": "December MMXXVI",
+};
+const monthFromIso = (iso: string) => MONTHS_ROMAN[iso.slice(5, 7)] ?? iso;
+
+const total = all.length;
+const position = total - all.findIndex((d) => d.slug === entry.id);
+const positionStr = String(position).padStart(2, "0");
+const positionRoman = toRoman(position);
+const totalRoman = toRoman(total);
+const author = data.author;
+const authorInitial = author.replace("@", "")[0]?.toUpperCase() ?? "M";
+const lastName = author.replace("@", "");
+---
+
+<DefaultLayout title={`${data.title} · Meridian Blog`} description={data.dek}>
+  <div class="relative">
+    <DottedBackdrop />
+
+    <section class="hero-padding relative">
+      <div class="container">
+        <div
+          class="text-meta text-muted-foreground flex items-center justify-between border-b pb-4"
+        >
+          <a
+            href="/blog"
+            class="text-foreground transition-colors hover:opacity-70"
+          >
+            ← Blog
+          </a>
+          <span class="hidden md:inline">
+            From {author} &middot; {monthFromIso(dateIso)}
+          </span>
+          <span>{data.filedFrom ?? "Filed remotely"}</span>
+        </div>
+      </div>
+
+      <div class="container mt-10 max-w-6xl md:mt-14 lg:mt-20">
+        <div
+          class="grid grid-cols-1 gap-10 md:grid-cols-[180px_minmax(0,62ch)_1fr] md:gap-16"
+        >
+          <aside class="relative hidden md:block">
+            <div class="sticky top-24 space-y-5">
+              {
+                data.coverImage ? (
+                  <div class="space-y-3">
+                    <div class="border-foreground/15 relative aspect-square w-full overflow-hidden border shadow-md">
+                      <img
+                        src={data.coverImage}
+                        alt={data.title}
+                        sizes="180px"
+                        class="absolute inset-0 size-full object-cover"
+                      />
+                    </div>
+                    <div class="text-meta-xs text-muted-foreground">
+                      Plate {positionRoman}
+                    </div>
+                  </div>
+                ) : (
+                  <div class="font-display text-foreground text-[7rem] leading-none tracking-tighter">
+                    {positionRoman}.
+                  </div>
+                )
+              }
+              {
+                data.chapters && data.chapters.length > 0 && (
+                  <div class="mt-4 space-y-3 border-t pt-4">
+                    {data.chapters.map((note, i) => (
+                      <div>
+                        <div class="text-meta-xs text-muted-foreground">
+                          p. {toRoman(i + 1).toLowerCase()}
+                        </div>
+                        <div class="font-display text-muted-foreground mt-0.5 text-xs leading-snug">
+                          {note}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
+            </div>
+          </aside>
+
+          <article
+            id="dispatch-article"
+            class="prose prose-neutral dark:prose-invert max-w-none"
+          >
+            <div
+              class="text-meta text-muted-foreground mb-8 flex items-baseline justify-between border-b pb-3 md:hidden"
+            >
+              <span>Dispatch № {data.num}</span>
+              <span>{monthFromIso(dateIso)}</span>
+            </div>
+
+            <header class="not-prose mb-8">
+              <h1
+                class="text-4xl leading-tight tracking-tight md:text-5xl lg:text-6xl"
+              >
+                {data.title}.
+              </h1>
+              <p
+                class="font-display text-muted-foreground mt-3 text-lg tracking-tight md:text-xl"
+              >
+                {data.dek}
+              </p>
+            </header>
+
+            <div
+              class="font-display text-foreground [&>blockquote]:border-foreground/40 [&>blockquote]:text-muted-foreground [&>ul>li]:before:text-muted-foreground space-y-6 text-xl leading-[1.55] tracking-tight md:text-2xl md:leading-[1.5] [&>blockquote]:border-l-2 [&>blockquote]:pl-6 [&>blockquote]:not-italic [&>h2]:hidden [&>p:first-of-type::first-letter]:float-left [&>p:first-of-type::first-letter]:mt-2 [&>p:first-of-type::first-letter]:mr-3 [&>p:first-of-type::first-letter]:text-[6rem] [&>p:first-of-type::first-letter]:leading-[0.82] [&>p:first-of-type::first-letter]:tracking-tighter md:[&>p:first-of-type::first-letter]:text-[8rem] [&>ul]:list-none [&>ul]:pl-0 [&>ul>li]:relative [&>ul>li]:pl-6 [&>ul>li]:before:absolute [&>ul>li]:before:left-0 [&>ul>li]:before:content-['—']"
+            >
+              <Content />
+            </div>
+
+            <footer class="not-prose relative mt-14 border-t pt-6">
+              <div
+                class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+              >
+                <div class="flex items-start gap-4">
+                  <span
+                    class="ring-foreground/15 relative flex size-12 shrink-0 overflow-hidden rounded-full ring-1"
+                  >
+                    <img
+                      src={data.authorImage}
+                      alt={`Portrait of ${author}`}
+                      class="aspect-square size-full object-cover"
+                    />
+                  </span>
+                  <div>
+                    <div class="text-meta-xs text-muted-foreground">
+                      Yours, unreservedly
+                    </div>
+                    <svg
+                      viewBox="0 0 220 80"
+                      class="text-foreground mt-2 h-16 w-44"
+                      aria-hidden
+                    >
+                      <path
+                        d="M8 54 C 18 20, 34 22, 42 46 S 58 66, 66 38 L 70 30 M 78 46 C 92 14, 108 20, 104 50 C 100 72, 86 66, 94 40 L 110 28 L 118 42 L 128 24 L 136 46 L 150 24 M 158 40 Q 174 8 188 40 T 212 38"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.25"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                      <path
+                        d="M 10 62 Q 110 72 210 58"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="0.6"
+                        stroke-opacity="0.55"></path>
+                    </svg>
+                    <div class="font-display mt-2 text-lg tracking-tight">
+                      {author}
+                    </div>
+                    <div class="text-meta-xs text-muted-foreground">
+                      {data.authorRole}
+                    </div>
+                  </div>
+                </div>
+                <svg
+                  viewBox="0 0 120 120"
+                  class="text-foreground size-24 md:size-28"
+                  aria-hidden
+                >
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="52"
+                    fill="var(--muted)"
+                    stroke="currentColor"
+                    stroke-width="1"></circle>
+                  {
+                    Array.from({ length: 36 }).map((_, i) => {
+                      const a = (i / 36) * Math.PI * 2;
+                      const x1 = 60 + Math.cos(a) * 46;
+                      const y1 = 60 + Math.sin(a) * 46;
+                      const x2 = 60 + Math.cos(a) * 50;
+                      const y2 = 60 + Math.sin(a) * 50;
+                      return (
+                        <line
+                          x1={x1}
+                          y1={y1}
+                          x2={x2}
+                          y2={y2}
+                          stroke="currentColor"
+                          stroke-width="0.5"
+                          opacity="0.5"
+                        />
+                      );
+                    })
+                  }
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="38"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-opacity="0.35"
+                    stroke-dasharray="2 2"></circle>
+                  <text
+                    x="60"
+                    y="60"
+                    text-anchor="middle"
+                    font-family="var(--font-display)"
+                    font-weight="500"
+                    font-size="30"
+                    fill="currentColor"
+                  >
+                    {authorInitial}.
+                  </text>
+                  <defs>
+                    <path
+                      id={`seal-arc-${authorInitial}`}
+                      d="M 26 60 A 34 34 0 0 0 94 60"
+                      fill="none"></path>
+                  </defs>
+                  <text
+                    font-family="var(--font-mono)"
+                    font-size="6"
+                    letter-spacing="0.25em"
+                    fill="currentColor"
+                    opacity="0.7"
+                  >
+                    <textPath
+                      href={`#seal-arc-${authorInitial}`}
+                      startOffset="50%"
+                      text-anchor="middle"
+                    >
+                      MERIDIAN &middot; MMXXVI
+                    </textPath>
+                  </text>
+                </svg>
+              </div>
+              <div class="mt-6 flex flex-wrap items-center gap-3">
+                <a
+                  href={`mailto:${lastName}@meridian.systems`}
+                  class="bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors"
+                >
+                  Reply to {authorInitial}.
+                </a>
+                <a
+                  href="/blog"
+                  class="text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors"
+                >
+                  Read dispatches 1&ndash;{total}
+                </a>
+              </div>
+            </footer>
+          </article>
+
+          <aside class="hidden md:block">
+            <div class="sticky top-24 flex flex-col items-end gap-8 text-right">
+              <div class="flex flex-col items-end gap-2">
+                <div class="text-meta text-muted-foreground">Page</div>
+                <div
+                  class="font-display text-5xl leading-none tracking-tighter"
+                >
+                  {positionStr} / {totalRoman}
+                </div>
+              </div>
+              <div class="w-full border-t pt-6">
+                <ReadingProgress
+                  articleId="dispatch-article"
+                  readMin={data.readMin}
+                  client:load
+                />
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+</DefaultLayout>

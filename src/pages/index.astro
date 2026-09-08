@@ -1,0 +1,26 @@
+---
+import Brands from "@/components/sections/home/brands";
+import Bulletin from "@/components/sections/home/bulletin";
+import Comparison from "@/components/sections/home/comparison";
+import HeroAlt from "@/components/sections/home/hero-alt";
+import NightShift from "@/components/sections/home/night-shift";
+import Notch from "@/components/sections/home/notch";
+import Rift from "@/components/sections/home/rift";
+import SpecImages from "@/components/sections/home/spec-images";
+import Voices from "@/components/sections/home/voices";
+import Ledger from "@/components/sections/pricing/ledger";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <HeroAlt client:load />
+  <SpecImages client:idle />
+  <Bulletin client:idle />
+  <NightShift client:idle />
+  <Rift client:idle />
+  <Voices client:idle />
+  <Comparison client:idle />
+  <Notch client:idle />
+  <Brands client:idle />
+  <Ledger client:idle />
+</DefaultLayout>

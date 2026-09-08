@@ -1,0 +1,54 @@
+---
+slug: what-an-slo-is-for
+num: "006"
+title: What an SLO is for
+dek: On uptime, trust, and the difference between a number and a promise.
+date: 2026-01-30
+time: "16:45"
+author: "@yass"
+authorRole: Founding engineer · oncall, 2026.Q1
+authorImage: /images/portraits/2.webp
+category: Practice
+readMin: 8
+filedFrom: us-east-1
+coverImage: https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1600&q=80
+coverCaption: A shelf of bound numbers, all of them too round to mean anything.
+chapters:
+  - On the uptime number.
+  - On who an SLO is for.
+  - On the budget.
+  - On the SLO we removed.
+  - On the one we kept.
+---
+
+## Lede
+
+An SLO is not a measurement. It is a promise. The number on the dashboard is a side effect.
+
+## The uptime number
+
+For most of the industry&apos;s history, an SLO has been a number on a status page that nobody looks at unless they are angry. 99.9, 99.95, 99.99 &mdash; the third nine has become a brag, the fourth a vendor lock-in, the fifth a rounding error. The number, on its own, communicates almost nothing about the service it describes.
+
+What the number is supposed to mean is this: a person who depends on this service can plan around its absence. The SLO is a promise to that person, not to the team that operates the service. If the promise is kept, the person can build on top of us; if it isn&apos;t, they cannot. The number is just the bookkeeping.
+
+## Who it is for
+
+We had thirty-two SLOs at the start of the quarter. Most of them were for ourselves. They tracked things like &ldquo;the 99th percentile of internal API latency,&rdquo; which is a metric that comforted the team that owned the API but did not communicate a promise to anyone outside it. Internal latency is interesting; it is not an SLO.
+
+> If the customer cannot say what your SLO is for, it is not an SLO. It is a chart.
+
+We removed twenty of the thirty-two. The remaining twelve all answer the same question: &ldquo;What can someone build on top of us, and how often do we let them down?&rdquo;
+
+## The budget
+
+A good SLO comes with a budget &mdash; a fixed amount of acceptable failure per quarter. The budget is what makes the SLO operational. If we have a 99.9% SLO, we have forty-three minutes of failure to spend per month. We can spend it on a planned migration, on an experiment, on a third spike at 03:14, or we can save it for a rainy day. What we cannot do is have a 99.9% SLO and zero tolerance for failure. That is not a promise; that is a wish.
+
+## The one we removed
+
+We had an SLO on a feature that fewer than 0.1% of customers used. The team that owned the feature had set the SLO at 99.99%. They had been chasing that fourth nine for six months. We removed the SLO. Not because we didn&apos;t care about the feature, but because nobody was building on top of it. The fourth nine was a personal project disguised as a promise.
+
+## The one we kept
+
+We kept the SLO on the auth path because three customers had built businesses on the assumption that it would not flicker for more than four minutes a quarter. They had told us, in writing, that this was the promise they had built around. The SLO was a contract; the number was the receipt. We have not spent more than two minutes of the budget all year, which means &mdash; in SLO terms &mdash; that we are saving the rest in case we need it.
+
+That is what an SLO is for: a promise that someone can plan around, kept until it cannot be, and tracked in plain sight.

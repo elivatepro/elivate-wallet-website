@@ -1,0 +1,54 @@
+---
+slug: charts-we-didnt-ship
+num: "009"
+title: Charts we didn&apos;t ship
+dek: A small museum of designs that died on purpose &mdash; and what each one was trying to be.
+date: 2026-02-20
+time: "13:30"
+author: "@ren"
+authorRole: Designer · platform
+authorImage: /images/portraits/1.webp
+category: Design notes
+readMin: 7
+filedFrom: Berlin
+coverImage: https://images.unsplash.com/photo-1606159068539-43f36b99d1b2?w=1600&q=80
+coverCaption: A drawer of charts that were never approved. Most of them weren&apos;t wrong.
+chapters:
+  - On the drawer.
+  - On the heatmap.
+  - On the ring.
+  - On the radar.
+  - On the chart we shipped instead.
+---
+
+## Lede
+
+A design system is judged by what it ships. It is built by what it doesn&apos;t. Here are three charts that almost made it into the product, and the reason each one didn&apos;t.
+
+## The drawer
+
+We keep a drawer &mdash; literally, in Figma; spiritually, in an unmerged branch &mdash; for charts that were close. They are not failures, exactly. They are mostly correct ideas that were not the right answer for the problem we were solving. We open the drawer, every quarter, and ask whether any of them have aged into the right answer. So far the drawer is undefeated.
+
+## The heatmap
+
+The first chart in the drawer is a service-by-hour heatmap of pager activity. It looks beautiful: a calendar grid of small squares, each colored by a count, with the loud hours obvious from across the room. We built it because we wanted a way to spot the bad weeks at a glance.
+
+It died because nobody acted on it. The bad weeks were already known to the team that lived through them; the heatmap was a postcard from the past. By the time a square was dark enough to draw the eye, the incident behind it was either already fixed or already a habit. We were not lacking the information; we were lacking the appetite to confront it. A heatmap, it turned out, was not the right way to confront anything.
+
+## The ring
+
+The second chart is a circular dependency view of services, drawn as a ring with arcs between nodes. It is, visually, the kind of thing that gets a chart pinned to the wall. It is also, on inspection, a confession that we had a circular dependency graph &mdash; a problem we should have been solving, not visualizing.
+
+> A chart that makes a problem look beautiful is sometimes a chart that has been hired to keep the problem.
+
+We removed the chart. We then removed two of the cycles. The chart, if it still existed, would now show a much less interesting ring &mdash; which is to say, a correct one.
+
+## The radar
+
+The third chart is a six-axis radar showing the &ldquo;health&rdquo; of a service across latency, error rate, queue depth, deploy frequency, oncall load, and on-time SLO. It tested well in usability sessions. People liked the shape. They could tell, at a glance, whether a service was &ldquo;balanced.&rdquo;
+
+It died because balance was not the goal. A service can be balanced and bad &mdash; equally mediocre on every axis &mdash; or it can be unbalanced in exactly the right way for what it does. The radar made the question &ldquo;is this service well-rounded&rdquo; into the question we were asking, when the question we should have been asking was &ldquo;is this service serving its purpose.&rdquo; We shipped a different answer.
+
+## The chart we shipped
+
+The chart we shipped, in place of the radar, is a single sentence written by the system: a paragraph that names the service, its current load, and the thing it is closest to failing at. There is no shape. There is no axis. There is, on most days, almost nothing to read. That is the chart.

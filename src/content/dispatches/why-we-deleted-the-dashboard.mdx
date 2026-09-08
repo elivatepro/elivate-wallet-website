@@ -1,0 +1,49 @@
+---
+slug: why-we-deleted-the-dashboard
+num: "013"
+title: Why we deleted the dashboard
+dek: On removing 217 graphs nobody read.
+date: 2026-04-11
+time: "09:00"
+author: "@ren"
+authorRole: Designer · platform
+authorImage: /images/portraits/1.webp
+category: Practice
+readMin: 6
+filedFrom: Berlin
+coverImage: https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&q=80
+coverCaption: 217 graphs nobody read &mdash; the day before we deleted them.
+chapters:
+  - On the audit.
+  - On the cull.
+  - On three months later.
+  - On what replaced them.
+---
+
+## Lede
+
+We had 217 graphs across our internal dashboards. None of them were used during last quarter&apos;s incidents. So we deleted them all and started over.
+
+## The audit
+
+We instrumented the dashboards themselves. For ninety days we tracked which charts loaded, which ones got eyeballs longer than three seconds, and which ones were referenced in incident retros. The result was bleak.
+
+- 14% of charts were viewed at all
+- 4% were viewed by more than two people
+- 1% were referenced in any retrospective
+
+Most of the 217 were artifacts of someone&apos;s curiosity, never deleted. They survived because the cost of keeping a dead chart is zero — until you&apos;re paging through twelve tabs trying to find the live one.
+
+## The cull
+
+We deleted everything that didn&apos;t hit the 1% bar. What stayed was a single page of nine charts. Each had at least one referee in a retro and at least one human who&apos;d log in voluntarily to look at it.
+
+> The right number of dashboards is the smallest number that can&apos;t be reduced further without losing an incident.
+
+## Three months later
+
+Time to first useful chart during an incident dropped from ninety seconds to twelve. The remaining nine charts get loved. Nobody has asked for any of the 208 we deleted.
+
+## What replaced them
+
+Nothing. The graphs that mattered already existed. The 208 were noise — they made the live ones harder to find.

@@ -1,0 +1,341 @@
+---
+import { getCollection, render } from "astro:content";
+
+import { LegalSchedule } from "@/components/legal/legal-schedule";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { getAllLegalPages } from "@/lib/legal";
+import { cn } from "@/lib/utils";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("legal");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const FILE_NO: Record<string, string> = {
+  privacy: "MER-PRV-26",
+  terms: "MER-TOS-26",
+};
+const REVISION = "04";
+const JURISDICTION = "California";
+
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const fileNoFor = (slug: string) =>
+  FILE_NO[slug] ?? `MER-${slug.toUpperCase()}-26`;
+
+const shortHash = (s: string) => {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = (h * 33) ^ s.charCodeAt(i);
+  return (h >>> 0).toString(16).padStart(6, "0").slice(-6);
+};
+
+const { entry } = Astro.props;
+const { Content, headings: mdHeadings } = await render(entry);
+const all = await getAllLegalPages();
+
+const data = entry.data;
+const slug = entry.id;
+const lastUpdatedIso =
+  data.lastUpdated instanceof Date
+    ? data.lastUpdated.toISOString().slice(0, 10)
+    : String(data.lastUpdated);
+
+const fileNo = fileNoFor(slug);
+const docHash = shortHash(entry.body ?? data.title);
+const sibling = all.find((p) => p.slug !== slug);
+
+const [titleHead, ...titleTailParts] = data.title.split(" ");
+const titleTail = titleTailParts.join(" ");
+
+const headings = mdHeadings
+  .filter((h) => h.depth === 2)
+  .map((h) => ({ text: h.text, slug: slugify(h.text) }));
+
+const metaCells = [
+  { label: "Effective", value: lastUpdatedIso, emphasis: false },
+  { label: "Revision", value: REVISION, emphasis: false },
+  { label: "Jurisdiction", value: JURISDICTION, emphasis: false },
+  { label: "Status", value: "In force", emphasis: true },
+];
+---
+
+<DefaultLayout
+  title={`${data.title} · Meridian`}
+  description={data.description}
+>
+  <main class="relative">
+    <span
+      aria-hidden
+      class="pointer-events-none absolute inset-0 -z-10"
+      style={{
+        backgroundImage:
+          "repeating-linear-gradient(to bottom, transparent 0, transparent 31px, var(--foreground) 31px, var(--foreground) 32px)",
+        opacity: 0.025,
+        maskImage:
+          "linear-gradient(to bottom, transparent 0, black 240px, black calc(100% - 240px), transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(to bottom, transparent 0, black 240px, black calc(100% - 240px), transparent 100%)",
+      }}></span>
+
+    <div class="container pt-32 md:pt-40">
+      <div
+        class="text-meta border-foreground text-foreground flex items-baseline justify-between border-y py-2"
+      >
+        <a href="/" class="transition-opacity hover:opacity-70">
+          ← Meridian Co.
+        </a>
+        <span class="text-muted-foreground hidden md:inline">
+          The clauses &middot; Edition MMXXVI
+        </span>
+        <span>File no. {fileNo}</span>
+      </div>
+    </div>
+
+    <div class="section-padding container max-w-7xl">
+      <header>
+        <div class="text-meta-xs text-muted-foreground">
+          Instrument of agreement
+        </div>
+        <h1
+          class="font-display mt-3 text-4xl leading-[0.95] tracking-tighter text-balance uppercase md:text-6xl lg:text-7xl"
+        >
+          <span class="block">{titleHead}</span>
+          {
+            titleTail && (
+              <span class="text-muted-foreground block">{titleTail}</span>
+            )
+          }
+        </h1>
+
+        <p
+          class="text-muted-foreground mt-10 max-w-prose text-base leading-relaxed md:text-lg"
+        >
+          <span class="text-meta text-foreground mr-2 align-middle">
+            In the matter of —
+          </span>
+          {data.description}
+        </p>
+
+        <div class="mt-12 grid grid-cols-2 border-y md:grid-cols-4">
+          {
+            metaCells.map((c, i) => (
+              <div
+                class={cn(
+                  "px-4 py-5 md:px-5",
+                  i % 2 === 1 && "border-l",
+                  i > 0 && "md:border-l",
+                  i >= 2 && "border-t md:border-t-0",
+                  c.emphasis && "bg-foreground text-background",
+                )}
+              >
+                <span
+                  class={cn(
+                    "text-meta-xs",
+                    c.emphasis ? "text-background/70" : "text-muted-foreground",
+                  )}
+                >
+                  {c.label}
+                </span>
+                <span
+                  class={cn(
+                    "mt-2 block tabular-nums",
+                    c.emphasis
+                      ? "font-mono text-sm font-bold tracking-widest uppercase"
+                      : "font-display text-base tracking-tight",
+                  )}
+                >
+                  {c.value}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+      </header>
+
+      <div
+        class="mt-12 grid gap-12 md:mt-16 md:gap-16 lg:mt-20 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-32"
+      >
+        <div class="min-w-0 lg:order-1">
+          <article class="legal-articles relative md:pl-28">
+            <div
+              aria-hidden
+              class="border-foreground/30 pointer-events-none absolute -top-2 bottom-0 left-0 hidden w-1 border-l-4 border-double md:block"
+            >
+            </div>
+            <div
+              class="prose prose-neutral dark:prose-invert prose-headings:font-display prose-headings:tracking-tight prose-a:text-foreground prose-a:underline prose-a:underline-offset-4 hover:prose-a:opacity-70 [&>p]:text-muted-foreground [&>ul]:text-muted-foreground max-w-none [&>h2]:mt-14 [&>h2]:mb-4 [&>h2]:text-2xl [&>h2]:leading-tight [&>p]:leading-relaxed [&>p+p]:mt-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:leading-relaxed"
+            >
+              <Content />
+            </div>
+          </article>
+
+          <footer class="mt-24">
+            <div
+              class="text-meta text-muted-foreground mb-10 flex items-center gap-3"
+            >
+              <span class="bg-foreground/30 h-px flex-1"></span>
+              <span>Executed and entered into force</span>
+              <span class="bg-foreground/30 h-px flex-1"></span>
+            </div>
+
+            <div
+              class="grid grid-cols-1 gap-6 md:grid-cols-[auto_1fr] md:items-end md:gap-8"
+            >
+              <svg
+                viewBox="0 0 220 130"
+                class="text-foreground h-32 w-auto -rotate-[4deg] md:h-36"
+                aria-hidden
+              >
+                <defs>
+                  <filter
+                    id="stamp-rough"
+                    x="-10%"
+                    y="-10%"
+                    width="120%"
+                    height="120%"
+                  >
+                    <feTurbulence baseFrequency="0.85" numOctaves="2" seed="3"
+                    ></feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" scale="1.4"
+                    ></feDisplacementMap>
+                  </filter>
+                </defs>
+                <g filter="url(#stamp-rough)" opacity="0.92">
+                  <rect
+                    x="4"
+                    y="4"
+                    width="212"
+                    height="122"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"></rect>
+                  <rect
+                    x="10"
+                    y="10"
+                    width="200"
+                    height="110"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="0.6"></rect>
+                  <text
+                    x="110"
+                    y="48"
+                    text-anchor="middle"
+                    font-family="var(--font-mono)"
+                    font-weight="700"
+                    font-size="22"
+                    letter-spacing="6"
+                    fill="currentColor">IN FORCE</text
+                  >
+                  <line
+                    x1="22"
+                    y1="60"
+                    x2="198"
+                    y2="60"
+                    stroke="currentColor"
+                    stroke-width="0.6"></line>
+                  <text
+                    x="110"
+                    y="78"
+                    text-anchor="middle"
+                    font-family="var(--font-mono)"
+                    font-size="9"
+                    letter-spacing="3"
+                    fill="currentColor"
+                    opacity="0.85">EFFECTIVE</text
+                  >
+                  <text
+                    x="110"
+                    y="96"
+                    text-anchor="middle"
+                    font-family="var(--font-mono)"
+                    font-size="14"
+                    letter-spacing="1"
+                    fill="currentColor">{lastUpdatedIso}</text
+                  >
+                  <text
+                    x="110"
+                    y="114"
+                    text-anchor="middle"
+                    font-family="var(--font-mono)"
+                    font-size="8"
+                    letter-spacing="3.2"
+                    fill="currentColor"
+                    opacity="0.7">MERIDIAN CO. &middot; REV. {REVISION}</text
+                  >
+                </g>
+              </svg>
+
+              <div>
+                <div class="text-meta-xs text-muted-foreground">
+                  For and on behalf of
+                </div>
+                <div class="bg-foreground mt-4 h-px w-56"></div>
+                <div class="font-display mt-2 text-lg tracking-tight">
+                  Office of the General Counsel
+                </div>
+                <div class="text-meta-xs text-muted-foreground">
+                  Meridian Co. &middot; 410 Townsend St, San Francisco
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="text-meta text-muted-foreground mt-12 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t pt-4"
+            >
+              <span>Doc. hash {docHash}</span>
+              <span aria-hidden>·</span>
+              <span>Rev. {REVISION}</span>
+              <span aria-hidden>·</span>
+              <span>In force from {lastUpdatedIso}</span>
+              <a
+                href="mailto:legal@meridian.systems"
+                class="hover:text-foreground ml-auto transition-colors"
+              >
+                legal@meridian.systems →
+              </a>
+            </div>
+
+            {
+              sibling && (
+                <a
+                  href={`/legal/${sibling.slug}`}
+                  class="group/cite border-foreground/20 hover:border-foreground mt-12 block border p-6 transition-colors"
+                >
+                  <div class="text-meta-xs text-muted-foreground">
+                    Related instrument &middot; cited herein
+                  </div>
+                  <div class="mt-3 flex items-baseline justify-between gap-4">
+                    <span class="font-display text-xl leading-snug tracking-tight">
+                      {sibling.title}
+                    </span>
+                    <span class="text-meta-xs text-muted-foreground transition-transform group-hover/cite:translate-x-1">
+                      {fileNoFor(sibling.slug)} →
+                    </span>
+                  </div>
+                </a>
+              )
+            }
+          </footer>
+        </div>
+
+        {
+          headings.length > 0 && (
+            <aside class="-order-1 lg:order-2">
+              <div class="lg:sticky lg:top-24">
+                <LegalSchedule headings={headings} client:visible />
+              </div>
+            </aside>
+          )
+        }
+      </div>
+    </div>
+  </main>
+</DefaultLayout>

@@ -1,0 +1,11 @@
+---
+import BlogMagazine from "@/components/sections/blog/magazine";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout
+  title="Dispatches"
+  description="Reports filed from oncall — the decisions, the SLOs we got wrong, and the post-mortems that wrote themselves. One dispatch a fortnight."
+>
+  <BlogMagazine client:load />
+</DefaultLayout>

@@ -1,0 +1,68 @@
+---
+slug: status-pages-should-be-boring
+num: "016"
+title: Status pages should be boring
+dek: On why a green status page is the most expensive feature you can ship.
+date: 2026-04-27
+time: "10:14"
+author: "@ren"
+authorRole: Designer · platform
+authorImage: /images/portraits/1.webp
+category: Design notes
+readMin: 9
+filedFrom: Berlin
+coverImage: https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80
+coverCaption: Sixteen green dots. Twelve months. The most boring page we ship.
+chapters:
+  - On the eighteen months.
+  - On the green dot.
+  - On the cost of green.
+  - On the second-glance test.
+  - On what we removed.
+  - On the bookmark folder.
+  - On the year of green.
+---
+
+## Lede
+
+The best status page is the one nobody bookmarks. We learned that the hard way, after eighteen months of designing one that customers checked twice a week.
+
+## On the eighteen months
+
+The first version had nineteen tabs, a Twitter feed, and a chart of historical incidents that loaded the moment you opened the page. It looked thorough. It was, by every measure of how a status page is graded today, comprehensive. It was also a confession: every chart we added was an admission that the dots couldn&apos;t carry the weight on their own.
+
+Each release after that took something away. By month nine the timeline had gone. By month fourteen the subscription form. By month seventeen the chat. The current page is what was left when nothing more could be removed without losing the point.
+
+## On the green dot
+
+Sixteen services. Sixteen dots. All green for the better part of a year. That is the headline, the copy, and the entire interaction model. There is no incident timeline below the fold. There is no &ldquo;subscribe to updates.&rdquo; There is no chat widget asking how we&apos;re doing.
+
+## On the cost of green
+
+A green dot is not free. Each one represents a budget, a probe, an engineer who agreed to be paged if the dot were to flip. The page looks calm because forty people, in three timezones, have agreed to be the first to know if it isn&apos;t.
+
+> The status page is the cheapest part of the system. Everything behind it is the price of the dot.
+
+## On the second-glance test
+
+If a customer comes back to the page twice in a week, we have failed twice. Not because the page is wrong &mdash; the dots are accurate &mdash; but because the customer is not sure they can trust the dots. The second glance is the tell.
+
+## On what we removed
+
+In April we removed three things from the page:
+
+- The &ldquo;all systems operational&rdquo; copy
+- The historic uptime percentage
+- The &ldquo;report an issue&rdquo; button
+
+The copy was redundant; if every dot is green, a literate adult can read that themselves. The uptime percentage was lossy in both directions &mdash; high enough to feel like a brag, low enough that any month with a single yellow dot looked worse than the month had felt. The report button drew complaints we had no way to triage from a status page, since the only thing the page could prove was that the writer of the complaint had loaded JavaScript.
+
+What we kept: sixteen dots, sixteen labels, and a single timestamp. Nobody bookmarks it. That is, finally, the goal.
+
+## On the bookmark folder
+
+A customer wrote to tell us, sheepishly, that they had moved our status page out of their pinned tabs. It had lived there for two years, alongside their bank and their email. They had checked it on Mondays and Thursdays for so long it had become a habit. Then, one quarter, they realized they hadn&apos;t opened it. They felt almost guilty about it. We took it as a compliment.
+
+## On the year of green
+
+We do not know whether we will keep the dots green for another year. The honest answer is that nobody does. What we know is what the page is for &mdash; to be read once, with relief, and then closed. If we ever ship a status page that earns a place in someone&apos;s pinned tabs, we will have shipped the wrong product.

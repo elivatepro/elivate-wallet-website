@@ -1,0 +1,47 @@
+---
+slug: a-quiet-quarter
+num: "010"
+title: A quiet quarter
+dek: What it feels like &mdash; the boredom, the suspicion, the unease &mdash; when nothing happens for ninety days.
+date: 2026-02-27
+time: "15:12"
+author: "@kit"
+authorRole: Editor · field notes
+authorImage: /images/portraits/3.webp
+category: Field
+readMin: 5
+filedFrom: Lisbon
+coverImage: https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80
+coverCaption: An office at four in the afternoon, with nothing on fire.
+chapters:
+  - On the count.
+  - On the suspicion.
+  - On the ritual.
+  - On the truth.
+---
+
+## Lede
+
+The team did not get paged for eighty-eight days. The team did not believe it.
+
+## The count
+
+The count is the kind of statistic that gets posted on an internal wall and quietly stared at. Eighty-eight days. No L1, no L2, no L3. The system had been issuing soft notes &mdash; the kind that arrive in a feed at 9am, not the kind that wake a person &mdash; but the Watch had stayed dark.
+
+## The suspicion
+
+The first reaction to a quiet quarter is not relief. It is suspicion. Engineers who have spent a career on the other end of a 03:14 page do not, on hearing that there have been no pages for three months, conclude that the system is healthy. They conclude that the alerting is broken. They check the test pages. They send a synthetic incident to staging. They run a chaos drill. They confirm, with some dejection, that the system is healthy and the alerting is not broken.
+
+> A quiet quarter is the moment a team finds out whether it can trust its own work. Most teams find out, and then go looking for a second opinion.
+
+## The ritual
+
+We added a small ritual to the end of each week of the quiet quarter. On Friday afternoon, the oncall posts a one-line message in `#oncall`: &ldquo;quiet week.&rdquo; Sometimes there is a small flag attached &mdash; a near-miss, a deploy that took longer than expected, a customer who emailed about a thing that did not, in the end, page anyone. The flag is not a complaint. It is a record. The ritual is the team&apos;s way of saying: yes, we noticed.
+
+The ritual matters because a quiet system is invisible. The work that keeps it quiet is invisible too. The Friday line is the only place where the silence gets credit.
+
+## The truth
+
+We do not know whether the next quarter will be quiet. We have not had a quarter like this one in our history, and we are not naive enough to think we have solved silence. What we know is what we did during this one, which is mostly: shipped slowly, refused to add charts, and went outside.
+
+The eighty-eighth day was a Wednesday. On the eighty-ninth day there was a small page about a queue depth in `feed-relay`. The oncall acked from a coffee shop. The streak ended quietly. We posted, in the channel, &ldquo;quiet ninety-nine.&rdquo; That seemed about right.

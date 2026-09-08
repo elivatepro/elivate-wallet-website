@@ -1,0 +1,58 @@
+---
+slug: eight-channels-one-signal
+num: "004"
+title: Eight channels, one signal
+dek: On collapsing a wall of Slack rooms into a feed nobody had to triage.
+date: 2026-01-16
+time: "11:02"
+author: "@ren"
+authorRole: Designer · platform
+authorImage: /images/portraits/1.webp
+category: Practice
+readMin: 7
+filedFrom: Berlin
+coverImage: https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80
+coverCaption: Eight feeds, one timeline. The merge that took a year to feel obvious.
+chapters:
+  - On the wall of rooms.
+  - On the merge.
+  - On the rules of entry.
+  - On the channel we kept.
+  - On what the silence costs.
+---
+
+## Lede
+
+We had eight oncall Slack channels. We replaced them with one. The channel we kept gets four messages on a quiet day and twelve on a loud one. Nobody mutes it.
+
+## The wall
+
+The eight rooms had grown the way Slack rooms grow &mdash; one per service, one per acronym, one for the team that joined two acquisitions ago. By the end every member of the rotation was in all eight, every message was cross-posted to at least three, and the only person who read them all was the bot that posted them.
+
+The bot was, in retrospect, the only system that could keep up. The humans had given up six months earlier.
+
+## The merge
+
+We collapsed the eight into one channel called `#oncall`. The merge itself took an afternoon. The hard part was not the channel; it was deciding what was allowed to enter it.
+
+## Rules of entry
+
+A message is allowed in `#oncall` if and only if it meets three conditions:
+
+- It changes what an oncall would do in the next sixty minutes
+- It cannot be expressed as a chart
+- It is signed by a human or by a system that has been granted standing
+
+The first rule cuts most informational chatter. The second cuts the dashboards that used to scream into channels. The third &mdash; standing &mdash; is the part that took the longest. A bot does not get standing for free; it has to earn it the way an engineer does, by being right enough times that its messages are read with the same weight.
+
+> A channel is not a place to put information. It is a place to put information that demands a response.
+
+## The one we kept
+
+The channel we kept reads, on most days, like a quiet shipping log. There is a system message when a deploy starts and a system message when it finishes. There is a human message when something needs a second pair of eyes. There is no weather, no birthdays, no &ldquo;FYI for visibility.&rdquo; The visibility was the problem.
+
+## The cost of silence
+
+A quiet channel feels, at first, like a broken one. People asked, in the first week, whether the bots were down. They were not. They had simply stopped speaking when speaking was unnecessary. The instinct to fill a silence with chatter is the same instinct that built the eight channels in the first place. We had to unlearn it.
+
+The cost of silence, it turns out, is the discomfort of trusting that the system would speak if it had something to say. After a quarter, the discomfort had passed.

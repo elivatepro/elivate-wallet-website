@@ -1,0 +1,13 @@
+---
+import ContactForm from "@/components/sections/contact/form";
+import ContactHero from "@/components/sections/contact/hero";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout
+  title="Contact"
+  description="Write to a human at Meridian. We reply within four hours, most days."
+>
+  <ContactHero client:load />
+  <ContactForm client:idle />
+</DefaultLayout>

@@ -1,0 +1,56 @@
+---
+slug: the-pager-that-learned-to-whisper
+num: "008"
+title: The pager that learned to whisper
+dek: On reducing nine pages to one &mdash; and the eight that nobody had needed in the first place.
+date: 2026-02-13
+time: "23:48"
+author: "@yass"
+authorRole: Founding engineer · oncall, 2026.Q1
+authorImage: /images/portraits/2.webp
+category: Postmortem
+readMin: 9
+filedFrom: us-east-1
+coverImage: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1600&q=80
+coverCaption: One pager, one page. The other eight stayed in the queue.
+chapters:
+  - On the night of nine.
+  - On the dedupe.
+  - On the page that mattered.
+  - On the eight that didn&apos;t.
+  - On the apology.
+---
+
+## Lede
+
+In November, a single broken database connection paged the oncall nine times in eleven minutes. After we were done apologizing to her, we built a system that would never do that to anyone again.
+
+## The night of nine
+
+The connection failed at 23:48. By 23:51 the oncall&apos;s Watch had buzzed nine times: once for the database itself, three times for services that had failed to retry against it, twice for queue depth, twice for an SLO burn, and once for a dashboard that had crashed because it was waiting on the first page&apos;s service. Each page contained a different paragraph of advice. Each contained the same root cause. None of them said so.
+
+The oncall acked all nine, fixed the database in three minutes, and went back to bed at 00:14. She wrote in the next morning&apos;s standup: `nine pages, one fix, no fun.`
+
+## The dedupe
+
+The dedupe was the part we had been avoiding. Every previous attempt had been a heuristic: cluster pages within a sixty-second window, suppress duplicates of the same alert ID, mute downstream services for two minutes after an upstream page. Each heuristic had been correct most of the time. None of them had been correct on the night of nine, because the nine pages had nine different alert IDs, came from six different services, and arrived over eleven minutes &mdash; outside every window we had set.
+
+The fix was to stop treating pages as events and start treating them as a story. A page is no longer delivered to a human until the system has tried to attach it to an existing story. A story is opened by the first page in a cluster and closed when the cluster resolves. The first page in a cluster is the only one that gets delivered. The rest become paragraphs in the post-mortem of the first.
+
+## The page that mattered
+
+On the next equivalent night, in late January, the same connection failed again. The Watch buzzed once. The page read:
+
+> billing-core · database connection · 1 page · 8 suppressed
+
+Eight other things had broken, in cascade. The system had stitched them into a story behind the scenes. The oncall fixed the connection in two minutes and the eight suppressed pages were filed as evidence in the post-mortem the system was already writing.
+
+## The eight that didn&apos;t
+
+The eight suppressed pages, on examination, were not bugs in the alerting system. They were correct alerts about correct symptoms. The mistake had been in delivering them to the human. Eight of the nine had no fix that the human could perform; they would resolve when the first did. The ninth was the only one that demanded a hand on a keyboard.
+
+> An alerting system&apos;s job is not to tell the truth. It is to tell the right person the smallest truth that requires their hand.
+
+## The apology
+
+We owed her an apology, formally, for the night of nine. We delivered it on the morning of February third, at the all-hands. It was three sentences and a coffee. She accepted, mostly, but she also said, on the way out, that she would prefer if we made sure no one ever needed to apologize for nine pages again. That is the project this dispatch is filed against.

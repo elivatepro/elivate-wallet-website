@@ -1,0 +1,45 @@
+---
+slug: the-call-we-never-made
+num: "003"
+title: The call we never made
+dek: A page that didn&apos;t fire, an oncall who didn&apos;t wake, and the forty-second window between the two.
+date: 2026-01-09
+time: "02:41"
+author: "@yass"
+authorRole: Founding engineer · oncall, 2026.Q1
+authorImage: /images/portraits/2.webp
+category: Postmortem
+readMin: 5
+filedFrom: us-east-1
+coverImage: https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=1600&q=80
+coverCaption: The Watch that didn&apos;t buzz, on the desk that nobody returned to.
+chapters:
+  - On the spike that didn&apos;t arrive.
+  - On the forty seconds.
+  - On the page that didn&apos;t fire.
+  - On the morning after.
+---
+
+## Lede
+
+The best incidents are the ones nobody remembers. This one we only know about because the system filed a receipt.
+
+## The spike
+
+At 02:41 UTC the `auth-edge` p99 jumped from 38ms to 410ms. Three regions saw it; one of them was already shedding load to a sibling. The dashboards we no longer keep would have painted the spike in red. The dashboards we do keep didn&apos;t mention it, because the system was already deciding what to do.
+
+## The forty seconds
+
+For forty seconds the spike was held in a window the system maintains for exactly this case &mdash; a quiet zone where a decision can be unmade. During those forty seconds the load shed itself, the sibling region absorbed the overflow, and a config diff that had been queued by an automated retry-policy review four hours earlier was rolled back without ceremony.
+
+> The cheapest incident is the one whose root cause has already been scheduled for removal.
+
+## The page that didn&apos;t fire
+
+There was no page. The Watch on the desk stayed dark. The oncall&apos;s phone &mdash; on the bedside table, do-not-disturb until 06:00 &mdash; never lit up. By 02:42:21 the p99 was back at 41ms and the system had filed a one-line note in the morning queue.
+
+## The morning after
+
+The note read: `auth-edge · transient p99 · resolved at source · diff #2014 reverted · no human action`.
+
+There was a time when this would have been a five-page incident report, a Slack thread, a 9am standup with the word &ldquo;learnings&rdquo; in it. Now it is a line in a queue, read with coffee, deleted without comment. We are not sure that is progress &mdash; only that it is what we built.
