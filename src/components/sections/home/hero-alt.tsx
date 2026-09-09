@@ -61,22 +61,23 @@ const HeroAlt = ({ className, asHero = true }: HeroAltProps) => {
         <div className="relative z-20 flex flex-col gap-5">
           <Heading className={headingClass}>
             <span className="hidden md:block">
-              One console for your logs, metrics, and traces
+              A Wallet that scales with your network.
             </span>
             <span className="mx-auto block max-w-[31.25rem] text-center md:hidden">
-              One console for logs, metrics, and traces
+              A Wallet that scales with your network.
             </span>
           </Heading>
           <div className="max-w-2xl">
             <p className="text-muted-foreground text-center text-xl font-medium md:text-left">
-              Elivate replaces noisy dashboards with a single observability
-              console that only pages you when it matters.
+              Give every member a clear view of their balance and transactions,
+              while your leaders manage income, withdrawals, teams, and financial
+              activity from one place.
             </p>
           </div>
           <div className="flex flex-col items-center gap-3 py-4 md:flex-row">
-            <Button size="lg">Start free trial</Button>
+            <Button size="lg">Get started</Button>
             <Button size="lg" variant="ghost">
-              See how it works
+              Book a demo
             </Button>
           </div>
           <div
