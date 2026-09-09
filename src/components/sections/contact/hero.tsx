@@ -105,9 +105,6 @@ const ContactHero = () => {
   });
   const tilesY = useTransform(progress, [0, 1], [0, -40]);
 
-  // Smooth-scroll to the form section and focus the first input once the
-  // browser has had time to settle — preventScroll on focus avoids the
-  // input pulling the viewport up past the section eyebrow.
   const goToForm = () => {
     document
       .getElementById("contact-form")
@@ -164,14 +161,9 @@ const ContactHero = () => {
           variants={fadeUp}
           className="text-muted-foreground mt-6 max-w-2xl text-base leading-relaxed md:mt-8 md:text-lg"
         >
-          We reply within four hours, most days. Phone, email, or message
-          &mdash; pick the one that suits you.
-          <span className="hidden md:inline">
-            {" "}
-            A small team across three time zones takes turns at the inbox, so
-            someone is usually around.
-          </span>{" "}
-          If it&apos;s urgent, the phone is fastest.
+          Tell us about your network, how you manage balances and transactions
+          today, and what you want Elivate Wallet to make easier. Use the form
+          below to start the conversation.
         </motion.p>
         <motion.div
           variants={fadeUp}
@@ -190,31 +182,20 @@ const ContactHero = () => {
         >
           <ul className="space-y-3 text-base md:text-lg">
             <li className="flex items-baseline gap-3">
-              <span className="font-display tracking-tighter">Tel.</span>
-              <span className="text-muted-foreground">+1 415 555 0148</span>
+              <span className="font-display tracking-tighter">Product.</span>
+              <span className="text-muted-foreground">Elivate Wallet</span>
             </li>
             <li className="flex items-baseline gap-3">
-              <span className="font-display tracking-tighter">Email.</span>
-              <span className="text-muted-foreground">
-                talk@meridian.systems
-              </span>
+              <span className="font-display tracking-tighter">Web.</span>
+              <span className="text-muted-foreground">elivatewallet.com</span>
             </li>
           </ul>
-          <a
-            href="mailto:talk@meridian.systems"
-            className="group/email font-display block min-w-0 leading-none tracking-tighter break-words md:text-end"
+          <p
+            className="font-display block min-w-0 leading-none tracking-tighter break-words md:text-end"
             style={{ fontSize: "clamp(1.25rem, 3.5vw, 3rem)" }}
           >
-            <span className="transition-opacity group-hover/email:opacity-80">
-              talk@meridian.systems
-            </span>
-            <span
-              aria-hidden
-              className="ml-3 inline-block text-[0.6em] transition-[transform,opacity] duration-300 ease-out group-hover/email:translate-x-1 group-hover/email:-translate-y-1 group-hover/email:opacity-80"
-            >
-              ↗
-            </span>
-          </a>
+            Tell us what you need.
+          </p>
         </motion.div>
       </div>
     </motion.section>
