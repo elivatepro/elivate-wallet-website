@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import "@/styles/brand.css";
 import { Font } from "astro:assets";
 
 import { SITE_METADATA } from "@/consts";
@@ -23,7 +24,7 @@ const imageURL = new URL(finalImage, Astro.site);
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta
   name="robots"
-  content={`${SITE_METADATA.robots.index ? "index" : "noindex"}, ${SITE_METADATA.robots.follow ? "follow" : "nofollow"}`}
+  content={`${SITE_METADATA.robots.index ? "index" : "noindex"}, ${SITE_METADATA.robots.follow ? "follow" : "nofollow"}`
 />
 <meta name="keywords" content={SITE_METADATA.keywords.join(", ")} />
 <meta name="author" content={SITE_METADATA.authors[0].name} />
