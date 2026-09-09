@@ -18,8 +18,7 @@ const finalTitle = title
   ? SITE_METADATA.title.template.replace("%s", title)
   : SITE_METADATA.title.default;
 const finalDescription = description || SITE_METADATA.description;
-const finalImage = image || SITE_METADATA.openGraph.images[0].url;
-const imageURL = new URL(finalImage, Astro.site);
+const imageURL = image ? new URL(image, Astro.site) : null;
 ---
 
 <meta charset="utf-8" />
@@ -45,20 +44,8 @@ const imageURL = new URL(finalImage, Astro.site);
   }
 </script>
 
-<link rel="icon" href="/favicon/favicon.ico" sizes="48x48" />
-<link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
-<link
-  rel="icon"
-  href="/favicon/favicon-96x96.png"
-  sizes="96x96"
-  type="image/png"
-/>
-<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" sizes="180x180" />
-<link rel="shortcut icon" href="/favicon/favicon.ico" />
-
 <link rel="sitemap" href="/sitemap-index.xml" />
 <meta name="generator" content={Astro.generator} />
-
 <link rel="canonical" href={canonicalURL} />
 
 <title>{finalTitle}</title>
@@ -70,22 +57,13 @@ const imageURL = new URL(finalImage, Astro.site);
 <meta property="og:site_name" content={SITE_METADATA.openGraph.siteName} />
 <meta property="og:title" content={finalTitle} />
 <meta property="og:description" content={finalDescription} />
-<meta property="og:image" content={imageURL} />
-<meta
-  property="og:image:width"
-  content={SITE_METADATA.openGraph.images[0].width.toString()}
-/>
-<meta
-  property="og:image:height"
-  content={SITE_METADATA.openGraph.images[0].height.toString()}
-/>
-<meta property="og:image:alt" content={SITE_METADATA.openGraph.images[0].alt} />
+{imageURL && <meta property="og:image" content={imageURL} />}
 
 <meta property="twitter:card" content={SITE_METADATA.twitter.card} />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={finalTitle} />
 <meta property="twitter:description" content={finalDescription} />
-<meta property="twitter:image" content={imageURL} />
+{imageURL && <meta property="twitter:image" content={imageURL} />}
 
 <Font cssVariable="--font-family-sans" preload />
 <Font cssVariable="--font-family-display" preload />
