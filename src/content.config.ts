@@ -22,25 +22,4 @@ const dispatches = defineCollection({
   }),
 });
 
-const docs = defineCollection({
-  loader: glob({ base: "./src/content/docs", pattern: "**/*.{md,mdx}" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    group: z.string(),
-    order: z.number(),
-    full: z.boolean().optional(),
-  }),
-});
-
-const legal = defineCollection({
-  loader: glob({ base: "./src/content/legal", pattern: "**/*.{md,mdx}" }),
-  schema: z.object({
-    title: z.string(),
-    slug: z.string(),
-    description: z.string(),
-    lastUpdated: z.coerce.date(),
-  }),
-});
-
-export const collections = { dispatches, docs, legal };
+export const collections = { dispatches };
