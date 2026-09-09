@@ -21,23 +21,24 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path('src/components/mockups/dashboard.tsx')
           text = path.read_text()
-          old = '''              <img
-                src="/logo.svg"
-                alt="Logo"
-                className="size-6 rounded bg-neutral-100 p-0.5"
-              />'''
-          new = '''              <span
+          pattern = re.compile(
+              r'<img\s+src="/logo\.svg"\s+alt="Logo"\s+className="size-6 rounded bg-neutral-100 p-0\.5"\s*/>',
+              re.MULTILINE,
+          )
+          replacement = '''<span
                 aria-hidden="true"
                 className="flex size-6 items-center justify-center rounded bg-neutral-100 text-[0.65rem] font-semibold text-neutral-900"
               >
                 E
               </span>'''
-          if old not in text:
-              raise SystemExit('Expected dashboard logo block not found')
-          path.write_text(text.replace(old, new, 1))
+          text, count = pattern.subn(replacement, text, count=1)
+          if count != 1:
+              raise SystemExit(f'Expected exactly one dashboard logo block, found {count}')
+          path.write_text(text)
 
           Path('public/_redirects').write_text('/product /features 301\n')
           PY
