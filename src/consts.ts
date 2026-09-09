@@ -1,29 +1,27 @@
 export const SITE_TITLE =
-  "Meridian — one quiet console for logs, metrics, and traces";
+  "Elivate Wallet — A Wallet That Scales With Your Network";
 export const SITE_DESCRIPTION =
-  "OTLP-native observability that pages on error budget burn, not on noise — and auto-drafts the post-mortem before you open the laptop.";
+  "Clear balances, transaction records, withdrawal management, and organization-wide financial visibility for growing member networks.";
 
 export const SITE_METADATA = {
   title: {
     default: SITE_TITLE,
-    template: "%s · Meridian",
+    template: "%s · Elivate Wallet",
   },
   description: SITE_DESCRIPTION,
   keywords: [
-    "Astro",
-    "React",
-    "TypeScript",
-    "TailwindCSS",
-    "Template",
-    "Shadcn/UI",
-    "Landing Page",
-    "SaaS",
-    "Developer Tools",
-    "Observability",
+    "Elivate Wallet",
+    "team financial management",
+    "member balances",
+    "transaction records",
+    "withdrawal management",
+    "financial visibility",
+    "network management",
+    "bookkeeping",
   ],
-  authors: [{ name: "Meridian - Shadcnblocks.com" }],
-  creator: "Meridian - Shadcnblocks.com",
-  publisher: "Meridian",
+  authors: [{ name: "Elivate" }],
+  creator: "Elivate",
+  publisher: "Elivate",
   robots: {
     index: true,
     follow: true,
@@ -40,7 +38,7 @@ export const SITE_METADATA = {
   openGraph: {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    siteName: "Meridian",
+    siteName: "Elivate Wallet",
     images: [
       {
         url: "/og-image.jpg",
@@ -55,6 +53,5 @@ export const SITE_METADATA = {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     images: ["/og-image.jpg"],
-    creator: "@shadcnblocks",
   },
 };
