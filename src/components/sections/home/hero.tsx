@@ -217,9 +217,9 @@ const Hero = () => {
             variants={heading}
             className="max-w-4xl text-5xl leading-[1.05] tracking-tight text-balance md:text-7xl md:leading-[0.95] lg:text-8xl"
           >
-            {renderWords("Built for the hours ", "a")}
+            {renderWords("A Wallet that scales ", "a")}
             <em className="text-muted-foreground">
-              {renderWords("the rest of the team isn't watching.", "b")}
+              {renderWords("with your network.", "b")}
             </em>
           </motion.h1>
 
@@ -228,18 +228,18 @@ const Hero = () => {
               variants={body}
               className="text-muted-foreground max-w-md text-base leading-snug text-balance md:text-lg"
             >
-              Elivate is one console for logs, metrics, and traces. It watches
-              quietly, pages only when budget burn crosses one, and writes the
-              post-mortem before you reach the laptop.
+              Give every member a clear view of their balance and transactions,
+              while your leaders manage income, withdrawals, teams, and financial
+              activity from one place.
             </motion.p>
 
             <motion.div
               variants={body}
               className="flex flex-col items-start gap-3 md:flex-row md:flex-wrap md:items-center md:justify-end"
             >
-              <Button size="lg">Start free trial</Button>
+              <Button size="lg">Get started</Button>
               <Button variant="ghost" size="lg">
-                Watch the tour
+                Book a demo
               </Button>
             </motion.div>
           </div>
@@ -248,9 +248,9 @@ const Hero = () => {
             variants={footer}
             className="text-meta text-muted-foreground mt-12 flex items-center justify-between border-t pt-4 sm:mt-16 md:mt-10"
           >
-            <span className="flex-1">Fig. 01 &middot; api.payments</span>
+            <span className="flex-1">Fig. 01 &middot; Elivate Wallet</span>
             <span className="hidden md:inline">
-              Rendered from the Elivate console
+              Member balances and transactions in one place
             </span>
             <span className="flex-1 text-end">Scroll &darr;</span>
           </motion.div>
