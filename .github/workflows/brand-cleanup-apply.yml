@@ -16,65 +16,48 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Apply safe internal renames
+      - name: Remove legacy content and assets
         shell: bash
         run: |
+          # These pages describe Meridian's unrelated telemetry product and
+          # must not be relabelled as Elivate Wallet legal/docs content.
+          git rm -rf src/content/docs src/pages/docs src/content/legal src/pages/legal || true
+
+          # Remove the purchased template's visual identity until confirmed
+          # Elivate Wallet logo/favicon/social artwork is supplied.
+          git rm -f public/logo.svg public/og-image.jpg || true
+          git rm -rf public/favicon || true
+
+          # The approved information architecture exposes the repurposed
+          # product page at /features.
+          if [ -f src/pages/product.astro ] && [ ! -f src/pages/features.astro ]; then
+            git mv src/pages/product.astro src/pages/features.astro
+          fi
+
           python3 - <<'PY'
           from pathlib import Path
 
-          paths = [
-              'src/hooks/use-loader-ready.ts',
-              'src/lib/highlighter.ts',
-              'src/styles/global.css',
-              'src/components/ui/alert-dialog.tsx',
-              'src/components/sections/home/rift.tsx',
-              'src/components/sections/home/comparison.tsx',
-              'src/components/sections/home/notch.tsx',
-              'src/components/sections/home/hero-alt.tsx',
-              'src/components/sections/home/spec.tsx',
-              'src/components/sections/home/voices.tsx',
-              'src/components/sections/home/bulletin.tsx',
-              'src/components/sections/home/night-shift.tsx',
-              'src/components/sections/home/hero.tsx',
-              'src/components/sections/home/spec-images.tsx',
-              'src/components/sections/product/oracle.tsx',
-              'src/components/sections/product/cta.tsx',
-              'src/components/sections/pricing/ledger.tsx',
-              'src/components/mdx/motion-steps.tsx',
-              'src/components/mockups/log-stream.tsx',
-              'src/components/mockups/watch-alert.tsx',
-              'src/components/mockups/console.tsx',
-          ]
+          feature = Path('src/pages/features.astro')
+          if feature.exists():
+              text = feature.read_text()
+              text = text.replace('title="Product"', 'title="Features"')
+              text = text.replace(
+                  'description="Logs, metrics, and traces in one keyboard-first console. ⌘K to anywhere, SLO-native paging, auto-drafted post-mortems shipped to Linear."',
+                  'description="Manage member balances, transactions, withdrawals, records, and network-wide financial visibility in one place."',
+              )
+              feature.write_text(text)
 
-          for name in paths:
-              path = Path(name)
-              if not path.exists():
+          # Update internal links now that /product is /features.
+          for path in Path('src').rglob('*'):
+              if not path.is_file() or path.suffix not in {'.astro', '.ts', '.tsx', '.js', '.jsx', '.md', '.mdx'}:
                   continue
               text = path.read_text()
-              text = text.replace('MERIDIAN', 'ELIVATE')
-              text = text.replace('Meridian', 'Elivate')
-              text = text.replace('meridian', 'elivate')
-              path.write_text(text)
-
-          lock = Path('package-lock.json')
-          text = lock.read_text().replace('meridian-astro-template', 'elivate-wallet-website')
-          lock.write_text(text)
+              updated = text.replace('"/product', '"/features').replace("'/product", "'/features")
+              if updated != text:
+                  path.write_text(updated)
           PY
 
-          if [ -f src/components/layout/meridian-frame.tsx ]; then
-            git mv src/components/layout/meridian-frame.tsx src/components/layout/elivate-frame.tsx
-            python3 - <<'PY'
-          from pathlib import Path
-          path = Path('src/components/layout/elivate-frame.tsx')
-          text = path.read_text()
-          text = text.replace('MERIDIAN', 'ELIVATE').replace('Meridian', 'Elivate').replace('meridian', 'elivate')
-          path.write_text(text)
-          PY
-          fi
-
-          git rm -f src/lib/meridian-canvas.ts src/components/icons/meridian-logo.tsx src/components/icons/meridian-mark.tsx || true
-
-      - name: Commit safe cleanup
+      - name: Commit cleanup
         shell: bash
         run: |
           if git diff --quiet; then
@@ -83,5 +66,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'Remove remaining safe Meridian implementation references'
+          git commit -m 'Remove remaining Meridian content and assets'
           git push
