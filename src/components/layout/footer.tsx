@@ -14,7 +14,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CONTACT_EMAIL, FOOTER_NAV, SOCIAL } from "@/lib/constants";
+import { FOOTER_NAV, SOCIAL } from "@/lib/constants";
 
 const EASE = cubicBezier(0.16, 1, 0.3, 1);
 const DURATION = { base: 0.6 } as const;
@@ -33,7 +33,7 @@ const fadeUp: Variants = {
   },
 };
 
-const LOGO_TEXT = "Meridian.";
+const LOGO_TEXT = "Elivate.";
 
 const SCATTER = [
   { x: "-180%", y: "-80%", r: -16 },
@@ -133,7 +133,7 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
             End of dispatch
           </span>
           <span className="hidden md:inline">
-            The quietest console of your career
+            Built for growing networks
           </span>
           <span className="flex-1 text-end">2026.04</span>
         </motion.div>
@@ -153,8 +153,8 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
           variants={fadeUp}
           className="text-muted-foreground mx-auto mt-12 max-w-xl text-center text-base leading-relaxed md:text-lg"
         >
-          Quiet is the product. Forty-one teams have run Meridian for ninety
-          days. None of them have asked to go back.
+          Elivate Wallet gives growing networks a clearer way to manage member
+          balances, transactions, withdrawals, and financial records.
         </motion.p>
 
         <motion.form
@@ -221,7 +221,7 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
           variants={fadeUp}
           className="text-meta-xs text-muted-foreground mx-auto mt-4 max-w-md text-center sm:mt-3"
         >
-          One email every fortnight &middot; one click unsub
+          Product notes and practical updates from Elivate
         </motion.p>
 
         <motion.div
@@ -248,10 +248,8 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
           variants={fadeUp}
           className="text-meta text-muted-foreground mx-auto mt-10 flex max-w-3xl flex-wrap items-baseline gap-4"
         >
-          <span className="flex-1">© {copyrightYear} Meridian Co.</span>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-foreground">
-            {CONTACT_EMAIL}
-          </a>
+          <span className="flex-1">© {copyrightYear} Elivate.</span>
+          <span>elivatewallet.com</span>
           <div className="flex flex-1 items-center justify-end gap-4">
             {SOCIAL.map((item) => (
               <a
