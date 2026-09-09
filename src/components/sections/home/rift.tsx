@@ -185,7 +185,7 @@ const Rift = () => {
               style={{ y: rightShift }}
               className="text-right will-change-transform sm:shrink-0"
             >
-              <p className="text-meta opacity-60">Meridian</p>
+              <p className="text-meta opacity-60">Elivate</p>
               <h2 className="mt-4 text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
                 <em className="opacity-60">what</em> held
               </h2>
@@ -197,7 +197,7 @@ const Rift = () => {
           <p className="text-meta opacity-60">How it works &middot; 00</p>
           <p className="text-muted-foreground max-w-xl text-base leading-relaxed md:text-lg">
             Every incident starts as a gap between what the system promised and
-            what actually happened. Meridian keeps that gap visible and
+            what actually happened. Elivate keeps that gap visible and
             annotated &mdash; a live feed of every disruption &mdash; until
             on-call resolves it for good.
           </p>

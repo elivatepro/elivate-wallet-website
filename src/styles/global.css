@@ -318,7 +318,7 @@
 
 /* Subtle pulse for the live indicator dot — accent-color halo with a
    short attack and a long decay, looped. */
-@keyframes meridian-pulse {
+@keyframes elivate-pulse {
   0% {
     box-shadow: 0 0 0 0 oklch(0.65 0.15 60 / 0.55);
   }
@@ -330,12 +330,12 @@
   }
 }
 
-.meridian-pulse {
-  animation: meridian-pulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+.elivate-pulse {
+  animation: elivate-pulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .meridian-pulse,
+  .elivate-pulse,
   .animate-marquee,
   .animate-marquee-vertical {
     animation: none;

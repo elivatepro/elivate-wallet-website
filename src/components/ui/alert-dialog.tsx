@@ -162,7 +162,7 @@ function AlertDialogAction({
       data-slot="alert-dialog-action"
       className={cn(
         buttonVariants({ variant, size }),
-        "meridian-default-surface",
+        "elivate-default-surface",
         className
       )}
       {...props}

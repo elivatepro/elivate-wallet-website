@@ -33,7 +33,7 @@ const WatchAlert = () => (
         </div>
 
         <div className="mt-2 flex flex-1 flex-col items-center text-center md:mt-4">
-          <span className="text-meta opacity-60">Meridian</span>
+          <span className="text-meta opacity-60">Elivate</span>
           <span className="text-meta mt-2 rounded-full bg-red-500 px-2.5 py-1">
             SEV-2
           </span>

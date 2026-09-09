@@ -18,7 +18,7 @@ const LogStream = () => (
     <div className="border-foreground/10 flex items-center justify-between border-b px-4 py-3">
       <div className="text-muted-foreground flex items-center gap-2 font-mono text-xs">
         <span className="bg-destructive size-2 animate-pulse rounded-full" />
-        <span className="hidden sm:inline">meridian/log · </span>
+        <span className="hidden sm:inline">elivate/log · </span>
         api.payments · sev-2
       </div>
       <span className="text-meta border-foreground/15 text-muted-foreground rounded border px-2 py-0.5">

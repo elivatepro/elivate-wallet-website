@@ -235,7 +235,7 @@ const Exchange = ({ exchange, index, start, delayMs }: ExchangeProps) => {
           Exchange 0{index + 1}
         </span>
         <span className="hidden md:inline">
-          meridian.console &middot; /q/
+          elivate.console &middot; /q/
           {index === 0 ? "3fb7c2" : index === 1 ? "8a12de" : "b47f91"}
         </span>
         <span>

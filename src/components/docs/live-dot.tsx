@@ -10,7 +10,7 @@ export const LiveDot = ({ label = "Live edition" }: LiveDotProps) => (
     <span className="relative inline-flex size-1.5">
       <span
         aria-hidden
-        className="meridian-pulse bg-foreground absolute inset-0 rounded-full"
+        className="elivate-pulse bg-foreground absolute inset-0 rounded-full"
       />
     </span>
     <span className="text-foreground/80">{label}</span>

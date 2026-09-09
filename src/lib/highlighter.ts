@@ -164,8 +164,8 @@ const buildSettings = (p: {
   },
 ];
 
-const meridianLight: ThemeRegistrationRaw = {
-  name: "meridian-light",
+const elivateLight: ThemeRegistrationRaw = {
+  name: "elivate-light",
   type: "light",
   colors: {
     "editor.background": "#00000000",
@@ -184,8 +184,8 @@ const meridianLight: ThemeRegistrationRaw = {
   }),
 };
 
-const meridianDark: ThemeRegistrationRaw = {
-  name: "meridian-dark",
+const elivateDark: ThemeRegistrationRaw = {
+  name: "elivate-dark",
   type: "dark",
   colors: {
     "editor.background": "#00000000",
@@ -232,7 +232,7 @@ let highlighterPromise: Promise<Highlighter> | null = null;
 export function getHighlighter() {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighter({
-      themes: [meridianLight, meridianDark],
+      themes: [elivateLight, elivateDark],
       langs: [...SUPPORTED_LANGS],
     });
   }
@@ -245,7 +245,7 @@ export async function highlight(code: string, lang: string) {
   const safeLang = known.has(lang) ? lang : "text";
   return h.codeToHtml(code, {
     lang: safeLang,
-    themes: { light: "meridian-light", dark: "meridian-dark" },
+    themes: { light: "elivate-light", dark: "elivate-dark" },
     defaultColor: false,
   });
 }

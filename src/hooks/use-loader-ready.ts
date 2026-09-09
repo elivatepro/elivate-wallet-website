@@ -1,17 +1,17 @@
 import { useSyncExternalStore } from "react";
 
-export const LOADER_DONE_EVENT = "meridian:loader-done";
+export const LOADER_DONE_EVENT = "elivate:loader-done";
 
 declare global {
   interface Window {
-    __meridianLoaderDone?: boolean;
+    __elivateLoaderDone?: boolean;
   }
 }
 
 export const markLoaderDone = () => {
   if (typeof window === "undefined") return;
-  if (window.__meridianLoaderDone) return;
-  window.__meridianLoaderDone = true;
+  if (window.__elivateLoaderDone) return;
+  window.__elivateLoaderDone = true;
   window.dispatchEvent(new CustomEvent(LOADER_DONE_EVENT));
 };
 
@@ -23,7 +23,7 @@ const subscribe = (callback: () => void) => {
 
 const getSnapshot = () => {
   if (typeof window === "undefined") return false;
-  return !!window.__meridianLoaderDone;
+  return !!window.__elivateLoaderDone;
 };
 
 const getServerSnapshot = () => false;

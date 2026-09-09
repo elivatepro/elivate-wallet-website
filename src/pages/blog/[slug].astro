@@ -71,11 +71,10 @@ const positionStr = String(position).padStart(2, "0");
 const positionRoman = toRoman(position);
 const totalRoman = toRoman(total);
 const author = data.author;
-const authorInitial = author.replace("@", "")[0]?.toUpperCase() ?? "M";
-const lastName = author.replace("@", "");
+const authorInitial = author.replace("@", "")[0]?.toUpperCase() ?? "E";
 ---
 
-<DefaultLayout title={`${data.title} · Meridian Blog`} description={data.dek}>
+<DefaultLayout title={`${data.title} · Elivate Wallet Blog`} description={data.dek}>
   <div class="relative">
     <DottedBackdrop />
 
@@ -287,18 +286,12 @@ const lastName = author.replace("@", "");
                       startOffset="50%"
                       text-anchor="middle"
                     >
-                      MERIDIAN &middot; MMXXVI
+                      ELIVATE &middot; MMXXVI
                     </textPath>
                   </text>
                 </svg>
               </div>
               <div class="mt-6 flex flex-wrap items-center gap-3">
-                <a
-                  href={`mailto:${lastName}@meridian.systems`}
-                  class="bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors"
-                >
-                  Reply to {authorInitial}.
-                </a>
                 <a
                   href="/blog"
                   class="text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors"

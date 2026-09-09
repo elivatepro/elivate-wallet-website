@@ -14,17 +14,18 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image } = Astro.props;
-const finalTitle = title ? `${title} · Meridian` : SITE_METADATA.title.default;
+const finalTitle = title
+  ? SITE_METADATA.title.template.replace("%s", title)
+  : SITE_METADATA.title.default;
 const finalDescription = description || SITE_METADATA.description;
-const finalImage = image || SITE_METADATA.openGraph.images[0].url;
-const imageURL = new URL(finalImage, Astro.site);
+const imageURL = image ? new URL(image, Astro.site) : null;
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta
   name="robots"
-  content={`${SITE_METADATA.robots.index ? "index" : "noindex"}, ${SITE_METADATA.robots.follow ? "follow" : "nofollow"}`
+  content={`${SITE_METADATA.robots.index ? "index" : "noindex"}, ${SITE_METADATA.robots.follow ? "follow" : "nofollow"}`}
 />
 <meta name="keywords" content={SITE_METADATA.keywords.join(", ")} />
 <meta name="author" content={SITE_METADATA.authors[0].name} />
@@ -43,30 +44,8 @@ const imageURL = new URL(finalImage, Astro.site);
   }
 </script>
 
-{
-  SITE_METADATA.icons.icon.map((icon) => (
-    <link
-      rel="icon"
-      type={"type" in icon ? icon.type : undefined}
-      sizes={"sizes" in icon ? icon.sizes : undefined}
-      href={icon.url}
-    />
-  ))
-}
-{
-  SITE_METADATA.icons.apple.map((icon) => (
-    <link rel="apple-touch-icon" sizes={icon.sizes} href={icon.url} />
-  ))
-}
-{
-  SITE_METADATA.icons.shortcut.map((icon) => (
-    <link rel="shortcut icon" href={icon.url} />
-  ))
-}
-
 <link rel="sitemap" href="/sitemap-index.xml" />
 <meta name="generator" content={Astro.generator} />
-
 <link rel="canonical" href={canonicalURL} />
 
 <title>{finalTitle}</title>
@@ -78,23 +57,13 @@ const imageURL = new URL(finalImage, Astro.site);
 <meta property="og:site_name" content={SITE_METADATA.openGraph.siteName} />
 <meta property="og:title" content={finalTitle} />
 <meta property="og:description" content={finalDescription} />
-<meta property="og:image" content={imageURL} />
-<meta
-  property="og:image:width"
-  content={SITE_METADATA.openGraph.images[0].width.toString()}
-/>
-<meta
-  property="og:image:height"
-  content={SITE_METADATA.openGraph.images[0].height.toString()}
-/>
-<meta property="og:image:alt" content={SITE_METADATA.openGraph.images[0].alt} />
+{imageURL && <meta property="og:image" content={imageURL} />}
 
 <meta property="twitter:card" content={SITE_METADATA.twitter.card} />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={finalTitle} />
 <meta property="twitter:description" content={finalDescription} />
-<meta property="twitter:image" content={imageURL} />
-<meta property="twitter:creator" content={SITE_METADATA.twitter.creator} />
+{imageURL && <meta property="twitter:image" content={imageURL} />}
 
 <Font cssVariable="--font-family-sans" preload />
 <Font cssVariable="--font-family-display" preload />

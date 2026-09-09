@@ -188,11 +188,12 @@ const Dashboard = () => {
         <aside className="hidden border-r border-neutral-800 py-4 md:block">
           <div className="px-4 pb-4">
             <div className="flex items-center gap-2">
-              <img
-                src="/logo.svg"
-                alt="Logo"
-                className="size-6 rounded bg-neutral-100 p-0.5"
-              />
+              <span
+      aria-hidden="true"
+      className="flex size-6 items-center justify-center rounded bg-neutral-100 text-[0.65rem] font-semibold text-neutral-900"
+    >
+      E
+    </span>
               <span className="text-xs font-medium text-neutral-100">
                 Acme Inc
               </span>

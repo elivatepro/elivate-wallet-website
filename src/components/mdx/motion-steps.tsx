@@ -7,7 +7,7 @@ import { motion, useInView } from "motion/react";
 const EASE = [0.32, 0.72, 0, 1] as const;
 
 export const MotionSteps = ({ children }: { children: React.ReactNode }) => (
-  <ol className="not-prose mt-8 space-y-8" data-meridian-steps>
+  <ol className="not-prose mt-8 space-y-8" data-elivate-steps>
     {children}
   </ol>
 );

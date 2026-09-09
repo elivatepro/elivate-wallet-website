@@ -16,7 +16,7 @@ import {
   type Variants,
 } from "motion/react";
 
-import { MeridianFrame } from "@/components/layout/meridian-frame";
+import { ElivateFrame } from "@/components/layout/elivate-frame";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
@@ -55,7 +55,7 @@ const ACTIVITIES: Activity[] = [
     id: "build",
     slot: "right",
     label: "Build",
-    value: "meridian#41b2",
+    value: "elivate#41b2",
     compact: <BuildIcon />,
     expanded: <BuildExpanded />,
   },
@@ -118,7 +118,7 @@ const Notch = () => {
       viewport={{ once: true, margin: "-100px" }}
       className="section-padding container"
     >
-      <MeridianFrame borderWidth={12} radius={0}>
+      <ElivateFrame borderWidth={12} radius={0}>
         <div className="mx-auto max-w-5xl px-6 py-12 md:px-12 md:py-16 lg:px-20 lg:py-24">
           <motion.div
             variants={fadeUp}
@@ -236,7 +236,7 @@ const Notch = () => {
               </Tabs>
 
               <p className="text-muted-foreground mt-4 border-t pt-4 text-sm leading-relaxed md:text-base">
-                Deploys, builds, incidents, and commute ETA — Meridian surfaces
+                Deploys, builds, incidents, and commute ETA — Elivate surfaces
                 them in the Dynamic Island without unlocking your phone or
                 opening an app. Tap to switch, or let it cycle automatically.
               </p>
@@ -247,7 +247,7 @@ const Notch = () => {
             </div>
           </motion.div>
         </div>
-      </MeridianFrame>
+      </ElivateFrame>
     </motion.section>
   );
 };
@@ -330,7 +330,7 @@ const Phone = ({ active }: { active: Activity }) => {
             <div className="flex items-center justify-between text-[10px] text-[#1c1c1e]/55">
               <span className="flex items-center gap-1.5 font-semibold tracking-tight">
                 <span className="bg-accent inline-block size-1.5 rounded-full" />
-                Meridian
+                Elivate
               </span>
               <span>now</span>
             </div>

@@ -31,18 +31,6 @@ const ROWS = [
   { num: "III", label: "Message" },
 ] as const;
 
-const STATS = [
-  { value: "04", label: "hr reply" },
-  { value: "1", label: "inbox" },
-  { value: "0", label: "bots" },
-] as const;
-
-const FOOTNOTES = [
-  { tag: "A", title: "Letterbox", body: "talk@meridian.systems" },
-  { tag: "B", title: "Hotline", body: "+1 415 555 0148 · 24h" },
-  { tag: "C", title: "Office", body: "Brooklyn · Lisbon · Kyoto" },
-] as const;
-
 const ContactForm = () => {
   const {
     name,
@@ -73,23 +61,13 @@ const ContactForm = () => {
           >
             <span className="text-meta text-muted-foreground">Contact</span>
             <h2 className="mt-3 text-4xl leading-[1.1] tracking-tight text-balance md:text-5xl">
-              <em className="text-muted-foreground">Write us</em> a message.
+              <em className="text-muted-foreground">Tell us</em> what you need.
             </h2>
             <p className="text-muted-foreground mt-6 max-w-sm text-base leading-relaxed md:mt-8 md:text-lg">
-              We reply within the day, usually inside four hours. Three offices
-              share the inbox in rotation, so someone is almost always awake.
-              The sooner you reach out, the sooner we can help.
+              Share your network size, how you currently manage member balances
+              and transactions, and the problem you want to solve. That gives us
+              the context to understand the right next step.
             </p>
-            <ul className="text-meta-xs border-foreground/20 mt-10 grid grid-cols-3 gap-3 border-t pt-5">
-              {STATS.map((s) => (
-                <li key={s.label}>
-                  <div className="font-display text-foreground text-3xl leading-none tracking-tighter md:text-4xl">
-                    {s.value}
-                  </div>
-                  <div className="text-muted-foreground mt-2">{s.label}</div>
-                </li>
-              ))}
-            </ul>
           </motion.div>
 
           <motion.form
@@ -127,7 +105,7 @@ const ContactForm = () => {
                   autoComplete="name"
                   onChange={(e) => setName(e.target.value)}
                   disabled={status !== "idle"}
-                  placeholder="Anika Roy"
+                  placeholder="Your name"
                   className="border-foreground/25 bg-foreground/5 focus-visible:border-foreground h-12 text-base focus-visible:ring-0"
                 />
               </ContactRow>
@@ -143,7 +121,7 @@ const ContactForm = () => {
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={status !== "idle"}
-                  placeholder="anika@example.com"
+                  placeholder="you@example.com"
                   className="border-foreground/25 bg-foreground/5 focus-visible:border-foreground h-12 text-base focus-visible:ring-0"
                 />
               </ContactRow>
@@ -157,7 +135,7 @@ const ContactForm = () => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   disabled={status !== "idle"}
-                  placeholder="What's on your mind?"
+                  placeholder="Tell us about your network and what you want to improve."
                   rows={6}
                   className="border-foreground/25 bg-foreground/5 focus-visible:border-foreground resize-y text-base focus-visible:ring-0"
                 />
@@ -176,7 +154,7 @@ const ContactForm = () => {
               >
                 <span className="font-display text-base leading-tight tracking-tight md:text-lg">
                   {status === "success"
-                    ? "Sent ✓ · we'll reply within 4h"
+                    ? "Message received ✓"
                     : status === "submitting"
                       ? "Sending…"
                       : "Send message"}
@@ -184,22 +162,6 @@ const ContactForm = () => {
                 <span className="text-meta-xs opacity-70">↵ enter</span>
               </button>
             </div>
-
-            <ul className="text-meta-xs border-foreground/20 mt-10 grid grid-cols-1 gap-6 border-t pt-6 lg:grid-cols-3">
-              {FOOTNOTES.map((f) => (
-                <li key={f.tag} className="flex items-baseline gap-3">
-                  <span className="font-display text-foreground text-2xl leading-none tracking-tighter">
-                    {f.tag}
-                  </span>
-                  <div>
-                    <div className="text-muted-foreground">{f.title}</div>
-                    <div className="text-foreground mt-1 font-mono text-xs">
-                      {f.body}
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
           </motion.form>
         </div>
       </div>

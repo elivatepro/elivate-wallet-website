@@ -1,6 +1,6 @@
 /* Elivate Wallet brand layer.
  *
- * Meridian's neutral light/dark system stays intact. Brand colour is a
+ * The template's neutral light/dark system stays intact. Brand colour is a
  * deliberate signal layer rather than a replacement for every semantic
  * "primary" or "accent" token.
  */
@@ -26,7 +26,7 @@
   --brand-ring: #ff7f4f;
   --chart-brand: #ff7f4f;
 
-  /* Meridian's stock theme leaves one unrelated blue token in dark mode.
+  /* The stock theme leaves one unrelated blue token in dark mode.
    * Restore the neutral inverse instead of turning the whole primary system
    * into brand orange. */
   --sidebar-primary: oklch(0.922 0 0);
@@ -34,7 +34,7 @@
 }
 
 /* Small reusable brand primitives for components that need an intentional
- * Elivate signal without changing Meridian's global semantic tokens. */
+ * Elivate signal without changing the template's global semantic tokens. */
 .brand-surface {
   background: var(--brand);
   color: var(--brand-foreground);
@@ -57,9 +57,8 @@
   border-color: var(--brand-border);
 }
 
-/* Existing live indicator: keep the same motion, replace Meridian's amber
- * halo with the Elivate logo orange. */
-@keyframes meridian-pulse {
+/* Existing live indicator: keep the same motion with the Elivate logo orange. */
+@keyframes elivate-pulse {
   0% {
     box-shadow: 0 0 0 0 rgb(255 127 79 / 55%);
   }
@@ -71,10 +70,10 @@
   }
 }
 
-/* Warm only the rare coloured flashes in Meridian's chrome fallback.
+/* Warm only the rare coloured flashes in the chrome fallback.
  * The metallic greys stay untouched. !important is intentional here because
  * ButtonStyles injects its fallback CSS from the component at runtime. */
-.meridian-fallback-silver {
+.elivate-fallback-silver {
   background: conic-gradient(
     from var(--chrome-angle),
     #1f2429 0%,

@@ -11,7 +11,7 @@ import {
   type Variants,
 } from "motion/react";
 
-import { MeridianFrame } from "@/components/layout/meridian-frame";
+import { ElivateFrame } from "@/components/layout/elivate-frame";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -95,7 +95,7 @@ const SPEC_ROWS: SpecRow[] = [
     key: "E",
     label: "Query speed",
     value: "p95 queries under 120 ms worldwide",
-    detail: "Fast reads from every region Meridian runs in.",
+    detail: "Fast reads from every region Elivate runs in.",
     image: "/images/spec/5.png",
   },
   {
@@ -198,7 +198,7 @@ const SpecImages = () => {
             style={{ y: headlineParallax, willChange: "transform" }}
             className="text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]"
           >
-            Meridian, <em className="text-muted-foreground">at a glance.</em>
+            Elivate, <em className="text-muted-foreground">at a glance.</em>
           </motion.h2>
           <Stamp />
         </div>
@@ -209,7 +209,7 @@ const SpecImages = () => {
             className="group/fig sticky top-16 z-20 flex flex-col gap-4 md:static md:z-auto md:justify-between md:gap-8 lg:gap-10"
           >
             <motion.div variants={fadeUp}>
-              <MeridianFrame borderWidth={8} radius={0}>
+              <ElivateFrame borderWidth={8} radius={0}>
                 <div className="relative aspect-square overflow-hidden bg-black">
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -243,7 +243,7 @@ const SpecImages = () => {
                     </AnimatePresence>
                   </div>
                 </div>
-              </MeridianFrame>
+              </ElivateFrame>
             </motion.div>
             <motion.figcaption
               variants={fadeUp}

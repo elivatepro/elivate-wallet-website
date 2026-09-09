@@ -3,9 +3,9 @@
 import { type RefObject, useEffect, useRef, useState } from "react";
 
 export type Surface = "dark" | "light";
-export type MeridianTheme = "chrome" | "silver" | "red" | "platinum";
+export type ElivateTheme = "chrome" | "silver" | "red" | "platinum";
 
-export type MeridianConfig = {
+export type ElivateConfig = {
   /** Global animation speed multiplier (0 = paused). */
   speed?: number;
   /** Speed variance (0 = uniform, higher = more reversals / accelerations). */
@@ -30,7 +30,7 @@ export type MeridianConfig = {
   borderWidth?: number;
 };
 
-export type MeridianThemeConfig = {
+export type ElivateThemeConfig = {
   chromeDark: readonly [number, number, number];
   chromeBright: readonly [number, number, number];
   rainbowScale: number;
@@ -38,9 +38,9 @@ export type MeridianThemeConfig = {
 };
 
 // Two shader tunings — the dark orb feels glassy and deep, the light one
-// feels flowy and bright. Both are `Required<MeridianConfig>` so any field the
+// feels flowy and bright. Both are `Required<ElivateConfig>` so any field the
 // user doesn't override still has a concrete value.
-export const MERIDIAN_DEFAULTS: Record<Surface, Required<MeridianConfig>> = {
+export const ELIVATE_DEFAULTS: Record<Surface, Required<ElivateConfig>> = {
   dark: {
     speed: 1.4,
     warpAmount: 0.5,
@@ -69,37 +69,34 @@ export const MERIDIAN_DEFAULTS: Record<Surface, Required<MeridianConfig>> = {
   },
 };
 
-// Only `chrome` differs per-surface — its peak highlight drops from
-// near-white (light) to bright silver (dark) so the ring stays visible
-// against the different interiors. `silver` / `red` are surface-agnostic.
-export const MERIDIAN_THEMES: Record<
+export const ELIVATE_THEMES: Record<
   Surface,
-  Record<MeridianTheme, MeridianThemeConfig>
+  Record<ElivateTheme, ElivateThemeConfig>
 > = {
   dark: {
     chrome: {
       chromeDark: [0.12, 0.14, 0.18],
       chromeBright: [0.96, 0.98, 1.0],
       rainbowScale: 1,
-      fallbackClass: "meridian-fallback-silver",
+      fallbackClass: "elivate-fallback-silver",
     },
     silver: {
       chromeDark: [0.4, 0.43, 0.5],
       chromeBright: [0.99, 1.0, 1.0],
       rainbowScale: 0,
-      fallbackClass: "meridian-fallback-silver",
+      fallbackClass: "elivate-fallback-silver",
     },
     red: {
       chromeDark: [0.55, 0.14, 0.14],
       chromeBright: [1.0, 0.92, 0.92],
       rainbowScale: 0,
-      fallbackClass: "meridian-fallback-red",
+      fallbackClass: "elivate-fallback-red",
     },
     platinum: {
       chromeDark: [0.78, 0.8, 0.85],
       chromeBright: [1.0, 1.0, 1.0],
       rainbowScale: 0.35,
-      fallbackClass: "meridian-fallback-silver",
+      fallbackClass: "elivate-fallback-silver",
     },
   },
   light: {
@@ -107,25 +104,25 @@ export const MERIDIAN_THEMES: Record<
       chromeDark: [0.32, 0.36, 0.44],
       chromeBright: [0.99, 1.0, 1.0],
       rainbowScale: 1,
-      fallbackClass: "meridian-fallback-silver",
+      fallbackClass: "elivate-fallback-silver",
     },
     silver: {
       chromeDark: [0.4, 0.43, 0.5],
       chromeBright: [0.99, 1.0, 1.0],
       rainbowScale: 0,
-      fallbackClass: "meridian-fallback-silver",
+      fallbackClass: "elivate-fallback-silver",
     },
     red: {
       chromeDark: [0.55, 0.14, 0.14],
       chromeBright: [1.0, 0.92, 0.92],
       rainbowScale: 0,
-      fallbackClass: "meridian-fallback-red",
+      fallbackClass: "elivate-fallback-red",
     },
     platinum: {
       chromeDark: [0.78, 0.8, 0.85],
       chromeBright: [1.0, 1.0, 1.0],
       rainbowScale: 0.35,
-      fallbackClass: "meridian-fallback-silver",
+      fallbackClass: "elivate-fallback-silver",
     },
   },
 };
@@ -227,9 +224,6 @@ const FRAGMENT_SHADER = `
 `;
 
 function compileShader(gl: WebGLRenderingContext, type: number, src: string) {
-  // Strict-mode double-effect or a real driver context loss leaves the
-  // gl handle pointing at a lost context — compile returns false with a
-  // null infoLog. Skip silently instead of logging noise.
   if (gl.isContextLost()) return null;
   const shader = gl.createShader(type);
   if (!shader) return null;
@@ -244,44 +238,39 @@ function compileShader(gl: WebGLRenderingContext, type: number, src: string) {
   return shader;
 }
 
-// Self-cap below the browser's WebGL limit (Safari ~8, Chrome ~16).
-// Exceeding it evicts older contexts, so callers past this cap skip
-// WebGL and show their fallback. Bumped for the buttons showcase
-// page — revert to 6 if Safari users start losing earlier shaders.
 const MAX_WEBGL_CONTEXTS = 16;
 let activeWebGLContexts = 0;
 
-export type UseMeridianCanvasOptions = {
+export type UseElivateCanvasOptions = {
   surface: Surface;
-  theme: MeridianTheme;
-  meridian?: MeridianConfig;
+  theme: ElivateTheme;
+  elivate?: ElivateConfig;
   fallback?: boolean;
 };
 
 /**
  * Drives a chrome-shader animation on the given canvas. Returns whether
- * WebGL failed (context cap, getContext null, compile/link failure) so
- * the caller can render its CSS fallback.
+ * WebGL failed so the caller can render its CSS fallback.
  */
-export function useMeridianCanvas(
+export function useElivateCanvas(
   canvasRef: RefObject<HTMLCanvasElement | null>,
-  { surface, theme, meridian = {}, fallback = false }: UseMeridianCanvasOptions,
+  { surface, theme, elivate = {}, fallback = false }: UseElivateCanvasOptions,
 ) {
-  const themeConfig = MERIDIAN_THEMES[surface][theme];
-  const defaults = MERIDIAN_DEFAULTS[surface];
+  const themeConfig = ELIVATE_THEMES[surface][theme];
+  const defaults = ELIVATE_DEFAULTS[surface];
   const [webglFailed, setWebglFailed] = useState(fallback);
 
-  const speed = meridian.speed ?? defaults.speed;
-  const warpAmount = meridian.warpAmount ?? defaults.warpAmount;
-  const patternScale = meridian.patternScale ?? defaults.patternScale;
-  const driftSpeed = meridian.driftSpeed ?? defaults.driftSpeed;
-  const rainbowRarity = meridian.rainbowRarity ?? defaults.rainbowRarity;
+  const speed = elivate.speed ?? defaults.speed;
+  const warpAmount = elivate.warpAmount ?? defaults.warpAmount;
+  const patternScale = elivate.patternScale ?? defaults.patternScale;
+  const driftSpeed = elivate.driftSpeed ?? defaults.driftSpeed;
+  const rainbowRarity = elivate.rainbowRarity ?? defaults.rainbowRarity;
   const rainbowIntensity =
-    meridian.rainbowIntensity ?? defaults.rainbowIntensity;
-  const specBrightness = meridian.specBrightness ?? defaults.specBrightness;
-  const specWidth = meridian.specWidth ?? defaults.specWidth;
-  const chromeContrast = meridian.chromeContrast ?? defaults.chromeContrast;
-  const hueShiftRate = meridian.hueShiftRate ?? defaults.hueShiftRate;
+    elivate.rainbowIntensity ?? defaults.rainbowIntensity;
+  const specBrightness = elivate.specBrightness ?? defaults.specBrightness;
+  const specWidth = elivate.specWidth ?? defaults.specWidth;
+  const chromeContrast = elivate.chromeContrast ?? defaults.chromeContrast;
+  const hueShiftRate = elivate.hueShiftRate ?? defaults.hueShiftRate;
 
   const cfgRef = useRef({
     speed,
@@ -380,10 +369,7 @@ export function useMeridianCanvas(
     const uPatternScale = gl.getUniformLocation(program, "uPatternScale");
     const uDriftSpeed = gl.getUniformLocation(program, "uDriftSpeed");
     const uRainbowRarity = gl.getUniformLocation(program, "uRainbowRarity");
-    const uRainbowIntensity = gl.getUniformLocation(
-      program,
-      "uRainbowIntensity",
-    );
+    const uRainbowIntensity = gl.getUniformLocation(program, "uRainbowIntensity");
     const uSpecBrightness = gl.getUniformLocation(program, "uSpecBrightness");
     const uSpecWidth = gl.getUniformLocation(program, "uSpecWidth");
     const uChromeContrast = gl.getUniformLocation(program, "uChromeContrast");
@@ -407,7 +393,6 @@ export function useMeridianCanvas(
     let raf = 0;
     let lastNow = performance.now();
     let contextLost = false;
-    // Integrated time — speed changes scale the rate instead of jumping.
     let shaderT = reduceMotion ? 7.3 : 0;
 
     const onLost = (e: Event) => {

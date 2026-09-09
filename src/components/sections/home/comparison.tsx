@@ -80,7 +80,7 @@ const Comparison = () => (
       <div>
         <div className="text-meta text-muted-foreground">Us</div>
         <div className="font-display text-6xl leading-none tracking-tighter md:text-8xl">
-          Meridian.
+          Elivate.
         </div>
       </div>
       <div className="md:text-right">
@@ -130,7 +130,7 @@ const Comparison = () => (
           </div>
           <div className="mt-3 space-y-2.5">
             <div className="flex items-baseline gap-3">
-              <Badge className="shrink-0">Meridian</Badge>
+              <Badge className="shrink-0">Elivate</Badge>
               <p className="font-display text-lg leading-snug tracking-tight">
                 {row.us}
               </p>

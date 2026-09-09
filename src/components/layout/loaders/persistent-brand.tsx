@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { motion } from "motion/react";
 
-import { MeridianLogo } from "@/components/icons/meridian-logo";
 import { usePathname } from "@/hooks/use-pathname";
 import { cn } from "@/lib/utils";
 
@@ -16,11 +15,11 @@ const LETTER_STAGGER = 0.04;
 const LETTER_DELAY = 0.22;
 const MAX_SCALE = 5;
 const VIEWPORT_RATIO = 0.82;
+const BRAND_TEXT = "Elivate Wallet";
 
 const computeScale = () => {
   const w = window.innerWidth;
-  const hasMark = w >= 768;
-  const naturalWidth = hasMark ? 208 : 165;
+  const naturalWidth = 240;
   return Math.min(MAX_SCALE, (w * VIEWPORT_RATIO) / naturalWidth);
 };
 
@@ -46,9 +45,6 @@ export function PersistentBrand({
   const brandRef = useRef<HTMLAnchorElement>(null);
   const pathname = usePathname();
   const inDocs = pathname?.startsWith("/docs") ?? false;
-  // Skipped-intro path mounts directly at phase="done", so the wrapper
-  // would paint at viewport center before the gsap.set snap. Hide it
-  // until the first positioning pass commits.
   const initialDoneRef = useRef(phase === "done");
   const [doneReady, setDoneReady] = useState(false);
   const hideForInitialDone =
@@ -89,10 +85,6 @@ export function PersistentBrand({
     }
 
     const targetRect = target.getBoundingClientRect();
-    // The wrapper's `left/top: 50%` resolves against the containing block
-    // (clientWidth/clientHeight — excludes the scrollbar), but innerWidth
-    // includes it. Using innerWidth here offsets the landing by half the
-    // scrollbar width, which puts the logo a few px left of the container.
     const cbWidth = document.documentElement.clientWidth;
     const cbHeight = document.documentElement.clientHeight;
     const deltaX = targetRect.left + targetRect.width / 2 - cbWidth / 2;
@@ -126,7 +118,6 @@ export function PersistentBrand({
       if (!brand) return;
       const target = findVisibleTarget();
       if (!target) {
-        // No visible slot (e.g. mobile). Hide instead of stranding it at center.
         gsap.set(brand, { opacity: 0 });
         return;
       }
@@ -147,7 +138,7 @@ export function PersistentBrand({
   }, [phase, inDocs]);
 
   const showContent = phase !== "cycle";
-  const letters = "Meridian".split("");
+  const letters = BRAND_TEXT.split("");
 
   return (
     <div
@@ -162,59 +153,27 @@ export function PersistentBrand({
       <a
         ref={brandRef}
         href="/"
-        aria-label="Meridian — home"
-        className="font-display pointer-events-auto inline-flex shrink-0 origin-center items-center gap-2.5 text-3xl leading-none tracking-tight whitespace-nowrap text-white will-change-transform"
+        aria-label="Elivate Wallet — home"
+        className="font-display pointer-events-auto inline-flex shrink-0 origin-center items-center text-3xl leading-none tracking-tight whitespace-nowrap text-white will-change-transform"
       >
         {showContent ? (
-          <>
-            <motion.span
-              initial={{ opacity: 0, y: -18, scale: 0.94 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={
-                reduced
-                  ? { duration: 0.3, ease: SOFT_EASE }
-                  : { type: "spring", stiffness: 110, damping: 18 }
-              }
-              className="hidden size-9 shrink-0 md:block"
-            >
-              <MeridianLogo aria-hidden className="size-full" />
-            </motion.span>
-            <span>
-              {letters.map((char, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, filter: "blur(8px)", scale: 0.92 }}
-                  animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-                  transition={{
-                    duration: reduced ? 0.3 : 0.5,
-                    ease: SOFT_EASE,
-                    delay: reduced ? 0 : LETTER_DELAY + i * LETTER_STAGGER,
-                  }}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
-              <motion.sup
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={
-                  reduced
-                    ? { duration: 0.3, ease: SOFT_EASE, delay: 0.5 }
-                    : {
-                        type: "spring",
-                        stiffness: 180,
-                        damping: 18,
-                        delay:
-                          LETTER_DELAY + letters.length * LETTER_STAGGER + 0.1,
-                      }
-                }
-                className="align-super text-sm"
+          <span>
+            {letters.map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, filter: "blur(8px)", scale: 0.92 }}
+                animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+                transition={{
+                  duration: reduced ? 0.3 : 0.5,
+                  ease: SOFT_EASE,
+                  delay: reduced ? 0 : LETTER_DELAY + i * LETTER_STAGGER,
+                }}
+                className="inline-block"
               >
-                ®
-              </motion.sup>
-            </span>
-          </>
+                {char === " " ? "\u00a0" : char}
+              </motion.span>
+            ))}
+          </span>
         ) : null}
       </a>
     </div>
