@@ -26,7 +26,7 @@ const fadeUp: Variants = {
 
 const QUOTES = [
   {
-    text: "We closed our first week of Meridian with one page and no laptop opened. The post-mortem was waiting in Linear when I got up.",
+    text: "We closed our first week of Elivate with one page and no laptop opened. The post-mortem was waiting in Linear when I got up.",
     name: "L. Chen",
     role: "SRE Lead",
     org: "Basin",
@@ -34,7 +34,7 @@ const QUOTES = [
     filed: "Filed · Brooklyn · 2026.03",
   },
   {
-    text: "I stopped dreading on-call. Meridian decides what's worth waking me for, and it's almost always right.",
+    text: "I stopped dreading on-call. Elivate decides what's worth waking me for, and it's almost always right.",
     name: "M. Okafor",
     role: "Platform Lead",
     org: "Compass",

@@ -1,4 +1,4 @@
-// Meridian console mockup — main product surface, used across sections
+// Elivate console mockup — main product surface, used across sections
 
 const SIDEBAR_SERVICES = [
   { name: "api.payments", status: "warn" },
@@ -52,7 +52,7 @@ const Console = () => (
         <span className="bg-foreground/20 size-2.5 rounded-full" />
         <span className="bg-foreground/20 size-2.5 rounded-full" />
         <span className="text-muted-foreground ml-4 hidden font-mono text-xs sm:inline">
-          meridian &middot; api.payments &middot; us-east-1
+          elivate &middot; api.payments &middot; us-east-1
         </span>
       </div>
       <div className="text-meta text-muted-foreground flex items-center gap-2">

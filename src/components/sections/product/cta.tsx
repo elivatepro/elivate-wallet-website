@@ -152,7 +152,7 @@ const SilencePlate = () => (
       <div className="bg-foreground/5 relative aspect-[16/10] overflow-hidden">
         <img
           src="/images/product/silence.png"
-          alt="A night-shift desk overlooking the coast: lamp, ledger, mug, and a Meridian console reading 99.97% silence over 24 hours"
+          alt="A night-shift desk overlooking the coast: lamp, ledger, mug, and a Elivate console reading 99.97% silence over 24 hours"
           sizes="(min-width: 1024px) 24rem, (min-width: 640px) 22rem, 92vw"
           className="absolute inset-0 size-full object-cover transition-transform duration-[1400ms] ease-out group-hover/plate:scale-[1.03]"
         />

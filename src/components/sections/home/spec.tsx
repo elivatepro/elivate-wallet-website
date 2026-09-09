@@ -98,7 +98,7 @@ const SPEC_ROWS: SpecRow[] = [
     key: "E",
     label: "Query speed",
     value: "p95 queries under 120 ms worldwide",
-    detail: "Fast reads from every region Meridian runs in.",
+    detail: "Fast reads from every region Elivate runs in.",
   },
   {
     key: "F",
@@ -210,7 +210,7 @@ const Spec = () => {
             style={{ y: headlineParallax, willChange: "transform" }}
             className="text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]"
           >
-            Meridian, <em className="text-muted-foreground">at a glance.</em>
+            Elivate, <em className="text-muted-foreground">at a glance.</em>
           </motion.h2>
           <Stamp />
         </div>

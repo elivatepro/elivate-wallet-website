@@ -24,7 +24,7 @@ const fadeUp: Variants = {
 
 const STATS = [
   { value: "217", label: "Alerts per week · before", inverted: false },
-  { value: "2", label: "Alerts per week · on Meridian", inverted: true },
+  { value: "2", label: "Alerts per week · on Elivate", inverted: true },
   { value: "215", label: "Alerts you never see", inverted: false },
 ] as const;
 
@@ -66,7 +66,7 @@ const Bulletin = () => (
           <em className="text-muted-foreground">with confidence.</em>
         </h2>
         <p className="text-muted-foreground mt-6 max-w-xl text-base leading-relaxed md:mt-8 md:text-lg">
-          Forty-one teams ran Meridian for ninety days. They went from two
+          Forty-one teams ran Elivate for ninety days. They went from two
           hundred alerts a week down to two. Not one team has asked to switch
           back.
         </p>

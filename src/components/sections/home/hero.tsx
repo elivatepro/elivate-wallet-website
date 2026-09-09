@@ -228,7 +228,7 @@ const Hero = () => {
               variants={body}
               className="text-muted-foreground max-w-md text-base leading-snug text-balance md:text-lg"
             >
-              Meridian is one console for logs, metrics, and traces. It watches
+              Elivate is one console for logs, metrics, and traces. It watches
               quietly, pages only when budget burn crosses one, and writes the
               post-mortem before you reach the laptop.
             </motion.p>
@@ -250,7 +250,7 @@ const Hero = () => {
           >
             <span className="flex-1">Fig. 01 &middot; api.payments</span>
             <span className="hidden md:inline">
-              Rendered from the Meridian console
+              Rendered from the Elivate console
             </span>
             <span className="flex-1 text-end">Scroll &darr;</span>
           </motion.div>

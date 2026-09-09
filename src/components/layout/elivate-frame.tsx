@@ -3,26 +3,26 @@
 import { type ReactNode, useRef } from "react";
 
 import {
-  type MeridianConfig,
-  type MeridianTheme,
+  type ElivateConfig,
+  type ElivateTheme,
   type Surface,
-  useMeridianCanvas,
-} from "@/lib/meridian-canvas";
+  useElivateCanvas,
+} from "@/lib/elivate-canvas";
 import { cn } from "@/lib/utils";
 
-type MeridianFrameProps = {
+type ElivateFrameProps = {
   children: ReactNode;
   className?: string;
   innerClassName?: string;
   surface?: Surface;
-  theme?: MeridianTheme;
+  theme?: ElivateTheme;
   borderWidth?: number;
   /** Outer corner radius in rem. Inner radius auto-derives from borderWidth. */
   radius?: number;
-  meridian?: MeridianConfig;
+  elivate?: ElivateConfig;
 };
 
-const MeridianFrame = ({
+const ElivateFrame = ({
   children,
   className,
   innerClassName,
@@ -30,13 +30,13 @@ const MeridianFrame = ({
   theme = "chrome",
   borderWidth = 2,
   radius = 1,
-  meridian,
-}: MeridianFrameProps) => {
+  elivate,
+}: ElivateFrameProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const webglFailed = useMeridianCanvas(canvasRef, {
+  const webglFailed = useElivateCanvas(canvasRef, {
     surface,
     theme,
-    meridian,
+    elivate,
   });
 
   return (
@@ -69,4 +69,4 @@ const MeridianFrame = ({
   );
 };
 
-export { MeridianFrame };
+export { ElivateFrame };

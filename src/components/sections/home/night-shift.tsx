@@ -54,7 +54,7 @@ const STEPS: {
     step: "02",
     label: "Detect",
     title: "Critical incidents detected.",
-    body: "Meridian monitors your SLO, not raw CPU graphs. An incident room opens automatically before anyone opens a laptop.",
+    body: "Elivate monitors your SLO, not raw CPU graphs. An incident room opens automatically before anyone opens a laptop.",
   },
   {
     id: "draft",

@@ -215,7 +215,7 @@ const TicketCard = ({ tier }: { tier: Tier }) => {
             dashed,
           )}
         >
-          <span>Meridian · {tier.name}</span>
+          <span>Elivate · {tier.name}</span>
           <span className={muted}>№ {tier.auth}</span>
         </div>
 

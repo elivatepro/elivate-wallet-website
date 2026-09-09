@@ -69,7 +69,7 @@ const HeroAlt = ({ className, asHero = true }: HeroAltProps) => {
           </Heading>
           <div className="max-w-2xl">
             <p className="text-muted-foreground text-center text-xl font-medium md:text-left">
-              Meridian replaces noisy dashboards with a single observability
+              Elivate replaces noisy dashboards with a single observability
               console that only pages you when it matters.
             </p>
           </div>
