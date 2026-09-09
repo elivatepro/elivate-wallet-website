@@ -1,6 +1,5 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
-import Banner from "@/components/layout/banner";
 import Footer from "@/components/layout/footer";
 import { IntroLoader } from "@/components/layout/loaders/intro-loader";
 import Navbar from "@/components/layout/navbar";
@@ -23,13 +22,8 @@ const isHome = Astro.url.pathname === "/";
     <BaseHead title={title} description={description} image={image} />
   </head>
   <body>
-    <Banner
-      url="https://www.shadcnblocks.com/template/meridian"
-      initialVisible={true}
-      client:load
-    />
     {isHome && <IntroLoader client:load />}
-    <Navbar initialBannerVisible={true} client:load />
+    <Navbar initialBannerVisible={false} client:load />
     <main>
       <slot />
     </main>
