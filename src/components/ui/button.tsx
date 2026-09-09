@@ -6,19 +6,19 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
 import {
-  MERIDIAN_DEFAULTS,
-  MERIDIAN_THEMES,
-  type MeridianConfig,
-  type MeridianTheme,
+  ELIVATE_DEFAULTS,
+  ELIVATE_THEMES,
+  type ElivateConfig,
+  type ElivateTheme,
   type Surface,
-  useMeridianCanvas,
-} from "@/lib/meridian-canvas"
+  useElivateCanvas,
+} from "@/lib/elivate-canvas"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
   // `relative` stacks the button above the absolute WebGL canvas behind it —
   // without it the shader covers the whole pill, not just the padding ring.
-  "group/button relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full font-semibold tracking-tight whitespace-nowrap transition-all duration-300 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] outline-none select-none hover:scale-[1.02] focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "group/button relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full font-semibold tracking-tight whitespace-nowrap transition-all duration-300 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] outline-none select-none hover:scale-[1.02] focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 focus-visible:ring-ring/50 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -31,7 +31,7 @@ const buttonVariants = cva(
         // `chrome-ring-outline` hover state doesn't cause an inward shift.
         ghost:
           "hover:chrome-ring-outline border-[1.5px] border-transparent text-foreground",
-        destructive: "meridian-destructive-surface",
+        destructive: "elivate-destructive-surface",
         link: "rounded-none bg-transparent text-foreground underline-offset-4 shadow-none hover:scale-100 hover:underline active:scale-100",
       },
       size: {
@@ -59,16 +59,16 @@ type ButtonProps = React.ComponentProps<"button"> &
     /** Interior + shader treatment. `dark` = glassy orb, `light` = classic pill. */
     surface?: Surface
     /** Shader configuration — overrides the surface defaults. */
-    meridian?: MeridianConfig
+    elivate?: ElivateConfig
     /** Force the CSS conic-gradient ring (skip WebGL). Useful for previewing
      *  the degraded state or when you know you're rendering many buttons. */
     fallback?: boolean
   }
 
-const MERIDIAN_VARIANT_THEMES: Partial<
+const ELIVATE_VARIANT_THEMES: Partial<
   Record<
     NonNullable<VariantProps<typeof buttonVariants>["variant"]>,
-    MeridianTheme
+    ElivateTheme
   >
 > = {
   default: "chrome",
@@ -77,8 +77,8 @@ const MERIDIAN_VARIANT_THEMES: Partial<
 }
 
 const DEFAULT_SURFACE_CLASS: Record<Surface, string> = {
-  dark: "meridian-default-surface",
-  light: "meridian-default-surface-light",
+  dark: "elivate-default-surface",
+  light: "elivate-default-surface-light",
 }
 
 function Button({
@@ -87,7 +87,7 @@ function Button({
   size = "default",
   surface = "dark",
   asChild = false,
-  meridian,
+  elivate,
   fallback = false,
   ...props
 }: ButtonProps) {
@@ -97,8 +97,8 @@ function Button({
   const effSurface: Surface = isLightClassic ? "light" : surface
   const effVariant = isLightClassic ? "default" : variant
 
-  const meridianTheme = effVariant
-    ? MERIDIAN_VARIANT_THEMES[effVariant]
+  const elivateTheme = effVariant
+    ? ELIVATE_VARIANT_THEMES[effVariant]
     : undefined
   const Comp = asChild ? Slot.Root : "button"
 
@@ -109,21 +109,21 @@ function Button({
     effVariant === "default"
       ? DEFAULT_SURFACE_CLASS[effSurface]
       : effVariant === "secondary"
-        ? "meridian-silver-surface"
+        ? "elivate-silver-surface"
         : ""
 
   return (
     <>
       <ButtonStyles />
-      {meridianTheme ? (
-        <MeridianButton
-          theme={meridianTheme}
+      {elivateTheme ? (
+        <ElivateButton
+          theme={elivateTheme}
           surface={effSurface}
           variant={effVariant}
           size={size}
           surfaceClass={surfaceClass}
           className={className}
-          meridian={meridian}
+          elivate={elivate}
           fallback={fallback}
           {...props}
         />
@@ -167,7 +167,7 @@ function ButtonStyles() {
          dark↔bright bands to echo the FBM noise pattern, with two narrow
          rainbow bleed regions (sky at ~52%, rose at ~88%) that match how
          the shader only lets rainbow bursts leak in rare angular slots. */
-      .meridian-fallback-silver {
+      .elivate-fallback-silver {
         background: conic-gradient(
           from var(--chrome-angle),
           #1f2429 0%,
@@ -193,7 +193,7 @@ function ButtonStyles() {
       /* Red fallback — same cycling pattern using the shader's red palette
          (#7f1d1d → #fecaca). No rainbow bleed since the red theme sets
          rainbowScale = 0 in the shader. */
-      .meridian-fallback-red {
+      .elivate-fallback-red {
         background: conic-gradient(
           from var(--chrome-angle),
           #450a0a 0%,
@@ -257,7 +257,7 @@ function ButtonStyles() {
             border-box;
       }
 
-      .meridian-default-surface {
+      .elivate-default-surface {
         background:
           radial-gradient(
             ellipse 80% 55% at 50% 0%,
@@ -274,7 +274,7 @@ function ButtonStyles() {
           0 1px 2px rgb(0 0 0 / 0.1),
           0 10px 24px -6px rgb(0 0 0 / 0.3);
       }
-      .dark .meridian-default-surface {
+      .dark .elivate-default-surface {
         box-shadow:
           inset 0 1px 0 rgb(255 255 255 / 0.16),
           inset 0 8px 16px -8px rgb(255 255 255 / 0.2),
@@ -283,7 +283,7 @@ function ButtonStyles() {
           0 10px 24px -6px rgb(0 0 0 / 0.6);
       }
 
-      .meridian-default-surface-light {
+      .elivate-default-surface-light {
         background: linear-gradient(
           to bottom,
           rgb(255 255 255),
@@ -300,7 +300,7 @@ function ButtonStyles() {
           0 8px 20px -4px rgb(0 0 0 / 0.12);
       }
 
-      .meridian-silver-surface {
+      .elivate-silver-surface {
         background: linear-gradient(
           to bottom,
           #fafafa 0%,
@@ -315,7 +315,7 @@ function ButtonStyles() {
           0 1px 2px rgb(0 0 0 / 0.04),
           0 6px 14px -3px rgb(0 0 0 / 0.1);
       }
-      .dark .meridian-silver-surface {
+      .dark .elivate-silver-surface {
         background: linear-gradient(
           to bottom,
           oklch(0.27 0 0) 0%,
@@ -331,7 +331,7 @@ function ButtonStyles() {
           0 6px 14px -3px rgb(0 0 0 / 0.45);
       }
 
-      .meridian-destructive-surface {
+      .elivate-destructive-surface {
         background: linear-gradient(
           to bottom,
           #fef2f2 0%,
@@ -346,7 +346,7 @@ function ButtonStyles() {
           0 1px 2px rgb(239 68 68 / 0.1),
           0 6px 18px -3px rgb(239 68 68 / 0.3);
       }
-      .dark .meridian-destructive-surface {
+      .dark .elivate-destructive-surface {
         background: linear-gradient(
           to bottom,
           #450a0a 0%,
@@ -364,8 +364,8 @@ function ButtonStyles() {
 
       @media (prefers-reduced-motion: reduce) {
         .chrome-ring-outline,
-        .meridian-fallback-silver,
-        .meridian-fallback-red {
+        .elivate-fallback-silver,
+        .elivate-fallback-red {
           animation: none;
         }
       }
@@ -373,41 +373,41 @@ function ButtonStyles() {
   )
 }
 
-type MeridianButtonProps = React.ComponentProps<"button"> & {
+type ElivateButtonProps = React.ComponentProps<"button"> & {
   variant?: VariantProps<typeof buttonVariants>["variant"]
   size?: VariantProps<typeof buttonVariants>["size"]
-  theme?: MeridianTheme
+  theme?: ElivateTheme
   surface?: Surface
   /** Pre-resolved surface class (dark-orb or light-classic) for variant="default". */
   surfaceClass?: string
-  meridian?: MeridianConfig
+  elivate?: ElivateConfig
   fallback?: boolean
 }
 
-function MeridianButton({
+function ElivateButton({
   variant = "default",
   size = "default",
   theme = "chrome",
   surface = "dark",
   surfaceClass = "",
   className,
-  meridian = {},
+  elivate = {},
   fallback = false,
   children,
   style,
   ...props
-}: MeridianButtonProps) {
-  const themeConfig = MERIDIAN_THEMES[surface][theme]
+}: ElivateButtonProps) {
+  const themeConfig = ELIVATE_THEMES[surface][theme]
   const borderWidth =
-    meridian.borderWidth ?? MERIDIAN_DEFAULTS[surface].borderWidth
+    elivate.borderWidth ?? ELIVATE_DEFAULTS[surface].borderWidth
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Hook flips this only on real WebGL failure (context cap, getContext null,
   // shader link failure), so the CSS conic fallback doesn't flash for a frame
   // before the shader's first paint.
-  const webglFailed = useMeridianCanvas(canvasRef, {
+  const webglFailed = useElivateCanvas(canvasRef, {
     surface,
     theme,
-    meridian,
+    elivate,
     fallback,
   })
 
