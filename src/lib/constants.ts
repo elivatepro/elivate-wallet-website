@@ -37,8 +37,6 @@ export const SOCIAL = [
   { label: "RSS", href: "/rss.xml", external: false },
 ] as const;
 
-export const CONTACT_EMAIL = "talk@meridian.systems";
-
 export const INTRO_ANIMATION = {
   /** Set to `false` to skip the homepage intro animation entirely. */
   enabled: false,
@@ -47,5 +45,5 @@ export const INTRO_ANIMATION = {
    * intro. Written when the animation completes; checked on every load so
    * refreshes and subsequent visits do not replay it.
    */
-  cookieName: "meridian-intro-seen",
+  cookieName: "elivate-intro-seen",
 } as const;
