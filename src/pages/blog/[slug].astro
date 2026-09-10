@@ -1,8 +1,99 @@
 ---
-// Blog article routes will be generated from Published Notion posts once the
-// approved Astro ↔ Notion publishing integration is implemented. Returning no
-// static paths prevents the legacy Meridian dispatch content from being public.
-export function getStaticPaths() {
-  return [];
+import ReadingProgress from "@/components/blog/reading-progress";
+import { DottedBackdrop } from "@/components/layout/dotted-backdrop";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { getPublishedBlogPosts, type BlogPost } from "@/lib/blog";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedBlogPosts();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post, posts } }));
 }
+
+const { post, posts } = Astro.props as { post: BlogPost; posts: BlogPost[] };
+const sameAuthor = posts.filter((candidate) => candidate.id !== post.id && candidate.author.id === post.author.id);
+const otherByAuthor = sameAuthor[0];
+const total = posts.length;
+const position = posts.findIndex((candidate) => candidate.id === post.id) + 1;
 ---
+
+<DefaultLayout
+  title={post.seoTitle || post.title}
+  description={post.seoDescription || post.excerpt}
+  image={post.socialImage || post.coverImage || undefined}
+>
+  <div class="relative">
+    <DottedBackdrop />
+    <section class="hero-padding relative">
+      <div class="container">
+        <div class="text-meta text-muted-foreground flex items-center justify-between gap-4 border-b pb-4">
+          <a href="/blog" class="text-foreground transition-opacity hover:opacity-70">← BLOG</a>
+          <span class="hidden md:inline">BY {post.author.name.toUpperCase()} · {post.displayDate.toUpperCase()}</span>
+          <span>{post.category.toUpperCase()}</span>
+        </div>
+      </div>
+
+      <div class="container mt-10 max-w-6xl md:mt-14 lg:mt-20">
+        <div class="grid grid-cols-1 gap-10 md:grid-cols-[180px_minmax(0,62ch)_1fr] md:gap-16">
+          <aside class="relative hidden md:block">
+            <div class="sticky top-24 space-y-5">
+              {post.coverImage ? (
+                <div class="space-y-3">
+                  <div class="border-foreground/15 relative aspect-square w-full overflow-hidden border shadow-md"><img src={post.coverImage} alt="" class="absolute inset-0 size-full object-cover" /></div>
+                  <div class="text-meta-xs text-muted-foreground">ARTICLE · № {post.articleNumber}</div>
+                </div>
+              ) : (
+                <div><div class="font-display text-foreground text-[5rem] leading-none tracking-tighter">{post.articleNumber}</div><div class="text-meta-xs text-muted-foreground mt-2">ARTICLE</div></div>
+              )}
+              {post.contents.length > 0 && (
+                <nav aria-label="Article contents" class="mt-5 space-y-3 border-t pt-4">
+                  {post.contents.map((entry) => (
+                    <a href={`#${entry.id}`} class:list={["text-muted-foreground hover:text-foreground block text-xs leading-snug transition-colors", entry.level >= 3 && "pl-3"]}>{entry.text}</a>
+                  ))}
+                </nav>
+              )}
+            </div>
+          </aside>
+
+          <article id="blog-article" class="prose prose-neutral dark:prose-invert max-w-none">
+            <header class="not-prose mb-10 border-b pb-8">
+              <div class="text-meta text-muted-foreground mb-5 md:hidden">ARTICLE · № {post.articleNumber}</div>
+              <h1 class="font-display text-4xl leading-tight tracking-tighter md:text-5xl lg:text-6xl">{post.title}</h1>
+              <p class="font-display text-muted-foreground mt-4 text-lg leading-snug tracking-tight md:text-xl">{post.excerpt}</p>
+            </header>
+
+            <div class="notion-article [&_.notion-callout]:bg-muted [&_.notion-callout]:my-6 [&_.notion-callout]:border [&_.notion-callout]:p-5 [&_.notion-equation]:my-6 [&_.notion-equation]:overflow-x-auto [&_figure]:my-8 [&_figure_figcaption]:text-muted-foreground [&_figure_figcaption]:mt-2 [&_figure_figcaption]:text-sm [&_figure_img]:w-full [&_h2]:font-display [&_h2]:scroll-mt-28 [&_h2]:tracking-tight [&_h3]:font-display [&_h3]:scroll-mt-28 [&_h3]:tracking-tight [&_h4]:font-display [&_h4]:scroll-mt-28 [&_pre]:overflow-x-auto">
+              <Fragment set:html={post.html} />
+            </div>
+
+            <footer class="not-prose mt-16 border-t pt-8">
+              <div class="flex items-start gap-4">
+                <span class="ring-foreground/15 relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1">
+                  {post.author.photo ? <img src={post.author.photo} alt={`Portrait of ${post.author.name}`} class="size-full object-cover" /> : <span class="font-display text-lg">{post.author.name.slice(0, 1).toUpperCase()}</span>}
+                </span>
+                <div>
+                  <div class="font-display text-lg tracking-tight">{post.author.name}</div>
+                  <div class="text-meta-xs text-muted-foreground mt-1">{post.author.role}</div>
+                  {post.author.bio && <p class="text-muted-foreground mt-3 max-w-lg text-sm leading-relaxed">{post.author.bio}</p>}
+                </div>
+              </div>
+              <div class="mt-8 flex flex-wrap items-center gap-3">
+                {otherByAuthor && <a href={`/blog/${otherByAuthor.slug}`} class="bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex h-9 items-center rounded-md px-3 text-xs font-medium transition-colors">More from {post.author.name}</a>}
+                <a href="/blog" class="text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center rounded-md px-3 text-xs font-medium transition-colors">All articles</a>
+              </div>
+            </footer>
+          </article>
+
+          <aside class="hidden md:block">
+            <div class="sticky top-24 flex flex-col items-end gap-8 text-right">
+              <div class="flex flex-col items-end gap-2">
+                <div class="text-meta text-muted-foreground">Article</div>
+                <div class="font-display text-5xl leading-none tracking-tighter">{String(position).padStart(2, "0")} / {String(total).padStart(2, "0")}</div>
+              </div>
+              <div class="w-full border-t pt-6"><ReadingProgress articleId="blog-article" readMin={post.readMin} client:load /></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+</DefaultLayout>
