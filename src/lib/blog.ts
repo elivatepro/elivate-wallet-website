@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 export const BLOG_CATEGORIES = [
   "Product",
@@ -61,7 +62,7 @@ let dataPromise: Promise<GeneratedBlogData> | undefined;
 
 async function loadBlogData() {
   if (!dataPromise) {
-    const file = new URL("../generated/blog-data.json", import.meta.url);
+    const file = path.join(process.cwd(), "src", "generated", "blog-data.json");
     dataPromise = readFile(file, "utf8").then((raw) => JSON.parse(raw));
   }
   return dataPromise;
