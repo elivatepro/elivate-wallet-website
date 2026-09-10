@@ -1,0 +1,39 @@
+name: Verify website build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  astro-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node 22.16.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate Notion sync script syntax
+        run: node --check scripts/sync-notion-blog.mjs
+
+      - name: Create empty CMS fixture
+        run: |
+          mkdir -p src/generated
+          cat > src/generated/blog-data.json <<'JSON'
+          {
+            "generatedAt": "fixture",
+            "currentDate": "2026-09-10",
+            "timeZone": "Africa/Lagos",
+            "posts": []
+          }
+          JSON
+
+      - name: Build Astro site
+        run: npx astro build
