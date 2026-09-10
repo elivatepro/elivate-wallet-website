@@ -38,82 +38,81 @@ type Tier = {
   totalDue: { value: string; suffix?: string };
   featured: boolean;
   lean?: string;
+  stamp?: string;
 };
 
 const TIERS: readonly Tier[] = [
   {
-    id: "lookout",
-    name: "Lookout",
-    auth: "MRD-LK-2026",
-    tagline: "For the team that just stood up on-call.",
-    cta: { label: "Start free trial", variant: "ghost" },
+    id: "400",
+    name: "400",
+    auth: "EW-400",
+    tagline: "For networks with up to 400 members.",
+    cta: { label: "Get started", variant: "ghost" },
     includes: [
-      "5 seats · single team",
-      "Logs, metrics, traces · unified",
-      "SLO-native paging",
-      "Slack · PagerDuty",
-      "99.95% global SLA",
+      "Up to 400 users",
+      "Member balances & history",
+      "Income & expense records",
+      "Withdrawal requests",
+      "Team and leader visibility",
+      "Core Wallet features included",
     ],
     totals: [
-      { label: "Subtotal", value: "$1,200.00" },
-      { label: "Per-seat tax", value: "$0.00" },
+      { label: "Covered users", value: "UP TO 400" },
+      { label: "Extras", value: "OPTIONAL" },
     ],
-    totalDue: { value: "$1,200", suffix: "/ yr" },
+    totalDue: { value: "₦700,000" },
     featured: false,
     lean: "md:-rotate-[0.6deg]",
   },
   {
-    id: "bridge",
-    name: "Bridge",
-    auth: "MRD-BR-2026",
-    tagline: "What forty-one teams already run.",
-    cta: { label: "Start free trial", variant: "default" },
+    id: "1000",
+    name: "1,000",
+    auth: "EW-1000",
+    tagline: "For growing networks with up to 1,000 members.",
+    cta: { label: "Get started", variant: "default" },
     includes: [
-      "25 seats included",
-      "Everything in Lookout",
-      "Auto-drafted post-mortems",
-      "Watch · ack & roll back",
-      "Linear · GitHub",
-      "99.997% global SLA",
-      "Audit log · signed",
+      "Up to 1,000 users",
+      "Member balances & history",
+      "Income & expense records",
+      "Withdrawal requests",
+      "Team and leader visibility",
+      "Financial records per member",
+      "Core Wallet features included",
     ],
     totals: [
-      { label: "Subtotal", value: "$4,800.00" },
-      { label: "Per-seat tax", value: "$0.00" },
-      { label: "Overage fees", value: "$0.00" },
-      { label: "Hidden charges", value: "$0.00" },
+      { label: "Covered users", value: "UP TO 1,000" },
+      { label: "Extras", value: "OPTIONAL" },
     ],
-    totalDue: { value: "$4,800", suffix: "/ yr" },
+    totalDue: { value: "₦1,000,000" },
     featured: true,
+    stamp: "UP TO 1,000 USERS",
   },
   {
-    id: "atlas",
-    name: "Atlas",
-    auth: "MRD-AT-2026",
-    tagline: "When the rotation spans three time zones.",
+    id: "1500",
+    name: "1,500+",
+    auth: "EW-1500",
+    tagline: "For larger networks with 1,500+ members.",
     cta: { label: "Talk to us", variant: "ghost" },
     includes: [
-      "Unlimited seats",
-      "Everything in Bridge",
-      "Dedicated rotation engineer",
-      "SOC 2 · custom DPA",
-      "Custom retention",
-      "Priority on-call",
+      "1,500+ users",
+      "Member balances & history",
+      "Income & expense records",
+      "Withdrawal requests",
+      "Team and leader visibility",
+      "Core Wallet features included",
     ],
     totals: [
-      { label: "Subtotal", value: "scaled to you" },
-      { label: "Setup fee", value: "$0.00" },
+      { label: "Covered users", value: "1,500+" },
+      { label: "Extras", value: "OPTIONAL" },
     ],
-    totalDue: { value: "Custom" },
+    totalDue: { value: "₦1,500,000" },
     featured: false,
     lean: "md:rotate-[0.6deg]",
   },
 ] as const;
 
 type LedgerProps = {
-  /** Padding utility — defaults to `section-padding`. Pass `hero-padding` when mounted as the page hero. */
   className?: string;
-  /** When true, render the heading as h1 with hero-scale sizing (matches `product/scene.tsx` hero). Default is h2 with canonical section sizing. */
   asHero?: boolean;
 };
 
@@ -140,12 +139,12 @@ const Ledger = ({
             variants={fadeUp}
             className="text-meta text-muted-foreground"
           >
-            § Ledger · three tickets · 2026.04
+            § PRICING · THREE NETWORK SIZES
           </motion.span>
           <Heading variants={fadeUp} className={headingClass}>
-            Pick a plan. <br className="hidden md:block" />
+            Choose your network size. <br className="hidden md:block" />
             <em className="text-muted-foreground">
-              Simple pricing, no per-seat fees.
+              Simple pricing, based on your network.
             </em>
           </Heading>
         </div>
@@ -163,7 +162,7 @@ const Ledger = ({
           variants={fadeUp}
           className="text-meta-xs text-muted-foreground mt-12 text-center"
         >
-          Billed annually &middot; 30-day trial &middot; no card to start
+          ONE SUBSCRIPTION COVERS YOUR ORGANIZATION AND ITS TEAMS · EXTRAS PRICED SEPARATELY
         </motion.p>
       </div>
     </motion.section>
@@ -215,7 +214,7 @@ const TicketCard = ({ tier }: { tier: Tier }) => {
             dashed,
           )}
         >
-          <span>Elivate · {tier.name}</span>
+          <span>ELIVATE WALLET · {tier.name}</span>
           <span className={muted}>№ {tier.auth}</span>
         </div>
 
@@ -256,14 +255,9 @@ const TicketCard = ({ tier }: { tier: Tier }) => {
               totalRule,
             )}
           >
-            <span className="text-meta">Total due</span>
+            <span className="text-meta">Plan price</span>
             <span className="font-display text-3xl tracking-tight tabular-nums md:text-4xl">
               {tier.totalDue.value}
-              {tier.totalDue.suffix && (
-                <span className={cn("text-meta ml-2", muted)}>
-                  {tier.totalDue.suffix}
-                </span>
-              )}
             </span>
           </div>
         </div>
@@ -275,8 +269,8 @@ const TicketCard = ({ tier }: { tier: Tier }) => {
             muted,
           )}
         >
-          <span>Auth · 0x{tier.auth.replace(/-/g, "").toLowerCase()}</span>
-          <span>Holder · your team</span>
+          <span>Network · {tier.name}</span>
+          <span>Extras · optional</span>
         </div>
 
         <Barcode className="mt-5" inverted={tier.featured} />
@@ -287,12 +281,12 @@ const TicketCard = ({ tier }: { tier: Tier }) => {
           </Button>
         </div>
 
-        {tier.featured && (
+        {tier.featured && tier.stamp && (
           <span
             aria-hidden="true"
             className="border-background/55 text-background/85 pointer-events-none absolute top-[5.5rem] right-7 -rotate-[11deg] border-2 px-3 py-1 text-[0.625rem] font-bold tracking-[0.22em] uppercase"
           >
-            ★ Teams&apos; pick ★
+            {tier.stamp}
           </span>
         )}
       </div>
