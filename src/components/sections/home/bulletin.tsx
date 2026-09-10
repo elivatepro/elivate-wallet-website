@@ -23,9 +23,9 @@ const fadeUp: Variants = {
 };
 
 const STATS = [
-  { value: "217", label: "Alerts per week · before", inverted: false },
-  { value: "2", label: "Alerts per week · on Elivate", inverted: true },
-  { value: "215", label: "Alerts you never see", inverted: false },
+  { value: "₦84.2M", label: "Member balances · demo view", inverted: false },
+  { value: "₦12.6M", label: "Income this month · demo view", inverted: true },
+  { value: "18", label: "Pending withdrawals · demo view", inverted: false },
 ] as const;
 
 const Bulletin = () => (
@@ -44,11 +44,11 @@ const Bulletin = () => (
       <div className="text-meta container flex flex-wrap items-center gap-4 py-4 md:py-5">
         <span className="text-foreground flex flex-1 items-center gap-2">
           <span className="bg-foreground size-1.5 animate-pulse rounded-full" />
-          Bulletin № 01
+          Network view · example
         </span>
-        <span className="text-muted-foreground">MRD-2026-Q1 · Sheet 1/1</span>
+        <span className="text-muted-foreground">ELIVATE WALLET · OVERVIEW</span>
         <span className="text-muted-foreground flex-1 text-end">
-          Filed from us-east-1 · 03:14 UTC
+          Illustrative organization data
         </span>
       </div>
     </motion.div>
@@ -59,16 +59,15 @@ const Bulletin = () => (
         className="border-foreground/20 border-b py-6 md:col-span-7 md:border-r md:border-b-0 md:py-12 md:pr-12 lg:py-16 lg:pr-16"
       >
         <span className="text-meta text-muted-foreground">
-          Headline · Filed 2026.04.25
+          Financial activity · one view
         </span>
         <h2 className="mt-3 text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
-          Silence your alerts,{" "}
-          <em className="text-muted-foreground">with confidence.</em>
+          Know where the money is.
         </h2>
         <p className="text-muted-foreground mt-6 max-w-xl text-base leading-relaxed md:mt-8 md:text-lg">
-          Forty-one teams ran Elivate for ninety days. They went from two
-          hundred alerts a week down to two. Not one team has asked to switch
-          back.
+          See recorded balances, income, and pending withdrawals together, so
+          you know what needs attention without rebuilding the picture from
+          separate messages and records.
         </p>
       </motion.div>
 
@@ -110,11 +109,10 @@ const Bulletin = () => (
       <DottedBackdrop opacity={0.06} className="z-auto" />
       <div className="container flex flex-col items-baseline gap-6 py-6 md:flex-row md:items-center md:justify-between md:py-8">
         <span className="font-display text-xl leading-tight tracking-tight md:text-2xl">
-          This is not an outage.{" "}
-          <em className="text-muted-foreground">It&apos;s the product.</em>
+          Clear records as your network grows.
         </span>
         <div className="flex flex-wrap items-center gap-3">
-          <Button size="lg">Start free trial</Button>
+          <Button size="lg">Get started</Button>
           <Button size="lg" variant="ghost">
             See pricing
           </Button>
