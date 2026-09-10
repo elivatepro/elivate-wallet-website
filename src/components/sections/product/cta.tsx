@@ -40,11 +40,11 @@ const glow: Variants = {
 };
 
 const TICKER = [
-  "Two pages · last week.",
-  "Six minutes · MTTR.",
-  "Forty-one teams · in production.",
-  "Zero noise · by design.",
-  "One console · for everything.",
+  "Balances · visible anytime.",
+  "One history · per member.",
+  "Income · kept on record.",
+  "Withdrawals · tracked.",
+  "Clear records · across your network.",
 ] as const;
 
 const ProductCTA = () => (
@@ -73,12 +73,12 @@ const ProductCTA = () => (
       >
         <span className="text-foreground flex items-center gap-2">
           <span className="bg-foreground size-1.5 animate-pulse rounded-full" />
-          § End of spec
+          § END OF FEATURES · THE RECORD STAYS CLEAR
         </span>
         <span className="hidden md:inline">
-          · Ship a trace. Page yourself. See it work.
+          BALANCES · ACTIVITY · WITHDRAWALS
         </span>
-        <span className="ml-auto">03:14 UTC · live</span>
+        <span className="ml-auto">ELIVATE WALLET · READY</span>
       </motion.div>
 
       <div className="mt-10 grid items-center gap-16 md:mt-14 lg:mt-20 lg:grid-cols-[2fr_1fr] lg:gap-10">
@@ -88,31 +88,30 @@ const ProductCTA = () => (
             className="font-display max-w-[16ch] leading-[0.85] tracking-tighter text-balance lg:max-w-none"
             style={{ fontSize: "clamp(2.5rem, 9vw, 9rem)" }}
           >
-            <em className="text-muted-foreground">Quiet</em> is the new{" "}
-            <em>fast.</em>
+            Know where <em className="text-muted-foreground">the money is.</em>
           </motion.h2>
 
           <motion.p
             variants={fadeUp}
             className="text-muted-foreground mt-6 max-w-xl text-base leading-relaxed md:mt-8 md:text-lg"
           >
-            Spin up a workspace, point your OTLP exporter at us, watch the
-            alerts go quiet. If anything still slips through, tell us &mdash; we
-            go fix it.
+            See balances, transactions, allocations, and withdrawal status in
+            one place, without piecing the answer together from calls, sheets,
+            or messages.
           </motion.p>
 
           <motion.div
             variants={fadeUp}
             className="mt-8 flex flex-wrap items-center gap-3 md:mt-10"
           >
-            <Button size="lg">Start free trial</Button>
+            <Button size="lg">Get started</Button>
             <Button asChild variant="ghost" size="lg">
-              <a href="#">Book a tour</a>
+              <a href="/contact">Talk to us</a>
             </Button>
           </motion.div>
         </div>
 
-        <SilencePlate />
+        <WalletPlate />
       </div>
     </div>
 
@@ -146,13 +145,13 @@ const ProductCTA = () => (
   </motion.section>
 );
 
-const SilencePlate = () => (
+const WalletPlate = () => (
   <figure className="group/plate relative mx-auto w-full max-w-[22.5rem] lg:max-w-[24rem]">
     <div className="border-foreground/30 group-hover/plate:border-foreground/55 relative overflow-hidden border transition-colors duration-500">
       <div className="bg-foreground/5 relative aspect-[16/10] overflow-hidden">
         <img
           src="/images/product/silence.png"
-          alt="A night-shift desk overlooking the coast: lamp, ledger, mug, and a Elivate console reading 99.97% silence over 24 hours"
+          alt=""
           sizes="(min-width: 1024px) 24rem, (min-width: 640px) 22rem, 92vw"
           className="absolute inset-0 size-full object-cover transition-transform duration-[1400ms] ease-out group-hover/plate:scale-[1.03]"
         />
@@ -171,18 +170,13 @@ const SilencePlate = () => (
           size="sm"
           className="pointer-events-none absolute top-2 left-2 gap-1"
         >
-          <span className="bg-foreground size-1 animate-pulse rounded-full" />№
-          04
+          <span className="bg-foreground size-1 animate-pulse rounded-full" />№ 04
         </Badge>
-
-        <span className="text-meta-xs text-background pointer-events-none absolute right-2 bottom-2 opacity-70">
-          B&amp;W
-        </span>
       </div>
 
       <figcaption className="text-meta-xs border-foreground/15 text-muted-foreground group-hover/plate:text-foreground flex items-baseline justify-between gap-3 border-t px-4 py-3 transition-colors duration-300">
-        <span>Console · at rest</span>
-        <span>Plate IV</span>
+        <span>WALLET · AT A GLANCE</span>
+        <span>PLATE IV</span>
       </figcaption>
     </div>
   </figure>
