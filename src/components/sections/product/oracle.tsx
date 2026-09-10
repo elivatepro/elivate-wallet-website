@@ -32,36 +32,36 @@ const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789!@#$%&*+-=_";
 
 const EXCHANGES = [
   {
-    prompt: "errors on checkout, past 6h, grouped by version",
-    plan: "PLAN · index(version) · 3 shards · est 42ms · hot",
-    answer: "429 events · v2.4.1 dominates (412) · regression at 14:02",
+    prompt: "why is this member's balance ₦82,500?",
+    plan: "RECORD · income · expenses · withdrawals",
+    answer: "₦82,500 balance · every movement behind it is on record",
     chart: [
-      { k: "v2.4.1", v: 412, bad: true },
-      { k: "v2.4.0", v: 14, bad: false },
-      { k: "v2.3.9", v: 3, bad: false },
+      { k: "Income", v: 120000, bad: false },
+      { k: "Expenses", v: 22500, bad: false },
+      { k: "Withdrawn", v: 15000, bad: false },
     ],
   },
   {
-    prompt: "p99 query latency, last 24h, by region",
-    plan: "PLAN · index(region, ts) · 27 shards · est 118ms · hot",
-    answer: "27 regions · p99 87ms overall · ap-south drifting (142ms)",
+    prompt: "where did this ₦300,000 income go?",
+    plan: "RECORD · income entry · member allocations",
+    answer: "₦300,000 allocated across 3 member records",
     chart: [
-      { k: "us-east", v: 72, bad: false },
-      { k: "eu-central", v: 81, bad: false },
-      { k: "ap-south", v: 142, bad: true },
+      { k: "Member 01", v: 150000, bad: false },
+      { k: "Member 02", v: 90000, bad: false },
+      { k: "Member 03", v: 60000, bad: false },
     ],
   },
   {
-    prompt: "users affected by the 14:02 spike",
-    plan: "PLAN · join(events, users) · est 91ms · partial cache hit",
-    answer: "1,804 users · 82% on v2.4.1 · paged oncall",
+    prompt: "which withdrawal requests still need attention?",
+    plan: "RECORD · withdrawal requests · current status",
+    answer: "See every request together with its current status",
     chart: [
-      { k: "v2.4.1", v: 1478, bad: true },
-      { k: "v2.4.0", v: 241, bad: false },
-      { k: "v2.3.9", v: 85, bad: false },
+      { k: "Request 01", v: 75000, bad: false },
+      { k: "Request 02", v: 120000, bad: false },
+      { k: "Request 03", v: 60000, bad: false },
     ],
   },
-];
+] as const;
 
 const Oracle = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -82,12 +82,12 @@ const Oracle = () => {
       >
         <span className="flex flex-1 items-center gap-2">
           <span className="bg-foreground inline-block size-1.5 animate-pulse rounded-full" />
-          Oracle &middot; the AI in your console
+          RECORDS · ANSWERS WITHOUT THE MESSAGE TRAIL
         </span>
         <span className="hidden md:inline">
-          Natural language &rarr; plan &rarr; answer
+          QUESTION → RECORD → ANSWER
         </span>
-        <span className="flex-1 text-end">Fig. 05</span>
+        <span className="flex-1 text-end">FIG. 05</span>
       </motion.div>
 
       <motion.div
@@ -95,22 +95,11 @@ const Oracle = () => {
         className="mb-10 max-w-5xl md:mb-14 lg:mb-20"
       >
         <h2 className="text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
-          A sentence, <em className="text-muted-foreground">answered.</em>
-          <sup className="text-muted-foreground ml-1 align-super text-base md:text-xl lg:text-2xl">
-            *
-          </sup>
+          Need an answer? <em className="text-muted-foreground">Check the record.</em>
         </h2>
 
         <p className="text-meta text-muted-foreground mt-4 max-w-md md:mt-6">
-          <span className="font-display text-base font-bold text-red-500">
-            *
-          </span>{" "}
-          In{" "}
-          <span className="bg-red-500 px-1.5 py-px font-bold tracking-wider text-black">
-            BETA
-          </span>{" "}
-          &mdash; behavior and pricing may shift before GA. Your feedback shapes
-          what ships.
+          * SAMPLE DATA SHOWN · YOUR NUMBERS WILL REFLECT YOUR NETWORK.
         </p>
       </motion.div>
 
@@ -232,25 +221,20 @@ const Exchange = ({ exchange, index, start, delayMs }: ExchangeProps) => {
                 : "bg-foreground animate-pulse",
             )}
           />
-          Exchange 0{index + 1}
+          CHECK 0{index + 1}
         </span>
-        <span className="hidden md:inline">
-          elivate.console &middot; /q/
-          {index === 0 ? "3fb7c2" : index === 1 ? "8a12de" : "b47f91"}
-        </span>
+        <span className="hidden md:inline">WALLET · MEMBER RECORD</span>
         <span>
-          {phase === "typing" && "Typing…"}
-          {phase === "scrambling" && "Planning…"}
+          {phase === "typing" && "Question…"}
+          {phase === "scrambling" && "Checking record…"}
           {phase === "answering" && "Answering…"}
-          {phase === "done" && "Done · 87ms"}
+          {phase === "done" && "FOUND"}
           {phase === "idle" && "Queued"}
         </span>
       </div>
 
       <div className="flex items-start gap-3 px-4 py-4 md:px-6">
-        <span className="text-muted-foreground shrink-0 pt-0.5 font-mono text-xs">
-          ?
-        </span>
+        <span className="text-muted-foreground shrink-0 pt-0.5 font-mono text-xs">?</span>
         <p className="text-foreground font-mono text-sm leading-relaxed md:text-base">
           {promptText}
           {phase === "typing" && (
@@ -266,9 +250,7 @@ const Exchange = ({ exchange, index, start, delayMs }: ExchangeProps) => {
         phase === "answering" ||
         phase === "done") && (
         <div className="flex items-start gap-3 border-t px-4 py-3 md:px-6">
-          <span className="text-meta text-muted-foreground shrink-0 pt-0.5">
-            PLAN
-          </span>
+          <span className="text-meta text-muted-foreground shrink-0 pt-0.5">RECORD</span>
           <p
             className={cn(
               "font-mono text-xs leading-relaxed md:text-sm",
@@ -282,8 +264,6 @@ const Exchange = ({ exchange, index, start, delayMs }: ExchangeProps) => {
         </div>
       )}
 
-      {/* grid-rows 0fr↔1fr is the transform-only equivalent of height: 0↔auto — */}
-      {/* GPU-friendly and avoids layout thrash from re-measuring auto height. */}
       <div
         className={cn(
           "grid overflow-hidden border-t transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
@@ -294,9 +274,7 @@ const Exchange = ({ exchange, index, start, delayMs }: ExchangeProps) => {
       >
         <div className="min-h-0 space-y-5 px-4 py-5 md:px-6 md:py-6">
           <div className="flex items-start gap-3">
-            <span className="text-meta text-muted-foreground shrink-0 pt-0.5">
-              Ans
-            </span>
+            <span className="text-meta text-muted-foreground shrink-0 pt-0.5">ANSWER</span>
             <p className="font-display text-xl leading-snug tracking-tight md:text-2xl">
               {exchange.answer}
             </p>
@@ -320,14 +298,11 @@ const Exchange = ({ exchange, index, start, delayMs }: ExchangeProps) => {
                         delay: 0.2 + i * 0.1,
                         ease: [0.16, 1, 0.3, 1],
                       }}
-                      className={cn(
-                        "absolute inset-y-0 left-0",
-                        row.bad ? "bg-foreground" : "bg-foreground/45",
-                      )}
+                      className="bg-foreground/55 absolute inset-y-0 left-0"
                     />
                   </span>
-                  <span className="text-foreground w-16 shrink-0 text-right font-mono text-xs">
-                    {row.v.toLocaleString()}
+                  <span className="text-foreground w-20 shrink-0 text-right font-mono text-xs">
+                    ₦{row.v.toLocaleString()}
                   </span>
                 </li>
               );

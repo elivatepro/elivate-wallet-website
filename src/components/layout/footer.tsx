@@ -14,7 +14,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FOOTER_NAV, SOCIAL } from "@/lib/constants";
+import { FOOTER_NAV } from "@/lib/constants";
 
 const EASE = cubicBezier(0.16, 1, 0.3, 1);
 const DURATION = { base: 0.6 } as const;
@@ -130,12 +130,10 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
         >
           <span className="flex flex-1 items-center gap-2">
             <span className="bg-foreground size-1.5 animate-pulse rounded-full" />
-            End of dispatch
+            END OF OVERVIEW
           </span>
-          <span className="hidden md:inline">
-            Built for growing networks
-          </span>
-          <span className="flex-1 text-end">2026.04</span>
+          <span className="hidden md:inline">YOUR NETWORK, FINALLY IN ONE VIEW</span>
+          <span className="flex-1 text-end">2026.09</span>
         </motion.div>
 
         <h2
@@ -153,8 +151,8 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
           variants={fadeUp}
           className="text-muted-foreground mx-auto mt-12 max-w-xl text-center text-base leading-relaxed md:text-lg"
         >
-          Elivate Wallet gives growing networks a clearer way to manage member
-          balances, transactions, withdrawals, and financial records.
+          Members see their balances. Leaders see the activity. You see the whole
+          network clearly, without chasing updates.
         </motion.p>
 
         <motion.form
@@ -184,7 +182,7 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
                   exit={{ opacity: 0, filter: "blur(6px)", y: -4 }}
                   transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
                 >
-                  Subscribe
+                  Get started
                 </motion.span>
               )}
               {state === "submitting" && (
@@ -209,7 +207,7 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
                   transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
                   className="inline-flex items-center gap-2"
                 >
-                  Subscribed
+                  Received
                   <span aria-hidden>✓</span>
                 </motion.span>
               )}
@@ -221,7 +219,7 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
           variants={fadeUp}
           className="text-meta-xs text-muted-foreground mx-auto mt-4 max-w-md text-center sm:mt-3"
         >
-          Product notes and practical updates from Elivate
+          PREFER A WALKTHROUGH? · <a href="/contact" className="text-foreground hover:text-muted-foreground transition-colors">BOOK A DEMO</a>
         </motion.p>
 
         <motion.div
@@ -230,7 +228,7 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
         >
           {Object.entries(FOOTER_NAV).map(([group, items]) => (
             <div key={group} className="flex flex-col gap-1.5">
-              <span className="text-muted-foreground/60">{group}</span>
+              <span className="text-muted-foreground/60 uppercase">{group}</span>
               {items.map((item) => (
                 <a
                   key={item.label}
@@ -242,26 +240,24 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
               ))}
             </div>
           ))}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-muted-foreground/60">ACCESS</span>
+            <a href="https://app.elivatewallet.com" className="text-foreground hover:text-muted-foreground transition-colors">Login</a>
+            <a href="/contact" className="text-foreground hover:text-muted-foreground transition-colors">Support</a>
+            <a href="/pricing" className="text-foreground hover:text-muted-foreground transition-colors">Pricing</a>
+          </div>
         </motion.div>
 
         <motion.div
           variants={fadeUp}
           className="text-meta text-muted-foreground mx-auto mt-10 flex max-w-3xl flex-wrap items-baseline gap-4"
         >
-          <span className="flex-1">© {copyrightYear} Elivate.</span>
-          <span>elivatewallet.com</span>
+          <span className="flex-1">© {copyrightYear} ELIVATE</span>
+          <span>ELIVATEWALLET.COM</span>
           <div className="flex flex-1 items-center justify-end gap-4">
-            {SOCIAL.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noopener noreferrer" : undefined}
-                className="hover:text-foreground"
-              >
-                {item.label}
-              </a>
-            ))}
+            <a href="https://app.elivatewallet.com" className="hover:text-foreground">LOGIN</a>
+            <a href="/contact" className="hover:text-foreground">SUPPORT</a>
+            <a href="/pricing" className="hover:text-foreground">PRICING</a>
           </div>
         </motion.div>
       </div>

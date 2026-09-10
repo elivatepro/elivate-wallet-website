@@ -22,33 +22,33 @@ if (typeof window !== "undefined") {
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const FACTS = [
-  { value: "41", label: "teams · in production" },
-  { value: "215", label: "fewer pages · per quarter" },
-  { value: "06m", label: "mean time · to resolve" },
-  { value: "01", label: "console · everywhere" },
+  { value: "24/7", label: "balance access · anytime" },
+  { value: "01", label: "financial history · per member" },
+  { value: "03", label: "core money flows · in Wallet" },
+  { value: "20K+", label: "users · designed to scale" },
 ] as const;
 
 const SURFACES = [
   {
     num: "01",
-    title: "Console",
-    role: "Main view",
+    title: "Balances",
+    role: "MEMBER VIEW",
     caption:
-      "Service health, SLO budget, latency curve. The screen on-call lives on for twelve hours straight.",
+      "Members see their balance, income, expenses, and transaction history without asking for an update.",
   },
   {
     num: "02",
-    title: "Log stream",
-    role: "Live tail",
+    title: "Transactions",
+    role: "ACTIVITY",
     caption:
-      "Filtered, structured, threaded. Click a line, jump straight to its span — or to the commit that wrote it.",
+      "Every income, expense, allocation, and adjustment stays tied to the member record it changed.",
   },
   {
     num: "03",
-    title: "Watch alert",
-    role: "The page",
+    title: "Withdrawals",
+    role: "REQUEST FLOW",
     caption:
-      "What lights up the wrist at 03:17 — short, named, ranked by SLO bite. Acknowledge, snooze, or open the runbook.",
+      "Members submit requests in Wallet. Leaders review them, update the status, and keep the result on record.",
   },
 ] as const;
 
@@ -66,45 +66,45 @@ type Specimen = {
 const SPECIMENS: readonly Specimen[] = [
   {
     num: "01",
-    name: "Console",
-    role: "Main view",
-    headlineLead: "The console",
-    headlineTail: "you live on.",
-    body: "Service health, SLO budget, latency curve — one screen on-call doesn't tab away from for twelve hours straight.",
+    name: "Balances",
+    role: "MEMBER VIEW",
+    headlineLead: "Their balance.",
+    headlineTail: "Right there.",
+    body: "Members can see their balance, income, expenses, and transaction history without asking a leader to confirm the figures.",
     bullets: [
-      "⌘K to anywhere — services, runbooks, post-mortems",
-      "SLO budget live in the chrome, not buried in a tab",
-      "Latency curves: 24h · 7d · 30d, no clicks between",
+      "Current balance stays visible at a glance",
+      "Income and expenses stay tied to their record",
+      "Transaction history shows what changed and when",
     ],
-    metric: { value: "18.7ms", label: "p95 · 24h ▾ 2.3ms" },
+    metric: { value: "24/7", label: "BALANCE ACCESS · ANYTIME" },
   },
   {
     num: "02",
-    name: "Log stream",
-    role: "Live tail",
-    headlineLead: "Click a line.",
-    headlineTail: "Get the span.",
-    body: "Every line carries its trace, its commit, its caller. Filtered, structured, threaded — readable at 03:17.",
+    name: "Transactions",
+    role: "ACTIVITY",
+    headlineLead: "Open an entry.",
+    headlineTail: "See the record.",
+    body: "Every income, expense, allocation, and adjustment stays attached to the member record it changed, so the history is easier to review.",
     bullets: [
-      "Threaded by request id, deploy, SEV — never raw",
-      "Click → trace: jump to the span that emitted",
-      "Click → commit: jump to the line that wrote it",
+      "Income, expenses, and allocations stay in one history",
+      "Each entry stays tied to the member it affected",
+      "Dates, amounts, and notes stay easy to check",
     ],
-    metric: { value: "8.4M / hr", label: "lines tailed · 420k earn an index" },
+    metric: { value: "01", label: "FINANCIAL HISTORY · PER MEMBER" },
   },
   {
     num: "03",
-    name: "Watch alert",
-    role: "The page",
-    headlineLead: "What lights up",
-    headlineTail: "at 03:17.",
-    body: "Short. Named. Ranked by SLO bite — not message volume. Three lines of text, no scrolling, one rollback button.",
+    name: "Withdrawals",
+    role: "REQUEST FLOW",
+    headlineLead: "Request it.",
+    headlineTail: "Track the status.",
+    body: "Members can submit withdrawal requests in Wallet, while leaders review them and keep each request’s status clear.",
     bullets: [
-      "Acknowledge · snooze · jump to runbook",
-      "Burn-rate ranked, never message-volume sorted",
-      "Wrist-shaped: three lines, no scroll, one tap",
+      "Submit a withdrawal request from the member account",
+      "Leaders review and update each request",
+      "The request stays part of the member’s financial record",
     ],
-    metric: { value: "215", label: "fewer pages · per quarter" },
+    metric: { value: "03", label: "REQUEST → REVIEW → STATUS" },
   },
 ] as const;
 
@@ -140,7 +140,6 @@ const ProductScene = () => {
     () => {
       if (!ready) return;
 
-      // top-align (not center) — width-scaling can make the mockup taller than its slot; pair with origin-top wrapper.
       const fit = (target: HTMLElement, slot: HTMLElement) => {
         const slotR = slot.getBoundingClientRect();
         const targetR = target.getBoundingClientRect();
@@ -196,23 +195,15 @@ const ProductScene = () => {
       }
 
       const mockups = [consoleEl, logEl, watchEl];
-
-      // killed and rebuilt on each ScrollTrigger refresh with fresh measurements.
       let timelines: gsap.core.Timeline[] = [];
 
       const build = () => {
         timelines.forEach((tl) => tl.kill());
         timelines = [];
-
-        // critical: clear any prior transform from a previous build, otherwise
-        // getBoundingClientRect() inside fit() reads the already-translated
-        // position and computes a delta of ~0 → gsap.set then *removes* the
-        // transform and the mockup jumps back to its natural mid-page slot.
         gsap.set(mockups, { clearProps: "transform" });
 
         const heroStates = mockups.map((m, i) => fit(m, heroSlots[i]!));
 
-        // match focal width to stage width so scale stays 1× — mockups have pixel-locked heights and would overflow on width-only scaling.
         mockups.forEach((m, i) => {
           const w = m.getBoundingClientRect().width;
           focalSlots[i]!.style.maxWidth = `${w}px`;
@@ -238,7 +229,6 @@ const ProductScene = () => {
 
         mockups.forEach((m, i) => gsap.set(m, heroStates[i]!));
 
-        // Console: hero → stage → focal_01 (then natural scroll carries it off).
         timelines.push(
           gsap
             .timeline({
@@ -273,7 +263,6 @@ const ProductScene = () => {
             }),
         );
 
-        // Log: hero → stage → fade out → focal_02 (fades back in for brief 02).
         timelines.push(
           gsap
             .timeline({
@@ -317,7 +306,6 @@ const ProductScene = () => {
             }),
         );
 
-        // Watch: hero → stage → fade out → focal_03 (last brief, settles there).
         timelines.push(
           gsap
             .timeline({
@@ -359,13 +347,8 @@ const ProductScene = () => {
       };
 
       build();
-
-      // rebuild on refresh so new triggers replace old ones during the same ScrollTrigger refresh cycle.
       ScrollTrigger.addEventListener("refreshInit", build);
 
-      // hard refresh races GSAP setup ahead of webfont load AND the hero's
-      // motion fadeUp (0.8s y:24→0). Re-measure once both have settled so the
-      // cached hero/focal positions match the laid-out DOM.
       let cancelled = false;
       const refresh = () => {
         if (!cancelled) ScrollTrigger.refresh();
@@ -402,37 +385,34 @@ const ProductScene = () => {
           >
             <span className="text-foreground flex items-center gap-2">
               <span className="bg-foreground size-1.5 animate-pulse rounded-full" />
-              § Diorama · 03 in view
+              ELIVATE WALLET · 03 IN VIEW
             </span>
             <span className="hidden md:inline">
-              · Logs · Metrics · Traces · One console
+              · BALANCES · INCOME · WITHDRAWALS
             </span>
-            <span className="ml-auto">2026.04 · arranged</span>
+            <span className="ml-auto">FEATURES</span>
           </motion.div>
 
           <div className="mt-10 grid gap-4 md:mt-14 md:gap-12 lg:mt-20 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-24">
             <motion.div variants={fadeUp} className="flex flex-col">
               <h1 className="text-5xl leading-[1.05] tracking-tight text-balance md:text-7xl md:leading-[0.95] lg:text-8xl">
-                Page. Resolve.{" "}
-                <em className="text-muted-foreground">File the post-mortem.</em>
+                <span className="block">Balances.</span>
+                <span className="block">Income.</span>
+                <em className="text-muted-foreground block">Withdrawals.</em>
               </h1>
               <p className="text-muted-foreground mt-6 max-w-md text-base leading-relaxed md:mt-8 md:text-lg">
-                Logs, metrics, traces &mdash; one keyboard-first console.
-                &#8984;K to anywhere. The post-mortem files itself before the
-                laptop closes.
+                See member balances and transaction history.<br />
+                Record income and manage withdrawal requests.<br />
+                Keep the record clear across your network.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3 md:mt-10">
-                <Button size="lg">Start free trial</Button>
+                <Button size="lg">Get started</Button>
                 <Button variant="ghost" size="lg">
-                  See all surfaces
+                  See all features
                 </Button>
               </div>
             </motion.div>
 
-            {/* No fadeUp here — slots inside are invisible (measurement-only),
-                and y:24→0 motion would leave GSAP's getBoundingClientRect()
-                reading a transformed y until 0.8s after mount, which races
-                webfont load on hard refresh and shifts cached hero positions. */}
             <div className="relative mx-auto h-[400px] w-full max-w-[600px] lg:h-[560px]">
               <div
                 aria-hidden
@@ -491,26 +471,22 @@ const ProductScene = () => {
           <div className="text-meta text-muted-foreground flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b pb-4">
             <span className="text-foreground flex items-center gap-2">
               <span className="bg-foreground size-1.5 animate-pulse rounded-full" />
-              § Stage · 03 surfaces inspected
+              § STAGE · 03 CORE VIEWS
             </span>
             <span className="hidden md:inline">
-              · Untilted · Calibrated · Named
+              · BALANCES · TRANSACTIONS · WITHDRAWALS
             </span>
-            <span className="ml-auto">2026.04 · MRD-stage-001</span>
+            <span className="ml-auto">FIG. 02 · CORE VIEWS</span>
           </div>
 
           <div className="mt-10 grid grid-cols-1 items-end gap-6 md:mt-14 md:grid-cols-[1fr_auto] md:gap-16 lg:mt-20">
             <h2 className="text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
-              The diorama settles.{" "}
-              <em className="text-muted-foreground">
-                Three surfaces, one console.
-              </em>
+              Three money flows. {" "}
+              <em className="text-muted-foreground">One clear record.</em>
             </h2>
             <span className="text-meta text-muted-foreground hidden text-right md:block">
-              Fig. 02 ·<br />
-              The stage,
-              <br />
-              inspected
+              FIG. 02 ·<br />
+              CORE VIEWS
             </span>
           </div>
 
@@ -715,7 +691,6 @@ const SpecimenPanel = ({
             </div>
           </div>
 
-          {/* invisible slot — GSAP measures its rect to compute the travel transform. */}
           <div className="relative order-1 flex items-center justify-center lg:order-2">
             <div
               aria-hidden
@@ -736,7 +711,6 @@ const SpecimenPanel = ({
   </div>
 );
 
-// pixel caps (Watch is locked at 287×360 / 327×420 internally — face plus 7px button protrusion).
 const FOCAL_WIDTHS = {
   console: "w-full max-w-[420px] lg:max-w-[520px]",
   log: "w-full max-w-[360px] lg:max-w-[420px]",

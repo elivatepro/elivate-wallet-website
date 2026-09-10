@@ -45,30 +45,30 @@ const STEPS: {
   {
     id: "page",
     step: "01",
-    label: "Page",
-    title: "Alerts on every device.",
-    body: "The on-call engineer gets a single notification. Two taps: acknowledge or roll back.",
+    label: "Record",
+    title: "Add the income where it belongs.",
+    body: "Record income to the right member and keep the supporting details with the entry.",
   },
   {
     id: "detect",
     step: "02",
-    label: "Detect",
-    title: "Critical incidents detected.",
-    body: "Elivate monitors your SLO, not raw CPU graphs. An incident room opens automatically before anyone opens a laptop.",
+    label: "Track",
+    title: "Your member sees the change for themselves.",
+    body: "Their balance and transaction history reflect what was recorded, so they do not have to come back to you for the figure.",
   },
   {
     id: "draft",
     step: "03",
-    label: "Draft",
-    title: "The post-mortem writes itself.",
-    body: "Timeline, suspect services, last three commits, and correlated deploys — all attached when she opens the ticket.",
+    label: "Request",
+    title: "When they want to withdraw, the request starts in Wallet.",
+    body: "It is recorded against their account instead of beginning as a message someone has to remember.",
   },
   {
     id: "resolve",
     step: "04",
-    label: "Resolve",
-    title: "Resolved, with full documentation.",
-    body: "Error budget is back to healthy. The incident room closes, the post-mortem is saved, and on-call goes back to sleep.",
+    label: "Review & complete",
+    title: "See what is waiting. Keep track of what is done.",
+    body: "Review the request, update its status, and keep the record clear through completion.",
   },
 ];
 
@@ -141,14 +141,14 @@ const NightShift = () => {
             variants={fadeUp}
             className="text-meta text-muted-foreground"
           >
-            § Night shift · 03:17 UTC
+            § Workflow · Record to withdrawal
           </motion.span>
           <motion.h2
             variants={fadeUp}
             className="mt-3 text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]"
           >
-            Six minutes, one page,{" "}
-            <em className="text-muted-foreground">no laptop.</em>
+            From income recorded to withdrawal handled,{" "}
+            <em className="text-muted-foreground">the trail stays clear.</em>
           </motion.h2>
         </div>
 

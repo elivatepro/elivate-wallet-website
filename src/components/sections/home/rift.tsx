@@ -19,64 +19,71 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 
-const QUAKES = [
+const ACTIVITY = [
   {
-    at: "14:02:11",
-    depth: "L1",
-    mag: "4.2",
-    where: "checkout-api",
-    note: "regression · v2.4.1",
+    at: "09:42",
+    type: "Income",
+    member: "Ada O.",
+    team: "Delta",
+    amount: "+₦185K",
+    status: "Recorded",
   },
   {
-    at: "14:02:42",
-    depth: "L2",
-    mag: "3.1",
-    where: "auth-mesh",
-    note: "token rotation",
+    at: "09:36",
+    type: "Withdrawal",
+    member: "Daniel K.",
+    team: "Alpha",
+    amount: "₦75K",
+    status: "Pending",
   },
   {
-    at: "14:03:09",
-    depth: "L1",
-    mag: "2.4",
-    where: "cdn-edge",
-    note: "cache warm",
+    at: "09:15",
+    type: "Expense",
+    member: "Sarah E.",
+    team: "Beta",
+    amount: "−₦28.5K",
+    status: "Recorded",
   },
   {
-    at: "14:03:55",
-    depth: "L3",
-    mag: "5.6",
-    where: "billing-core",
-    note: "paged · oncall",
+    at: "08:58",
+    type: "Withdrawal",
+    member: "Michael A.",
+    team: "Gamma",
+    amount: "₦120K",
+    status: "Completed",
   },
   {
-    at: "14:04:18",
-    depth: "L2",
-    mag: "2.8",
-    where: "search-index",
-    note: "re-shard",
+    at: "08:44",
+    type: "Income",
+    member: "Tolu B.",
+    team: "Alpha",
+    amount: "+₦95K",
+    status: "Recorded",
   },
   {
-    at: "14:04:47",
-    depth: "L1",
-    mag: "1.9",
-    where: "webhooks",
-    note: "retry burst",
+    at: "08:21",
+    type: "Withdrawal",
+    member: "Grace N.",
+    team: "Delta",
+    amount: "₦60K",
+    status: "Approved",
   },
   {
-    at: "14:05:20",
-    depth: "L2",
-    mag: "3.4",
-    where: "billing-core",
-    note: "recovered",
+    at: "08:09",
+    type: "Income",
+    member: "Chidi E.",
+    team: "Beta",
+    amount: "+₦210K",
+    status: "Recorded",
   },
   {
-    at: "14:05:51",
-    depth: "L1",
-    mag: "2.1",
-    where: "search-index",
-    note: "hot",
+    at: "07:52",
+    type: "Expense",
+    member: "Mariam A.",
+    team: "Gamma",
+    amount: "−₦18K",
+    status: "Recorded",
   },
 ];
 
@@ -100,8 +107,6 @@ const Rift = () => {
 
   return (
     <section ref={sectionRef} className="relative isolate overflow-hidden">
-      {/* No -z-10 — section uses `isolate`, the next siblings paint above
-          via natural document order. */}
       <DottedBackdrop opacity={0.06} className="z-auto" />
       <span
         aria-hidden
@@ -116,12 +121,12 @@ const Rift = () => {
         <div className="text-meta flex items-center border-b pb-4">
           <span className="flex flex-1 items-center gap-2">
             <span className="bg-background inline-block size-1.5 animate-pulse rounded-full" />
-            8 quakes &middot; 14:02&ndash;14:05 UTC
+            Financial activity
           </span>
           <span className="hidden md:inline">
-            Drift &middot; <DriftReadout value={driftPct} />
+            View &middot; <DriftReadout value={driftPct} />
           </span>
-          <span className="flex-1 text-end">Peak L3 &middot; 5.6 mag</span>
+          <span className="flex-1 text-end">Illustrative product data</span>
         </div>
 
         <div className="relative mt-10 md:mt-14 lg:mt-20">
@@ -130,9 +135,9 @@ const Rift = () => {
               style={{ y: leftShift }}
               className="will-change-transform sm:shrink-0"
             >
-              <p className="text-meta opacity-60">Your stack</p>
+              <p className="text-meta opacity-60">Financial activity</p>
               <h2 className="mt-4 text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
-                What <em className="opacity-60">failed</em>
+                what <em className="opacity-60">changed</em>
               </h2>
             </motion.div>
 
@@ -158,21 +163,21 @@ const Rift = () => {
 
               <div className="pointer-events-none absolute inset-x-4 top-1/2 hidden h-40 -translate-y-1/2 overflow-hidden md:block">
                 <motion.ul style={{ x: reel }} className="flex gap-3">
-                  {[...QUAKES, ...QUAKES].map((q, i) => (
+                  {[...ACTIVITY, ...ACTIVITY].map((entry, i) => (
                     <li
-                      key={`${q.at}-${i}`}
+                      key={`${entry.at}-${i}`}
                       className="border-foreground/30 bg-card/80 w-36 shrink-0 rounded border px-3 py-2 backdrop-blur"
                     >
                       <div className="text-meta-xs flex items-center justify-between opacity-60">
-                        <span>{q.at}</span>
-                        <span>{q.depth}</span>
+                        <span>{entry.at}</span>
+                        <span>{entry.type}</span>
                       </div>
                       <div className="mt-1.5 flex items-baseline gap-2">
                         <span className="font-display text-lg leading-none tracking-tighter">
-                          {q.mag}
+                          {entry.amount}
                         </span>
                         <span className="text-meta-xs opacity-70">
-                          {q.where}
+                          {entry.member}
                         </span>
                       </div>
                     </li>
@@ -185,21 +190,19 @@ const Rift = () => {
               style={{ y: rightShift }}
               className="text-right will-change-transform sm:shrink-0"
             >
-              <p className="text-meta opacity-60">Elivate</p>
+              <p className="text-meta opacity-60">Elivate Wallet</p>
               <h2 className="mt-4 text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
-                <em className="opacity-60">what</em> held
+                <em className="opacity-60">what</em> remains
               </h2>
             </motion.div>
           </div>
         </div>
 
         <div className="mx-auto mt-20 grid max-w-5xl grid-cols-1 gap-8 md:mt-24 md:grid-cols-[1fr_1.2fr]">
-          <p className="text-meta opacity-60">How it works &middot; 00</p>
+          <p className="text-meta opacity-60">How it works &middot; 05</p>
           <p className="text-muted-foreground max-w-xl text-base leading-relaxed md:text-lg">
-            Every incident starts as a gap between what the system promised and
-            what actually happened. Elivate keeps that gap visible and
-            annotated &mdash; a live feed of every disruption &mdash; until
-            on-call resolves it for good.
+            Every balance change leaves a record. See who it belongs to, what
+            changed, when it happened, and what still needs your attention.
           </p>
         </div>
 
@@ -208,17 +211,17 @@ const Rift = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Time</TableHead>
-                <TableHead>Depth</TableHead>
-                <TableHead className="hidden md:table-cell">Shape</TableHead>
-                <TableHead>Mag</TableHead>
-                <TableHead className="w-full">Where</TableHead>
-                <TableHead className="text-right">Note</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead className="hidden md:table-cell">Team</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead className="w-full">Member</TableHead>
+                <TableHead className="text-right">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {QUAKES.map((q, i) => (
+              {ACTIVITY.map((entry, i) => (
                 <motion.tr
-                  key={q.at}
+                  key={`${entry.at}-${entry.member}`}
                   initial={{ opacity: 0, y: 8 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
@@ -227,29 +230,23 @@ const Rift = () => {
                     delay: 0.04 * i,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className={cn(
-                    "border-b font-mono text-xs",
-                    Number(q.mag) >= 5 && "bg-foreground/[0.03]",
-                  )}
+                  className="border-b font-mono text-xs"
                 >
                   <TableCell className="whitespace-nowrap opacity-70">
-                    {q.at}
+                    {entry.at}
                   </TableCell>
                   <TableCell className="whitespace-nowrap opacity-70">
-                    {q.depth}
+                    {entry.type}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    <QuakeBlip
-                      mag={Number(q.mag)}
-                      depth={q.depth as "L1" | "L2" | "L3"}
-                    />
+                    {entry.team}
                   </TableCell>
                   <TableCell className="font-display text-lg leading-none tracking-tighter whitespace-nowrap normal-case">
-                    {q.mag}
+                    {entry.amount}
                   </TableCell>
-                  <TableCell className="normal-case">{q.where}</TableCell>
+                  <TableCell className="normal-case">{entry.member}</TableCell>
                   <TableCell className="text-right tracking-widest whitespace-nowrap uppercase opacity-70">
-                    {q.note}
+                    {entry.status}
                   </TableCell>
                 </motion.tr>
               ))}
@@ -258,9 +255,9 @@ const Rift = () => {
         </div>
 
         <div className="text-meta-xs mt-10 flex flex-wrap items-center gap-3 border-t pt-4 opacity-70 md:mt-14 lg:mt-20">
-          <span className="flex-1">Scroll drives drift</span>
-          <span className="hidden md:inline">Rift seals on exit</span>
-          <span className="flex-1 text-end">End of tape</span>
+          <span className="flex-1">Organization · Team · Member</span>
+          <span className="hidden md:inline">Date range · Activity type</span>
+          <span className="flex-1 text-end">End of activity</span>
         </div>
       </div>
     </section>
@@ -276,73 +273,6 @@ const DriftReadout = ({ value }: { value: MotionValue<string> }) => {
     return () => unsub();
   }, [value]);
   return <span ref={ref}>0%</span>;
-};
-
-const QuakeBlip = ({
-  mag,
-  depth,
-}: {
-  mag: number;
-  depth: "L1" | "L2" | "L3";
-}) => {
-  const BASE = 14;
-  const h = mag * 2.0;
-  const isL3 = depth === "L3";
-  const noise = (x: number) =>
-    Math.sin(x * 0.45) * 0.5 + Math.sin(x * 0.83) * 0.35;
-
-  const segs: string[] = [];
-  for (let x = 0; x <= 28; x += 3) {
-    segs.push(
-      `${segs.length === 0 ? "M" : "L"}${x} ${(BASE + noise(x)).toFixed(2)}`,
-    );
-  }
-  segs.push(`L32 ${(BASE - h * 0.2).toFixed(2)}`);
-  segs.push(`L36 ${(BASE - h * 0.65).toFixed(2)}`);
-  segs.push(`L40 ${(BASE - h).toFixed(2)}`);
-  segs.push(`L43 ${(BASE - h * 0.4).toFixed(2)}`);
-  segs.push(`L46 ${(BASE + h * 0.15).toFixed(2)}`);
-  segs.push(`L49 ${(BASE - h * 0.05).toFixed(2)}`);
-  for (let x = 53; x <= 80; x += 3) {
-    segs.push(`L${x} ${(BASE + noise(x)).toFixed(2)}`);
-  }
-
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 80 28"
-      preserveAspectRatio="none"
-      className={cn(
-        "h-6 w-20",
-        isL3
-          ? "text-foreground"
-          : depth === "L2"
-            ? "text-foreground/75"
-            : "text-foreground/55",
-      )}
-    >
-      <line
-        x1="0"
-        y1={BASE}
-        x2="80"
-        y2={BASE}
-        stroke="currentColor"
-        strokeWidth="0.5"
-        strokeDasharray="1 2"
-        vectorEffect="non-scaling-stroke"
-        opacity={0.3}
-      />
-      <path
-        d={segs.join(" ")}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={isL3 ? "1.4" : "1"}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
-  );
 };
 
 export default Rift;

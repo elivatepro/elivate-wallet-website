@@ -26,73 +26,71 @@ type Stage = {
   label: string;
   ratio: string;
   hint: string;
-  // Visual height factor (0–1). Drives the chart's segment scale via synthetic value.
   visual: number;
 };
 
-const HEADER_LEFT = "§ Mesh · declared → pinned";
-const HEADER_MIDDLE = "Right now · across 41 teams";
-const HEADER_RIGHT = "2026.04 · MRD-mesh-001";
+const HEADER_LEFT = "§ SCOPE · NETWORK → ENTRY";
+const HEADER_MIDDLE = "FIVE LEVELS · ONE RECORD";
+const HEADER_RIGHT = "ELIVATE · WALLET-001";
 
-const HEADLINE_LEAD = "12.4k services in the mesh.";
-const HEADLINE_TAIL = "620 with eyes on them.";
+const HEADLINE_LEAD = "See the whole network.";
+const HEADLINE_TAIL = "Trace one exact entry.";
 const SUB =
-  "Every service walks the same five rings. Only the last one has a human paying attention right now.";
-const COUNT_LABEL = "now";
+  "Start with the wider picture, then narrow by team, member, balance, and transaction until you reach the record you need.";
 
 const STAGES: readonly Stage[] = [
   {
     num: "01",
-    count: "12.4k",
-    label: "Declared",
+    count: "ALL",
+    label: "Network",
     ratio: "ALL",
-    hint: "Registered with a name, an owner, and a heartbeat.",
+    hint: "See financial activity across your organization.",
     visual: 1.0,
   },
   {
     num: "02",
-    count: "6.8k",
-    label: "Reporting",
-    ratio: "55%",
-    hint: "Emitting in the last minute — logs, metrics, or traces.",
-    visual: 0.55,
+    count: "1 TEAM",
+    label: "Team",
+    ratio: "1 TEAM",
+    hint: "Narrow the view to a specific team or office.",
+    visual: 0.72,
   },
   {
     num: "03",
-    count: "3.2k",
-    label: "SLO-tracked",
-    ratio: "26%",
-    hint: "An SLO defined, a budget being measured.",
-    visual: 0.26,
+    count: "1 MEMBER",
+    label: "Member",
+    ratio: "1 MEMBER",
+    hint: "Open one member’s balance and financial history.",
+    visual: 0.5,
   },
   {
     num: "04",
-    count: "1.5k",
-    label: "At risk",
-    ratio: "12%",
-    hint: "Burning budget faster than the window refills.",
-    visual: 0.12,
+    count: "1 BALANCE",
+    label: "Balance",
+    ratio: "1 BALANCE",
+    hint: "See the entries behind their current recorded balance.",
+    visual: 0.3,
   },
   {
     num: "05",
-    count: "620",
-    label: "Pinned",
-    ratio: "5%",
-    hint: "On someone's console right now. Eyes on it.",
-    visual: 0.05,
+    count: "1 ENTRY",
+    label: "Transaction",
+    ratio: "1 ENTRY",
+    hint: "Inspect the exact income, expense, adjustment, or withdrawal entry.",
+    visual: 0.12,
   },
 ] as const;
 
 const RATIO_BY_PCT = new Map<number, string>([
   [100, "ALL"],
-  [55, "55%"],
-  [26, "26%"],
-  [12, "12%"],
-  [5, "5%"],
+  [72, "1 TEAM"],
+  [50, "1 MEMBER"],
+  [30, "1 BALANCE"],
+  [12, "1 ENTRY"],
 ]);
 
 const formatPercentage = (pct: number) =>
-  RATIO_BY_PCT.get(Math.round(pct)) ?? `${Math.round(pct)}%`;
+  RATIO_BY_PCT.get(Math.round(pct)) ?? "";
 
 const ProductFunnel = () => {
   const [selected, setSelected] = useState<number | null>(null);
@@ -103,9 +101,6 @@ const ProductFunnel = () => {
 
   const focused = hovered ?? selected;
   const focusedStage = focused !== null ? STAGES[focused]! : null;
-
-  const firstStage = STAGES[0]!;
-  const lastStage = STAGES[STAGES.length - 1]!;
 
   const chartData = useMemo(
     () =>
@@ -172,15 +167,13 @@ const ProductFunnel = () => {
           {focusedStage ? (
             <>
               <div>
-                <dt className="text-meta text-muted-foreground">Ring</dt>
+                <dt className="text-meta text-muted-foreground">Level</dt>
                 <dd className="font-display mt-2 text-2xl leading-none tracking-tight md:text-3xl">
                   № {focusedStage.num} · {focusedStage.label}
                 </dd>
               </div>
               <div>
-                <dt className="text-meta text-muted-foreground">
-                  Services · {COUNT_LABEL}
-                </dt>
+                <dt className="text-meta text-muted-foreground">Scope</dt>
                 <dd className="font-display mt-2 text-2xl leading-none tracking-tight tabular-nums md:text-3xl">
                   {focusedStage.count}
                 </dd>
@@ -195,21 +188,21 @@ const ProductFunnel = () => {
           ) : (
             <>
               <div>
-                <dt className="text-meta text-muted-foreground">Rings</dt>
+                <dt className="text-meta text-muted-foreground">Levels</dt>
                 <dd className="font-display mt-2 text-2xl leading-none tracking-tight tabular-nums md:text-3xl">
-                  {STAGES.length}
+                  5
                 </dd>
               </div>
               <div>
                 <dt className="text-meta text-muted-foreground">Range</dt>
-                <dd className="font-display mt-2 text-2xl leading-none tracking-tight tabular-nums md:text-3xl">
-                  {firstStage.count} → {lastStage.count}
+                <dd className="font-display mt-2 text-2xl leading-none tracking-tight md:text-3xl">
+                  Network → Entry
                 </dd>
               </div>
               <div>
                 <dt className="text-meta text-muted-foreground">Inspect</dt>
                 <dd className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                  Hover or click any ring above.
+                  Hover or click any level above.
                 </dd>
               </div>
             </>

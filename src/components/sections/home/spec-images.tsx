@@ -64,45 +64,44 @@ const KEYS: SpecKey[] = ["A", "B", "C", "D", "E", "F"];
 const SPEC_ROWS: SpecRow[] = [
   {
     key: "A",
-    label: "Surface",
-    value: "One console for logs, metrics, and traces",
-    detail: "Keyboard-first. ⌘K to search anything.",
+    label: "Network overview",
+    value: "See what’s happening without chasing updates.",
+    detail: "Balances, team activity, and withdrawal requests across your network.",
     image: "/images/spec/6.png",
   },
   {
     key: "B",
-    label: "Topology",
-    value: "Every service mapped to its SLO",
-    detail: "See your full service hierarchy at a glance.",
+    label: "Member balances",
+    value: "Give members the answer before they have to ask.",
+    detail: "Their balance and transaction history stay visible in Wallet.",
     image: "/images/spec/1.png",
   },
   {
     key: "C",
-    label: "Signal model",
-    value: "Alerts based on SLO error-budget burn",
-    detail: "You only get paged when your monthly budget is at risk.",
+    label: "Income & records",
+    value: "Record it once. Keep the proof with it.",
+    detail: "Attach receipts and keep each income entry in the member’s history.",
     image: "/images/spec/3.png",
   },
   {
     key: "D",
-    label: "Auto-draft",
-    value: "Post-mortems written automatically",
-    detail:
-      "Timeline, suspect services, and the last 3 commits — attached to every incident.",
+    label: "Withdrawals",
+    value: "Track requests where you can actually see them.",
+    detail: "See what is waiting, approved, or already handled.",
     image: "/images/spec/4.png",
   },
   {
     key: "E",
-    label: "Query speed",
-    value: "p95 queries under 120 ms worldwide",
-    detail: "Fast reads from every region Elivate runs in.",
+    label: "Teams & offices",
+    value: "Grow the network without growing the admin.",
+    detail: "Keep offices, leaders, and members organized under one network.",
     image: "/images/spec/5.png",
   },
   {
     key: "F",
-    label: "Noise floor",
-    value: "97% fewer alerts since Q1 2026",
-    detail: "Measured across 41 customer teams.",
+    label: "Oversight & reporting",
+    value: "Know what needs attention before the next meeting.",
+    detail: "Follow activity and records across your network from one place.",
     image: "/images/spec/8.png",
   },
 ];
@@ -198,7 +197,7 @@ const SpecImages = () => {
             style={{ y: headlineParallax, willChange: "transform" }}
             className="text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]"
           >
-            Elivate, <em className="text-muted-foreground">at a glance.</em>
+            Elivate Wallet, <em className="text-muted-foreground">at a glance.</em>
           </motion.h2>
           <Stamp />
         </div>
@@ -249,7 +248,7 @@ const SpecImages = () => {
               variants={fadeUp}
               className="text-meta text-muted-foreground group-hover/fig:text-foreground flex items-baseline justify-between border-b pb-3 transition-colors duration-300"
             >
-              <span>Spec &middot; 6 zones, A through F</span>
+              <span>Wallet · 6 areas, A through F</span>
               <span className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
@@ -374,21 +373,21 @@ const Stamp = () => (
     className="group/stamp border-foreground/20 hover:border-foreground/50 hidden border p-4 transition-colors duration-200 select-none md:block md:min-w-56"
   >
     <div className="text-meta text-muted-foreground group-hover/stamp:text-foreground flex items-center justify-between border-b pb-2 transition-colors duration-200">
-      <span>§ MRD / 01</span>
-      <span>Rev A</span>
+      <span>§ EW / 02</span>
+      <span>Wallet</span>
     </div>
     <dl className="text-meta text-muted-foreground mt-2 space-y-1">
       <div className="flex items-baseline justify-between">
-        <dt>Issued</dt>
-        <dd className="text-foreground">2026.01</dd>
+        <dt>Product</dt>
+        <dd className="text-foreground">Elivate Wallet</dd>
       </div>
       <div className="flex items-baseline justify-between">
-        <dt>Scale</dt>
-        <dd className="text-foreground">1 : 1</dd>
+        <dt>Focus</dt>
+        <dd className="text-foreground">Network clarity</dd>
       </div>
       <div className="flex items-baseline justify-between">
-        <dt>Sheet</dt>
-        <dd className="text-foreground">1 / 3</dd>
+        <dt>Areas</dt>
+        <dd className="text-foreground">A–F</dd>
       </div>
     </dl>
   </motion.div>
