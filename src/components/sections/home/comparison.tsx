@@ -18,39 +18,39 @@ const fadeUp: Variants = {
 
 const ROWS = [
   {
-    topic: "Pricing",
-    us: "Fixed cost, all-in.",
-    them: "Per-host, per-metric, per-seat.",
+    topic: "Balances",
+    us: "Members see their balance.",
+    them: "You look it up and reply.",
   },
   {
-    topic: "Schema",
-    us: "Logs, metrics, traces — one.",
-    them: "Three products, three invoices.",
+    topic: "Records",
+    us: "One history per member.",
+    them: "Sheets, docs, and chat threads.",
   },
   {
-    topic: "Ingest",
-    us: "OTLP native, 3ms edge.",
-    them: "Proprietary agents, 200ms+.",
+    topic: "Withdrawals",
+    us: "One request flow.",
+    them: "Requests arrive in messages.",
   },
   {
-    topic: "Incident",
-    us: "A room with a runbook.",
-    them: "A channel, if you remember to open one.",
+    topic: "Receipts",
+    us: "Attached to the entry.",
+    them: "Buried in chats or folders.",
   },
   {
-    topic: "Retention",
-    us: "90 days, always.",
-    them: "7 days, then archived to cold.",
+    topic: "Backup",
+    us: "Team-owned backups.",
+    them: "You make copies yourself.",
   },
   {
-    topic: "Exports",
-    us: "Parquet, NDJSON, signed S3.",
-    them: "Support ticket and a prayer.",
+    topic: "Reporting",
+    us: "Your overview is ready.",
+    them: "You compile it by hand.",
   },
   {
-    topic: "Onboarding",
-    us: "90 seconds, first trace in ten.",
-    them: "Two-week professional services plan.",
+    topic: "Scale",
+    us: "Add people, keep the process.",
+    them: "More people, more admin.",
   },
 ];
 
@@ -66,11 +66,11 @@ const Comparison = () => (
       variants={fadeUp}
       className="text-meta text-muted-foreground flex items-center border-b pb-4"
     >
-      <span className="flex-1">7 categories &middot; head-to-head</span>
+      <span className="flex-1">7 ways &middot; head-to-head</span>
       <span className="hidden md:inline">
-        Pricing, schema, ingest, retention &middot; and more
+        Balances, records, withdrawals &middot; and more
       </span>
-      <span className="flex-1 text-end">Updated &middot; 2026.04</span>
+      <span className="flex-1 text-end">Wallet vs manual</span>
     </motion.div>
 
     <motion.div
@@ -78,15 +78,17 @@ const Comparison = () => (
       className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-end md:gap-6"
     >
       <div>
-        <div className="text-meta text-muted-foreground">Us</div>
+        <div className="text-meta text-muted-foreground">ELIVATE</div>
         <div className="font-display text-6xl leading-none tracking-tighter md:text-8xl">
-          Elivate.
+          Wallet.
         </div>
       </div>
       <div className="md:text-right">
-        <div className="text-meta text-muted-foreground">Them</div>
+        <div className="text-meta text-muted-foreground">
+          SHEETS · DOCS · WHATSAPP
+        </div>
         <div className="font-display text-muted-foreground/60 decoration-foreground/40 text-6xl leading-none tracking-tighter line-through md:text-8xl">
-          Legacy.
+          Manual.
         </div>
       </div>
     </motion.div>
@@ -130,7 +132,7 @@ const Comparison = () => (
           </div>
           <div className="mt-3 space-y-2.5">
             <div className="flex items-baseline gap-3">
-              <Badge className="shrink-0">Elivate</Badge>
+              <Badge className="shrink-0">Wallet</Badge>
               <p className="font-display text-lg leading-snug tracking-tight">
                 {row.us}
               </p>
@@ -140,7 +142,7 @@ const Comparison = () => (
                 variant="outline"
                 className="text-muted-foreground shrink-0"
               >
-                Legacy
+                Manual
               </Badge>
               <p className="font-display text-muted-foreground decoration-foreground/30 text-lg leading-snug tracking-tight line-through">
                 {row.them}
