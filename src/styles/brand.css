@@ -14,6 +14,11 @@
   --brand-border: #ffd2c2;
   --brand-ring: #ff7f4f;
   --chart-brand: #ff7f4f;
+
+  /* Focus is an interaction signal, so it follows the brand without changing
+   * the neutral semantic primary/accent system. */
+  --ring: var(--brand-ring);
+  --sidebar-ring: var(--brand-ring);
 }
 
 .dark {
@@ -25,6 +30,8 @@
   --brand-border: rgb(255 127 79 / 38%);
   --brand-ring: #ff7f4f;
   --chart-brand: #ff7f4f;
+  --ring: var(--brand-ring);
+  --sidebar-ring: var(--brand-ring);
 
   /* The stock theme leaves one unrelated blue token in dark mode.
    * Restore the neutral inverse instead of turning the whole primary system
@@ -36,12 +43,15 @@
 /* Small reusable brand primitives for components that need an intentional
  * Elivate signal without changing the template's global semantic tokens. */
 .brand-surface {
-  background: var(--brand);
-  color: var(--brand-foreground);
+  background: var(--brand) !important;
+  color: var(--brand-foreground) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 28%),
+    0 10px 26px -14px rgb(255 127 79 / 72%) !important;
 }
 
 .brand-surface:hover {
-  background: var(--brand-hover);
+  background: var(--brand-hover) !important;
 }
 
 .brand-soft-surface {
@@ -55,6 +65,84 @@
 
 .border-brand {
   border-color: var(--brand-border);
+}
+
+/* Primary actions use the Elivate signal colour. The chrome canvas/ring stays
+ * intact around Button's padding, preserving Meridian's metallic treatment. */
+[data-slot="button"][data-variant="default"] {
+  background: var(--brand) !important;
+  color: var(--brand-foreground) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 28%),
+    0 10px 26px -14px rgb(255 127 79 / 72%) !important;
+}
+
+[data-slot="button"][data-variant="default"]:hover {
+  background: var(--brand-hover) !important;
+}
+
+/* Navbar conversion action: preserve the compact Meridian geometry, change
+ * only the signal colour. */
+.bg-foreground a[href="/contact"].bg-background {
+  background: var(--brand) !important;
+  color: var(--brand-foreground) !important;
+}
+
+.bg-foreground a[href="/contact"].bg-background:hover {
+  background: var(--brand-hover) !important;
+  opacity: 1;
+}
+
+/* Active navigation keeps its neutral label while the existing brackets pick
+ * up the brand colour. */
+a[aria-current="page"] [aria-hidden="true"] {
+  color: var(--brand) !important;
+}
+
+/* Existing small live/status pulses become a consistent Elivate signal. */
+.bg-foreground.animate-pulse.rounded-full {
+  background-color: var(--brand) !important;
+  box-shadow: 0 0 0 1px rgb(255 127 79 / 18%);
+}
+
+/* Form and pricing controls: brand only the user's active/selected state. */
+[data-slot="slider-range"] {
+  background-color: var(--brand) !important;
+}
+
+[data-slot="slider-thumb"] > span {
+  border-color: var(--brand) !important;
+}
+
+[data-slot="checkbox"][data-state="checked"] {
+  border-color: var(--brand) !important;
+  background-color: var(--brand) !important;
+  color: var(--brand-foreground) !important;
+}
+
+[data-slot="tabs-trigger"][data-state="active"] {
+  color: var(--brand) !important;
+}
+
+#contact-form input:focus-visible,
+#contact-form textarea:focus-visible {
+  border-color: var(--brand) !important;
+}
+
+#contact-form button[type="submit"] {
+  border-color: var(--brand) !important;
+  background: var(--brand) !important;
+  color: var(--brand-foreground) !important;
+  box-shadow: 0 10px 26px -14px rgb(255 127 79 / 72%);
+}
+
+#contact-form button[type="submit"]:hover {
+  background: var(--brand-hover) !important;
+}
+
+::selection {
+  background: var(--brand-soft-strong);
+  color: var(--foreground);
 }
 
 /* Existing live indicator: keep the same motion with the Elivate logo orange. */
@@ -134,4 +222,12 @@
         #94a3b8
       )
       border-box !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chrome-ring-outline,
+  .elivate-fallback-silver,
+  .elivate-fallback-red {
+    animation: none !important;
+  }
 }
