@@ -1,11 +1,14 @@
 ---
 import BlogMagazine from "@/components/sections/blog/magazine";
 import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { getPublishedBlogSummaries } from "@/lib/blog";
+
+const posts = await getPublishedBlogSummaries();
 ---
 
 <DefaultLayout
   title="Blog"
   description="Practical writing on clearer financial records, growing member networks, and what we’re learning as Elivate Wallet evolves."
 >
-  <BlogMagazine client:load />
+  <BlogMagazine posts={posts} client:load />
 </DefaultLayout>
