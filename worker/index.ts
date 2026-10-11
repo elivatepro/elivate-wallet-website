@@ -1,7 +1,8 @@
-// Serves the static Astro build and handles the contact form endpoint.
-// Everything except `/api/contact` is answered by the assets binding before
-// this Worker runs (see `run_worker_first` in wrangler.jsonc).
+// Serves the static Astro build and handles the contact form and Ask AI
+// endpoints. Everything except those routes is answered by the assets
+// binding before this Worker runs (see `run_worker_first` in wrangler.jsonc).
 
+import { type AskEnv, handleAsk } from "./ask";
 import {
   CONTACT_INQUIRY_TYPES,
   CONTACT_NETWORK_SIZES,
@@ -9,7 +10,7 @@ import {
   type ContactPayload,
 } from "../src/lib/contact";
 
-interface Env {
+interface Env extends AskEnv {
   ASSETS: Fetcher;
   EMAIL: SendEmail;
   TURNSTILE_SECRET_KEY: string;
@@ -25,6 +26,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/contact") return handleContact(request, env);
+    if (url.pathname === "/api/ask") return handleAsk(request, env);
     return env.ASSETS.fetch(request);
   },
 } satisfies ExportedHandler<Env>;

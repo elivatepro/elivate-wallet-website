@@ -9,9 +9,11 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
+  /** Docs pages bring their own header instead of the marketing navbar. */
+  hideNavbar?: boolean;
 }
 
-const { title, description, image, noindex } = Astro.props;
+const { title, description, image, noindex, hideNavbar } = Astro.props;
 
 const copyrightYear = new Date().getFullYear();
 const isHome = Astro.url.pathname === "/";
@@ -29,7 +31,7 @@ const isHome = Astro.url.pathname === "/";
   </head>
   <body>
     {isHome && <IntroLoader client:load />}
-    <Navbar initialBannerVisible={false} client:load />
+    {!hideNavbar && <Navbar initialBannerVisible={false} client:load />}
     <main>
       <slot />
     </main>

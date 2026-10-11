@@ -17,8 +17,23 @@ const NOTION_VERSION = "2025-09-03";
 const DOCS_DATA_SOURCE_ID =
   process.env.NOTION_DOCS_DATA_SOURCE_ID ??
   "aa1a529b-55d2-4867-941e-6172096258fd";
-const APPROVED_GROUPS = new Set(["Foundations", "Workflows", "Reference"]);
+// Must match the Group options in the Notion Docs database and GROUP_ORDER
+// in src/lib/docs.ts.
+const APPROVED_GROUPS = new Set([
+  "Getting started",
+  "For members",
+  "For leaders",
+  "Setup & admin",
+  "Troubleshooting",
+  "Foundations",
+  "Workflows",
+  "Reference",
+]);
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// Local preview only: DOCS_PREVIEW=1 also includes chapters in Review, and a
+// Review chapter replaces a Published one with the same slug. Never set this
+// in Cloudflare builds.
+const PREVIEW = process.env.DOCS_PREVIEW === "1";
 
 const root = process.cwd();
 const contentDir = path.join(root, "src", "content", "docs");
@@ -52,7 +67,14 @@ async function queryPublishedDocs() {
   do {
     const body = {
       page_size: 100,
-      filter: { property: "Status", select: { equals: "Published" } },
+      filter: PREVIEW
+        ? {
+            or: [
+              { property: "Status", select: { equals: "Published" } },
+              { property: "Status", select: { equals: "Review" } },
+            ],
+          }
+        : { property: "Status", select: { equals: "Published" } },
       sorts: [{ property: "Order", direction: "ascending" }],
     };
     if (cursor) body.start_cursor = cursor;
@@ -368,12 +390,18 @@ async function normalizeDoc(page) {
     "",
   ].join("\n");
 
-  return { slug, title, mdx };
+  return { slug, title, mdx, status: propertySelect(properties.Status) };
 }
 
 const pages = await queryPublishedDocs();
-const docs = [];
+let docs = [];
 for (const page of pages) docs.push(await normalizeDoc(page));
+
+if (PREVIEW) {
+  const reviewSlugs = new Set(docs.filter((d) => d.status === "Review").map((d) => d.slug));
+  docs = docs.filter((d) => d.status === "Review" || !reviewSlugs.has(d.slug));
+  console.warn("[docs] PREVIEW: including chapters in Review. Do not deploy this build.");
+}
 
 const slugs = new Set();
 for (const doc of docs) {

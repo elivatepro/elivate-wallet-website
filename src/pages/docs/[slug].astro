@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 
 import { ArticleHero } from "@/components/docs/article-hero";
+import { DocsHeader } from "@/components/docs/docs-header";
 import { DocsSidebar } from "@/components/docs/docs-sidebar";
 import { DocsToc } from "@/components/docs/docs-toc";
 import { DottedBackdrop } from "@/components/layout/dotted-backdrop";
@@ -37,11 +38,13 @@ const mdxComponents = getDocsMdxComponents();
 <DefaultLayout
   title={`${data.title} · Docs`}
   description={data.description}
+  hideNavbar
 >
+  <DocsHeader nav={nav} client:load />
   <div class="flex w-full">
     <aside
       aria-label="Docs sidebar"
-      class="hidden h-svh w-[286px] shrink-0 border-r md:sticky md:top-0 md:block md:overflow-y-auto"
+      class="hidden h-[calc(100svh-3.5rem)] w-[286px] shrink-0 border-r md:sticky md:top-14 md:block md:overflow-y-auto"
     >
       <div class="px-5 pt-6 pb-10">
         <DocsSidebar nav={nav} client:load />
@@ -52,7 +55,7 @@ const mdxComponents = getDocsMdxComponents();
       <DottedBackdrop />
       <div class="relative mx-auto flex w-full max-w-[1280px]">
         <main class="min-w-0 flex-1">
-          <article class="hero-padding relative px-6 md:px-10 lg:px-14">
+          <article class="relative pt-10 pb-16 md:pt-14 md:pb-24 px-6 md:px-10 lg:px-14">
             <nav
               aria-label="Breadcrumb"
               class="text-meta text-muted-foreground flex items-center justify-between border-b pb-4"
@@ -143,7 +146,7 @@ const mdxComponents = getDocsMdxComponents();
 
         <aside
           aria-label="Table of contents"
-          class="hidden h-svh w-[286px] shrink-0 xl:sticky xl:top-0 xl:block xl:overflow-y-auto"
+          class="hidden h-[calc(100svh-3.5rem)] w-[286px] shrink-0 xl:sticky xl:top-14 xl:block xl:overflow-y-auto"
         >
           <div class="flex h-full flex-col ps-2 pe-4 pt-20 pb-2">
             <DocsToc toc={toc} client:visible />
