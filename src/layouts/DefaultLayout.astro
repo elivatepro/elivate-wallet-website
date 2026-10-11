@@ -8,9 +8,10 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
 }
 
-const { title, description, image } = Astro.props;
+const { title, description, image, noindex } = Astro.props;
 
 const copyrightYear = new Date().getFullYear();
 const isHome = Astro.url.pathname === "/";
@@ -19,7 +20,12 @@ const isHome = Astro.url.pathname === "/";
 <!doctype html>
 <html lang="en" class="font-text antialiased">
   <head>
-    <BaseHead title={title} description={description} image={image} />
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      noindex={noindex}
+    />
   </head>
   <body>
     {isHome && <IntroLoader client:load />}
@@ -30,25 +36,43 @@ const isHome = Astro.url.pathname === "/";
     <Footer copyrightYear={copyrightYear} client:idle />
 
     <script is:inline>
+      // Copy, brand color, pre-chat form and greeting are managed on the
+      // Chatwoot inbox itself; these settings only control the launcher.
       window.chatwootSettings = {
         position: "right",
         type: "expanded_bubble",
-        launcherTitle: "Hey Yo!",
+        launcherTitle: "Chat with our team",
+        locale: "en",
+        darkMode: "light",
+        showPopoutButton: false,
       };
 
       (function (d, t) {
         var BASE_URL = "https://app.chatwoot.com";
-        var g = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-        g.src = BASE_URL + "/packs/js/sdk.js";
-        g.async = true;
-        s.parentNode.insertBefore(g, s);
-        g.onload = function () {
-          window.chatwootSDK.run({
-            websiteToken: "MEhVTNYdfkw1CeMYMyJEog8e",
-            baseUrl: BASE_URL,
-          });
-        };
+        function load() {
+          var g = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+          g.src = BASE_URL + "/packs/js/sdk.js";
+          g.async = true;
+          s.parentNode.insertBefore(g, s);
+          g.onload = function () {
+            window.chatwootSDK.run({
+              websiteToken: "MEhVTNYdfkw1CeMYMyJEog8e",
+              baseUrl: BASE_URL,
+            });
+          };
+        }
+        // Defer until the page is idle so the widget never competes with
+        // first paint or the intro loader.
+        function schedule() {
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(load, { timeout: 3000 });
+          } else {
+            setTimeout(load, 1500);
+          }
+        }
+        if (d.readyState === "complete") schedule();
+        else window.addEventListener("load", schedule, { once: true });
       })(document, "script");
     </script>
   </body>

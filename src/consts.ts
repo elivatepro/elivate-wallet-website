@@ -30,9 +30,16 @@ export const SITE_METADATA = {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     siteName: "Elivate Wallet",
+    locale: "en_US",
+    image: {
+      url: "/og.png",
+      width: 1200,
+      height: 630,
+      alt: "Elivate Wallet — A wallet that scales with your network.",
+    },
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
   },

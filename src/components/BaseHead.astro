@@ -9,24 +9,49 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image } = Astro.props;
+const { title, description, image, noindex = false } = Astro.props;
 const finalTitle = title
   ? SITE_METADATA.title.template.replace("%s", title)
   : SITE_METADATA.title.default;
 const finalDescription = description || SITE_METADATA.description;
-const imageURL = image ? new URL(image, Astro.site) : null;
+const imageURL = new URL(image || SITE_METADATA.openGraph.image.url, Astro.site);
+const isDefaultImage = !image;
+const robots = noindex
+  ? "noindex, nofollow"
+  : `${SITE_METADATA.robots.index ? "index" : "noindex"}, ${SITE_METADATA.robots.follow ? "follow" : "nofollow"}`;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": new URL("/#organization", Astro.site).href,
+      name: SITE_METADATA.openGraph.siteName,
+      url: Astro.site?.href,
+      logo: new URL("/icon-512.png", Astro.site).href,
+    },
+    {
+      "@type": "WebSite",
+      "@id": new URL("/#website", Astro.site).href,
+      name: SITE_METADATA.openGraph.siteName,
+      url: Astro.site?.href,
+      description: SITE_METADATA.description,
+      publisher: { "@id": new URL("/#organization", Astro.site).href },
+    },
+  ],
+};
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta
-  name="robots"
-  content={`${SITE_METADATA.robots.index ? "index" : "noindex"}, ${SITE_METADATA.robots.follow ? "follow" : "nofollow"}`}
-/>
+<meta name="robots" content={robots} />
+<meta name="theme-color" content="#111314" />
+<meta name="color-scheme" content="dark light" />
 <meta name="keywords" content={SITE_METADATA.keywords.join(", ")} />
 <meta name="author" content={SITE_METADATA.authors[0].name} />
 <meta name="creator" content={SITE_METADATA.creator} />
@@ -44,6 +69,10 @@ const imageURL = image ? new URL(image, Astro.site) : null;
   }
 </script>
 
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <meta name="generator" content={Astro.generator} />
 <link rel="canonical" href={canonicalURL} />
@@ -53,17 +82,31 @@ const imageURL = image ? new URL(image, Astro.site) : null;
 <meta name="description" content={finalDescription} />
 
 <meta property="og:type" content="website" />
+<meta property="og:locale" content={SITE_METADATA.openGraph.locale} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:site_name" content={SITE_METADATA.openGraph.siteName} />
 <meta property="og:title" content={finalTitle} />
 <meta property="og:description" content={finalDescription} />
-{imageURL && <meta property="og:image" content={imageURL} />}
+<meta property="og:image" content={imageURL} />
+{
+  isDefaultImage && (
+    <>
+      <meta property="og:image:width" content={String(SITE_METADATA.openGraph.image.width)} />
+      <meta property="og:image:height" content={String(SITE_METADATA.openGraph.image.height)} />
+      <meta property="og:image:type" content="image/png" />
+    </>
+  )
+}
+<meta property="og:image:alt" content={isDefaultImage ? SITE_METADATA.openGraph.image.alt : finalTitle} />
 
-<meta property="twitter:card" content={SITE_METADATA.twitter.card} />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={finalTitle} />
-<meta property="twitter:description" content={finalDescription} />
-{imageURL && <meta property="twitter:image" content={imageURL} />}
+<meta name="twitter:card" content={SITE_METADATA.twitter.card} />
+<meta name="twitter:url" content={Astro.url} />
+<meta name="twitter:title" content={finalTitle} />
+<meta name="twitter:description" content={finalDescription} />
+<meta name="twitter:image" content={imageURL} />
+<meta name="twitter:image:alt" content={isDefaultImage ? SITE_METADATA.openGraph.image.alt : finalTitle} />
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
 
 <Font cssVariable="--font-family-sans" preload />
 <Font cssVariable="--font-family-display" preload />
