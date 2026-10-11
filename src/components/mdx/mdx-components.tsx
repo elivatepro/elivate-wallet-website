@@ -10,7 +10,7 @@ import {
 import { MotionCard } from "@/components/mdx/motion-card";
 import { MotionStep, MotionSteps } from "@/components/mdx/motion-steps";
 import { MotionTabs } from "@/components/mdx/motion-tabs";
-import { getLangMeta, highlight } from "@/lib/highlighter";
+import { getLangMeta } from "@/lib/highlighter";
 import { cn } from "@/lib/utils";
 
 // Heading IDs come from the `remarkHeading` plugin upstream — no
@@ -135,23 +135,56 @@ function InlineCode(props: ComponentPropsWithoutRef<"code">) {
   );
 }
 
-async function Pre({ children }: ComponentPropsWithoutRef<"pre">) {
+// Astro hands React MDX components their children as pre-rendered HTML
+// (a StaticHtml element with a `value` prop) rather than React nodes.
+function slotHtml(node: ReactNode): string | null {
+  if (node && typeof node === "object" && "props" in (node as object)) {
+    const value = (node as { props: { value?: unknown } }).props.value;
+    if (value != null) return String(value);
+  }
+  return null;
+}
+
+function unescapeHtml(value: string) {
+  return value
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'")
+    .replaceAll("&#x27;", "'")
+    .replaceAll("&amp;", "&");
+}
+
+function Pre({ children }: ComponentPropsWithoutRef<"pre">) {
   // The MDX pipeline gives us <pre><code class="language-bash title="x.ts">…</code></pre>.
-  // Unwrap the <code>, parse the language + optional title= token, run Shiki
-  // on the server, then hand the rendered HTML to the client CodeBlock.
+  // Unwrap the <code>, parse the language + optional title= token, then hand
+  // the code to the client CodeBlock. This must stay synchronous: Astro's
+  // React renderer silently renders async components as nothing, which is
+  // why code blocks used to vanish (Shiki highlighting is async).
+  const raw = slotHtml(children);
   const codeProps =
-    children && typeof children === "object" && "props" in (children as object)
+    raw == null &&
+    children &&
+    typeof children === "object" &&
+    "props" in (children as object)
       ? (children as { props: { className?: string; children?: ReactNode } })
           .props
       : { className: "", children: "" };
-  const className = codeProps.className ?? "";
+  const className =
+    raw != null
+      ? (/<code[^>]*class="([^"]*)"/.exec(raw)?.[1] ?? "")
+      : (codeProps.className ?? "");
   const langRaw = /language-([\w-]+(?:[^\s]*)?)/.exec(className)?.[1] ?? "";
   const titleMatch = /title=(?:"([^"]+)"|'([^']+)')/.exec(langRaw);
   const lang = langRaw.replace(/title=.+$/, "").trim();
   const title = titleMatch?.[1] ?? titleMatch?.[2];
-  const code = toText(codeProps.children).replace(/\n$/, "");
+  const code = (
+    raw != null
+      ? unescapeHtml(raw.replace(/<[^>]+>/g, ""))
+      : toText(codeProps.children)
+  ).replace(/\n$/, "");
   const meta = getLangMeta(lang);
-  const html = await highlight(code, lang);
+  const html = `<pre><code>${escapeHtml(code)}</code></pre>`;
   return (
     <CodeBlock
       code={code}
@@ -161,6 +194,13 @@ async function Pre({ children }: ComponentPropsWithoutRef<"pre">) {
       title={title}
     />
   );
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function Hr(props: ComponentPropsWithoutRef<"hr">) {

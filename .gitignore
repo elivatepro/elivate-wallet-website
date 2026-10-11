@@ -4,6 +4,9 @@ dist/
 .astro/
 src/generated/
 public/blog-media/
+# docs are generated from the Notion "Docs" database (scripts/sync-notion-docs.mjs)
+src/content/docs/
+public/docs-media/
 
 # dependencies
 node_modules/
@@ -26,3 +29,7 @@ pnpm-debug.log*
 .idea/
 .qodo
 .vercel
+
+# wrangler local secrets
+.dev.vars
+.wrangler/
