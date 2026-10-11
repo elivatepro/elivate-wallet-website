@@ -251,11 +251,11 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
 
         <motion.div
           variants={fadeUp}
-          className="text-meta text-muted-foreground mx-auto mt-10 flex max-w-3xl flex-wrap items-baseline gap-4"
+          className="text-meta text-muted-foreground mx-auto mt-10 flex max-w-3xl flex-wrap items-baseline gap-4 pb-20 md:pb-0"
         >
           <span className="flex-1">© {copyrightYear} ELIVATE</span>
           <span>ELIVATEWALLET.COM</span>
-          <div className="flex flex-1 items-center justify-end gap-4">
+          <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
             <a href="https://app.elivatewallet.com" className="hover:text-foreground">LOGIN</a>
             <a href="/contact" className="hover:text-foreground">SUPPORT</a>
             <a href="/pricing" className="hover:text-foreground">PRICING</a>
