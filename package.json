@@ -7,8 +7,8 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "node scripts/sync-notion-blog.mjs && astro dev",
-    "build": "node scripts/sync-notion-blog.mjs && astro build",
+    "dev": "node --env-file-if-exists=.env scripts/sync-notion-blog.mjs && astro dev",
+    "build": "node --env-file-if-exists=.env scripts/sync-notion-blog.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint --fix \"src/**/*.{js,ts,jsx,tsx,astro}\"",
