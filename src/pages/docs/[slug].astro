@@ -177,7 +177,6 @@ const mdxComponents = getDocsMdxComponents();
       overlay.append(big);
       const close = () => {
         overlay.remove();
-        document.removeEventListener("keydown", onKey);
         img.focus();
       };
       // Focus stays in the overlay: Tab goes nowhere else, Esc/Enter close.
@@ -190,7 +189,9 @@ const mdxComponents = getDocsMdxComponents();
         }
       };
       overlay.addEventListener("click", close);
-      document.addEventListener("keydown", onKey);
+      // On the focused overlay, not document: the keypress that opened it
+      // must not also reach this handler and close it again.
+      overlay.addEventListener("keydown", onKey);
       document.body.append(overlay);
       overlay.focus();
     };

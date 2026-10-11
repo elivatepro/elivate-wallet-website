@@ -380,6 +380,13 @@ html.theme-transition::view-transition-new(root) {
     display: none;
   }
 }
+/* Below 1440px the docs sidebar would squeeze the chapter too, so it steps
+ * aside while Ask AI is open and returns when the panel closes. */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  html.ask-ai-open aside[aria-label="Docs sidebar"] {
+    display: none;
+  }
+}
 
 /* Docs images: app screens and diagrams. Tall phone screens are capped so
  * they don't fill the page; everything is centred with a soft frame. */
