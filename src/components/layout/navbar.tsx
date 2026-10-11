@@ -31,6 +31,12 @@ const isItemActive = (href: string, pathname: string | null) => {
   return pathname === href || pathname.startsWith(`${href}/`);
 };
 
+// Off-site items (the app login) open in a new tab.
+const externalLinkProps = (href: string) =>
+  href.startsWith("http")
+    ? { target: "_blank", rel: "noopener noreferrer" }
+    : {};
+
 const DesktopBrackets = () => (
   <>
     <motion.span
@@ -195,6 +201,7 @@ const Navbar = ({
                         <li key={item.label}>
                           <a
                             href={item.href}
+                            {...externalLinkProps(item.href)}
                             onClick={() => setOpen(false)}
                             aria-current={active ? "page" : undefined}
                             className={cn(
@@ -245,6 +252,7 @@ const Navbar = ({
                 <a
                   key={item.label}
                   href={item.href}
+                  {...externalLinkProps(item.href)}
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "text-meta relative px-4 py-2 transition-colors",
