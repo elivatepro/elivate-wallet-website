@@ -58,6 +58,8 @@ export function useContactForm() {
             `Something went wrong. Please email ${CONTACT_EMAIL} directly.`,
         );
       }
+      // The token was spent on this submission; a later message needs a new one.
+      setToken(null);
       setStatus("success");
     } catch (err) {
       setStatus("error");

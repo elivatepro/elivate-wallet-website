@@ -33,7 +33,17 @@ export async function getAllDocs(): Promise<DocNavEntry[]> {
     .sort((a, b) => a.order - b.order);
 }
 
-const GROUP_ORDER = ["Foundations", "Workflows", "Reference"];
+// Sidebar order. Must match APPROVED_GROUPS in scripts/sync-notion-docs.mjs.
+const GROUP_ORDER = [
+  "Getting started",
+  "Foundations",
+  "For members",
+  "For leaders",
+  "Workflows",
+  "Setup & admin",
+  "Troubleshooting",
+  "Reference",
+];
 
 export async function getDocNav(): Promise<DocNavGroup[]> {
   const all = await getAllDocs();

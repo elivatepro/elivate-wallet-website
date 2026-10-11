@@ -6,8 +6,18 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/contact"]
+    "run_worker_first": ["/api/contact", "/api/ask"]
   },
+  // Ask AI on the docs (worker/ask.ts).
+  "ai": { "binding": "AI" },
+  "ratelimits": [
+    {
+      "name": "ASK_LIMITER",
+      "namespace_id": "1101",
+      // Per visitor IP: 6 questions a minute.
+      "simple": { "limit": 6, "period": 60 }
+    }
+  ],
   // Cloudflare Email Service (sending). elivatewallet.com is onboarded via the
   // cf-bounce.* DNS records; inbound mail stays on Google Workspace.
   "send_email": [
@@ -19,7 +29,8 @@
   ],
   "vars": {
     "CONTACT_FROM": "website@elivatewallet.com",
-    "CONTACT_TO": "hello@elivatewallet.com"
+    "CONTACT_TO": "hello@elivatewallet.com",
+    "ASK_MODEL": "@cf/zai-org/glm-4.7-flash"
   }
   // Secret (set with `wrangler secret put TURNSTILE_SECRET_KEY`):
   //   TURNSTILE_SECRET_KEY — "Elivate Wallet website (contact form)" widget

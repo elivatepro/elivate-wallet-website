@@ -5,8 +5,6 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 
-import { DocsSearch } from "@/components/docs/docs-search";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { usePathname } from "@/hooks/use-pathname";
 import type { DocNavGroup } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -16,8 +14,8 @@ type DocsSidebarProps = {
   className?: string;
 };
 
-// A plasma/fumadocs-style left rail: workspace pill at the top, search
-// affordance, then collapsible group sections with compact items. Active
+// A plasma/fumadocs-style left rail: collapsible group sections with compact
+// items (brand and search live in the docs header). Active
 // item gets a left accent bar + bg wash. Restrained micro-motion only —
 // chevron rotates, hover nudges right, the active bar travels via
 // layoutId when the route changes.
@@ -29,10 +27,6 @@ export const DocsSidebar = ({ nav, className }: DocsSidebarProps) => {
       aria-label="Docs navigation"
       className={cn("flex flex-col gap-5", className)}
     >
-      <SidebarBrand />
-      <WorkspaceCard />
-      <DocsSearch />
-
       <ul className="flex list-none flex-col gap-1">
         <SidebarLink
           href="/docs"
@@ -61,26 +55,6 @@ export const DocsSidebar = ({ nav, className }: DocsSidebarProps) => {
     </nav>
   );
 };
-
-// Identical to the navbar brand on every other page — same mark size,
-// same wordmark, same tracking — so the docs sidebar reads as a
-// continuation of the global identity, not a docs-only variant.
-const SidebarBrand = () => <BrandLogo />;
-
-const WorkspaceCard = () => (
-  <div className="bg-card flex items-center gap-2.5 border p-2.5">
-    <div className="border-foreground bg-foreground font-display text-background flex size-7 shrink-0 items-center justify-center border text-xs leading-none tracking-tight">
-      E.
-    </div>
-    <div className="min-w-0 flex-1">
-      <div className="text-meta-xs text-muted-foreground">Docs</div>
-      <div className="font-display truncate text-sm leading-tight tracking-tight">
-        Help center
-      </div>
-    </div>
-    <div className="text-meta-xs text-muted-foreground tabular-nums">v2.0</div>
-  </div>
-);
 
 type SidebarGroupProps = {
   label: string;

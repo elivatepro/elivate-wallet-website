@@ -6,6 +6,8 @@ import { createHash } from "node:crypto";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import sharp from "sharp";
+
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 if (!NOTION_API_KEY) {
   throw new Error(
@@ -17,8 +19,23 @@ const NOTION_VERSION = "2025-09-03";
 const DOCS_DATA_SOURCE_ID =
   process.env.NOTION_DOCS_DATA_SOURCE_ID ??
   "aa1a529b-55d2-4867-941e-6172096258fd";
-const APPROVED_GROUPS = new Set(["Foundations", "Workflows", "Reference"]);
+// Must match the Group options in the Notion Docs database and GROUP_ORDER
+// in src/lib/docs.ts.
+const APPROVED_GROUPS = new Set([
+  "Getting started",
+  "For members",
+  "For leaders",
+  "Setup & admin",
+  "Troubleshooting",
+  "Foundations",
+  "Workflows",
+  "Reference",
+]);
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// Local preview only: DOCS_PREVIEW=1 also includes chapters in Review, and a
+// Review chapter replaces a Published one with the same slug. Never set this
+// in Cloudflare builds.
+const PREVIEW = process.env.DOCS_PREVIEW === "1";
 
 const root = process.cwd();
 const contentDir = path.join(root, "src", "content", "docs");
@@ -52,7 +69,14 @@ async function queryPublishedDocs() {
   do {
     const body = {
       page_size: 100,
-      filter: { property: "Status", select: { equals: "Published" } },
+      filter: PREVIEW
+        ? {
+            or: [
+              { property: "Status", select: { equals: "Published" } },
+              { property: "Status", select: { equals: "Review" } },
+            ],
+          }
+        : { property: "Status", select: { equals: "Published" } },
       sorts: [{ property: "Order", direction: "ascending" }],
     };
     if (cursor) body.start_cursor = cursor;
@@ -108,7 +132,31 @@ function escapeMdx(value = "") {
   return value.replace(/[\\`*_[\]{}<>#|~!]/g, "\\$&");
 }
 
-function richTextMdx(richText = []) {
+// Links come from Notion, so only allow ordinary web/mail/site links and
+// percent-encode anything that could end the Markdown URL early.
+function safeUrl(url = "") {
+  const trimmed = url.trim();
+  if (!/^(https?:|mailto:|\/|#)/i.test(trimmed)) return null;
+  return trimmed.replace(/[\s()<>{}`"\\]/g, (c) =>
+    `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, "0")}`,
+  );
+}
+
+// A backtick run longer than any inside the content, so the content can
+// never close its own code span or fence (and escape into live MDX).
+function backtickFence(content, minimum) {
+  const longest = Math.max(0, ...(content.match(/`+/g) ?? []).map((r) => r.length));
+  return "`".repeat(Math.max(minimum, longest + 1));
+}
+
+function inlineCode(content) {
+  const fence = backtickFence(content, 1);
+  const pad = content.startsWith("`") || content.endsWith("`") ? " " : "";
+  return `${fence}${pad}${content}${pad}${fence}`;
+}
+
+/** `lineBreak` lets table cells use <br /> instead of a Markdown hard break. */
+function richTextMdx(richText = [], { lineBreak = "  \n" } = {}) {
   return richText
     .map((item) => {
       const raw = item.plain_text ?? "";
@@ -118,17 +166,16 @@ function richTextMdx(richText = []) {
       const [, lead, core, trail] = raw.match(/^(\s*)([\s\S]*?)(\s*)$/);
       if (!core) return raw;
 
-      let value = annotations.code
-        ? `\`${core.replaceAll("`", "'")}\``
-        : escapeMdx(core);
+      let value = annotations.code ? inlineCode(core) : escapeMdx(core);
       if (annotations.bold) value = `**${value}**`;
       if (annotations.italic) value = `_${value}_`;
       if (annotations.strikethrough) value = `~~${value}~~`;
-      if (item.href) value = `[${value}](${item.href.replaceAll(")", "%29")})`;
+      const href = item.href ? safeUrl(item.href) : null;
+      if (href) value = `[${value}](${href})`;
       return `${lead}${value}${trail}`;
     })
     .join("")
-    .replace(/\n/g, "  \n");
+    .replace(/\n/g, lineBreak);
 }
 
 function extensionFromContentType(contentType = "") {
@@ -153,11 +200,20 @@ async function localizeImage(data, blockId) {
   if (!response.ok) {
     throw new Error(`Failed to download Notion image (${response.status})`);
   }
-  const bytes = Buffer.from(await response.arrayBuffer());
+  let bytes = Buffer.from(await response.arrayBuffer());
   const hash = createHash("sha256").update(blockId).digest("hex").slice(0, 20);
-  const extension = extensionFromContentType(
+  let extension = extensionFromContentType(
     response.headers.get("content-type") ?? "",
   );
+  // Screenshots and diagrams arrive as large PNGs; ship them as WebP, no
+  // wider than 2000px (2x the docs column), which is a fraction of the size.
+  if ([".png", ".jpg", ".webp", ".avif"].includes(extension)) {
+    bytes = await sharp(bytes)
+      .resize({ width: 2000, withoutEnlargement: true })
+      .webp({ quality: 84 })
+      .toBuffer();
+    extension = ".webp";
+  }
   const filename = `${hash}${extension}`;
   pendingMedia.push({ filename, bytes });
   return `/docs-media/${filename}`;
@@ -238,18 +294,20 @@ async function renderBlocks(blocks, state) {
         out.push(`**${text}**`);
         break;
       case "code": {
-        const language = (data.language ?? "").replace(/[^a-z0-9+#-]/gi, "");
-        out.push(
-          "```" + (language === "plain text" ? "" : language) + "\n" +
-            richTextPlain(data.rich_text) + "\n```",
-        );
+        const code = richTextPlain(data.rich_text);
+        const language =
+          data.language === "plain text"
+            ? ""
+            : (data.language ?? "").replace(/[^a-z0-9+#-]/gi, "");
+        const fence = backtickFence(code, 3);
+        out.push(`${fence}${language}\n${code}\n${fence}`);
         break;
       }
       case "divider":
         out.push("---");
         break;
       case "image": {
-        const src = await localizeImage(data, block.id);
+        const src = safeUrl((await localizeImage(data, block.id)) ?? "");
         const caption = richTextPlain(data.caption);
         if (src) out.push(`![${escapeMdx(caption)}](${src})`);
         break;
@@ -257,13 +315,17 @@ async function renderBlocks(blocks, state) {
       case "bookmark":
       case "embed":
       case "link_preview":
-        if (data.url) out.push(`<${data.url}>`);
+        // MDX has no <autolinks>; "<https://…>" would be parsed as JSX.
+        if (data.url && safeUrl(data.url)) {
+          out.push(`[${escapeMdx(data.url)}](${safeUrl(data.url)})`);
+        }
         break;
       case "table": {
         const rows = await listBlockChildren(block.id);
         const cells = rows.map((row) =>
           (row.table_row?.cells ?? []).map((cell) =>
-            richTextMdx(cell) || " ", // escapeMdx already escapes "|"
+            // A newline would end the Markdown table row; escapeMdx already escapes "|".
+            richTextMdx(cell, { lineBreak: "<br />" }) || " ",
           ),
         );
         if (cells.length) {
@@ -339,12 +401,18 @@ async function normalizeDoc(page) {
     "",
   ].join("\n");
 
-  return { slug, title, mdx };
+  return { slug, title, mdx, status: propertySelect(properties.Status) };
 }
 
 const pages = await queryPublishedDocs();
-const docs = [];
+let docs = [];
 for (const page of pages) docs.push(await normalizeDoc(page));
+
+if (PREVIEW) {
+  const reviewSlugs = new Set(docs.filter((d) => d.status === "Review").map((d) => d.slug));
+  docs = docs.filter((d) => d.status === "Review" || !reviewSlugs.has(d.slug));
+  console.warn("[docs] PREVIEW: including chapters in Review. Do not deploy this build.");
+}
 
 const slugs = new Set();
 for (const doc of docs) {

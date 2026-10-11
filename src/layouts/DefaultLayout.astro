@@ -1,5 +1,6 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
+import Chatwoot from "@/components/layout/chatwoot.astro";
 import Footer from "@/components/layout/footer";
 import { IntroLoader } from "@/components/layout/loaders/intro-loader";
 import Navbar from "@/components/layout/navbar";
@@ -9,9 +10,16 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
+  /** Docs pages bring their own header instead of the marketing navbar. */
+  hideNavbar?: boolean;
+  /** Docs pages use Ask AI and the contact form instead of the chat widget. */
+  hideChat?: boolean;
+  /** Docs pages end with their own prev/next and support links. */
+  hideFooter?: boolean;
 }
 
-const { title, description, image, noindex } = Astro.props;
+const { title, description, image, noindex, hideNavbar, hideChat, hideFooter } =
+  Astro.props;
 
 const copyrightYear = new Date().getFullYear();
 const isHome = Astro.url.pathname === "/";
@@ -29,52 +37,12 @@ const isHome = Astro.url.pathname === "/";
   </head>
   <body>
     {isHome && <IntroLoader client:load />}
-    <Navbar initialBannerVisible={false} client:load />
+    {!hideNavbar && <Navbar initialBannerVisible={false} client:load />}
     <main>
       <slot />
     </main>
-    <Footer copyrightYear={copyrightYear} client:idle />
+    {!hideFooter && <Footer copyrightYear={copyrightYear} client:idle />}
 
-    <script is:inline>
-      // Copy, brand color, pre-chat form and greeting are managed on the
-      // Chatwoot inbox itself; these settings only control the launcher.
-      window.chatwootSettings = {
-        position: "right",
-        // Phones see it as a round button (brand.css), so it follows rotation.
-        type: "expanded_bubble",
-        launcherTitle: "Chat with our team",
-        locale: "en",
-        darkMode: "light",
-        showPopoutButton: false,
-      };
-
-      (function (d, t) {
-        var BASE_URL = "https://app.chatwoot.com";
-        function load() {
-          var g = d.createElement(t),
-            s = d.getElementsByTagName(t)[0];
-          g.src = BASE_URL + "/packs/js/sdk.js";
-          g.async = true;
-          s.parentNode.insertBefore(g, s);
-          g.onload = function () {
-            window.chatwootSDK.run({
-              websiteToken: "MEhVTNYdfkw1CeMYMyJEog8e",
-              baseUrl: BASE_URL,
-            });
-          };
-        }
-        // Defer until the page is idle so the widget never competes with
-        // first paint or the intro loader.
-        function schedule() {
-          if ("requestIdleCallback" in window) {
-            window.requestIdleCallback(load, { timeout: 3000 });
-          } else {
-            setTimeout(load, 1500);
-          }
-        }
-        if (d.readyState === "complete") schedule();
-        else window.addEventListener("load", schedule, { once: true });
-      })(document, "script");
-    </script>
+    {!hideChat && <Chatwoot />}
   </body>
 </html>

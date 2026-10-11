@@ -1,6 +1,10 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 
+import { mdxHeadings, mdxToPlainText } from "@/lib/docs-text";
+
+// Static search index for the docs ⌘K dialog. Includes headings and body text
+// so searches match what a chapter says, not just its title.
 export const GET: APIRoute = async () => {
   const docs = await getCollection("docs");
   const items = docs
@@ -18,6 +22,8 @@ export const GET: APIRoute = async () => {
         group: data.group,
         url: `/docs/${entry.id}`,
         order: data.order ?? 99,
+        headings: mdxHeadings(entry.body),
+        text: mdxToPlainText(entry.body),
       };
     })
     .sort((a, b) => a.order - b.order);

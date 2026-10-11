@@ -1,0 +1,45 @@
+---
+// Chatwoot live-chat launcher. Docs pages leave it out (see DefaultLayout).
+---
+
+<script is:inline>
+  // Copy, brand color, pre-chat form and greeting are managed on the
+  // Chatwoot inbox itself; these settings only control the launcher.
+  window.chatwootSettings = {
+    position: "right",
+    // Phones see it as a round button (brand.css), so it follows rotation.
+    type: "expanded_bubble",
+    launcherTitle: "Chat with our team",
+    locale: "en",
+    darkMode: "light",
+    showPopoutButton: false,
+  };
+
+  (function (d, t) {
+    var BASE_URL = "https://app.chatwoot.com";
+    function load() {
+      var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+      g.src = BASE_URL + "/packs/js/sdk.js";
+      g.async = true;
+      s.parentNode.insertBefore(g, s);
+      g.onload = function () {
+        window.chatwootSDK.run({
+          websiteToken: "MEhVTNYdfkw1CeMYMyJEog8e",
+          baseUrl: BASE_URL,
+        });
+      };
+    }
+    // Defer until the page is idle so the widget never competes with
+    // first paint or the intro loader.
+    function schedule() {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(load, { timeout: 3000 });
+      } else {
+        setTimeout(load, 1500);
+      }
+    }
+    if (d.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+  })(document, "script");
+</script>

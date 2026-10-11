@@ -36,6 +36,18 @@ jobs:
             "posts": []
           }
           JSON
+          # Docs come from Notion at deploy time; CI builds a fixture chapter
+          # that covers every block type the sync can emit.
+          mkdir -p src/content/docs
+          cp scripts/fixtures/docs/ci-fixture.mdx src/content/docs/
 
       - name: Build Astro site
         run: npx astro build
+
+      - name: Check the docs fixture rendered
+        run: |
+          page=dist/docs/ci-fixture/index.html
+          test -f "$page"
+          grep -q "fixture-code-block" "$page"
+          grep -q "Callout body" "$page"
+          grep -q "Line one<br */>Line two" "$page"
