@@ -1,8 +1,26 @@
 {
   "name": "elivate-wallet-website",
   "compatibility_date": "2026-09-09",
+  "main": "./worker/index.ts",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/contact"]
+  },
+  // Cloudflare Email Service (sending). elivatewallet.com is onboarded via the
+  // cf-bounce.* DNS records; inbound mail stays on Google Workspace.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "hello@elivatewallet.com",
+      "allowed_sender_addresses": ["website@elivatewallet.com"]
+    }
+  ],
+  "vars": {
+    "CONTACT_FROM": "website@elivatewallet.com",
+    "CONTACT_TO": "hello@elivatewallet.com"
   }
+  // Secret (set with `wrangler secret put TURNSTILE_SECRET_KEY`):
+  //   TURNSTILE_SECRET_KEY — "Elivate Wallet website (contact form)" widget
 }

@@ -38,6 +38,19 @@ export default defineConfig({
   vite: {
     // @ts-expect-error – two vite copies exist in node_modules (one in astro/, one top-level); their Plugin types diverge but the plugin works at runtime.
     plugins: [tailwindcss()],
+    server: {
+      // `npm run preview:worker` serves the contact endpoint on :8787.
+      proxy: {
+        '/api/contact': {
+          target: 'http://localhost:8787',
+          // The Worker rejects cross-origin posts; present as same-origin.
+          configure: (proxy) =>
+            proxy.on('proxyReq', (req) =>
+              req.setHeader('origin', `http://${req.getHeader('host')}`),
+            ),
+        },
+      },
+    },
     resolve: {
       dedupe: ['react', 'react-dom'],
     },

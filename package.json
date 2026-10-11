@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint --fix \"src/**/*.{js,ts,jsx,tsx,astro}\"",
-    "format": "prettier --write \"**/*.{ts,tsx,astro,md,mdx}\""
+    "format": "prettier --write \"**/*.{ts,tsx,astro,md,mdx}\"",
+    "preview:worker": "wrangler dev"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.2",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@cloudflare/workers-types": "^5.20261011.1",
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/vite": "4.1.18",
     "@types/react": "^19.2.14",
@@ -52,6 +54,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "4.1.18",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.149.0"
   }
 }

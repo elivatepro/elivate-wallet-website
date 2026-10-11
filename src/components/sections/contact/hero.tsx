@@ -12,6 +12,7 @@ import {
 } from "motion/react";
 
 import { Button } from "@/components/ui/button";
+import { CONTACT_EMAIL } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -42,50 +43,41 @@ const tileIn: Variants = {
 
 type TileSpec = {
   src: string;
-  alt: string;
   cell: string;
   focal: string;
-  priority?: boolean;
 };
 
+// Real product screens, shown as decorative texture behind the headline.
 const TILES: ReadonlyArray<TileSpec> = [
   {
-    src: "/images/portraits/1.webp",
-    alt: "Portrait — Brooklyn desk",
+    src: "/images/phone/balance.png",
     cell: "col-start-1 row-start-1 row-span-6 sm:row-span-4",
-    focal: "object-[50%_28%]",
-    priority: true,
+    focal: "object-[50%_12%]",
   },
   {
-    src: "/images/portraits/2.webp",
-    alt: "Portrait — Lisbon desk",
+    src: "/images/app/overview.png",
     cell: "col-start-1 row-start-5 row-span-2 hidden sm:block",
-    focal: "object-[50%_22%]",
-    priority: true,
+    focal: "object-[0%_0%]",
   },
   {
-    src: "/images/portraits/6.webp",
-    alt: "Portrait — Kyoto desk",
+    src: "/images/app/review-payout.png",
     cell: "col-start-2 row-start-1 row-span-3 hidden sm:block",
-    focal: "object-[50%_30%]",
+    focal: "object-[100%_0%]",
   },
   {
-    src: "/images/portraits/4.webp",
-    alt: "Portrait — mailroom",
+    src: "/images/app/queue.png",
     cell: "col-start-2 row-start-4 row-span-3 hidden sm:block",
-    focal: "object-[50%_28%]",
+    focal: "object-[0%_0%]",
   },
   {
-    src: "/images/portraits/5.webp",
-    alt: "Portrait — switchboard",
+    src: "/images/app/record-income.png",
     cell: "col-start-3 row-start-1 row-span-2 hidden xl:block",
-    focal: "object-[50%_25%]",
+    focal: "object-[0%_0%]",
   },
   {
-    src: "/images/portraits/3.webp",
-    alt: "Portrait — pressroom",
+    src: "/images/phone/activity.png",
     cell: "col-start-3 row-start-3 row-span-4 hidden xl:block",
-    focal: "object-[50%_30%]",
+    focal: "object-[50%_10%]",
   },
 ];
 
@@ -125,6 +117,7 @@ const ContactHero = () => {
     >
       <motion.div
         style={{ y: reduceMotion ? 0 : tilesY, willChange: "transform" }}
+        aria-hidden
         className="pointer-events-none absolute inset-0 grid grid-cols-1 grid-rows-6 gap-2 p-2 sm:grid-cols-2 sm:gap-3 sm:p-3 xl:grid-cols-3"
       >
         {TILES.map((tile, i) => (
@@ -155,15 +148,15 @@ const ContactHero = () => {
           variants={fadeUp}
           className="text-5xl leading-[1.05] tracking-tight text-balance md:text-7xl md:leading-[0.95] lg:text-8xl"
         >
-          Contact <em className="text-muted-foreground">us.</em>
+          Talk to <em className="text-muted-foreground">us.</em>
         </motion.h1>
         <motion.p
           variants={fadeUp}
           className="text-muted-foreground mt-6 max-w-2xl text-base leading-relaxed md:mt-8 md:text-lg"
         >
-          Tell us about your network, how you manage balances and transactions
-          today, and what you want Elivate Wallet to make easier. Use the form
-          below to start the conversation.
+          Planning a rollout for your network, stuck on something in the app,
+          or just curious — tell us what you need and a real person on the
+          Elivate Wallet team will get back to you.
         </motion.p>
         <motion.div
           variants={fadeUp}
@@ -182,19 +175,29 @@ const ContactHero = () => {
         >
           <ul className="space-y-3 text-base md:text-lg">
             <li className="flex items-baseline gap-3">
-              <span className="font-display tracking-tighter">Product.</span>
-              <span className="text-muted-foreground">Elivate Wallet</span>
+              <span className="font-display tracking-tighter">Email.</span>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {CONTACT_EMAIL}
+              </a>
             </li>
             <li className="flex items-baseline gap-3">
-              <span className="font-display tracking-tighter">Web.</span>
-              <span className="text-muted-foreground">elivatewallet.com</span>
+              <span className="font-display tracking-tighter">Help.</span>
+              <a
+                href="/docs"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Read the Docs
+              </a>
             </li>
           </ul>
           <p
             className="font-display block min-w-0 leading-none tracking-tighter break-words md:text-end"
             style={{ fontSize: "clamp(1.25rem, 3.5vw, 3rem)" }}
           >
-            Tell us what you need.
+            Real people, real replies.
           </p>
         </motion.div>
       </div>
@@ -210,10 +213,11 @@ const Tile = ({ idx, tile }: { idx: number; tile: TileSpec }) => (
   >
     <img
       src={tile.src}
-      alt={tile.alt}
+      alt=""
+      decoding="async"
       sizes="(min-width: 1024px) 33vw, (min-width: 768px) 33vw, 50vw"
       className={cn(
-        "absolute inset-0 size-full object-cover transition-transform duration-700 ease-out group-hover/tile:scale-105",
+        "absolute inset-0 size-full object-cover opacity-45 blur-[1.5px] saturate-75 transition-transform duration-700 ease-out group-hover/tile:scale-105",
         tile.focal,
       )}
     />

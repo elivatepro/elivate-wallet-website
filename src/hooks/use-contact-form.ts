@@ -2,41 +2,89 @@
 
 import { type FormEvent, useState } from "react";
 
-export type ContactFormStatus = "idle" | "submitting" | "success";
+import { CONTACT_EMAIL, type ContactPayload } from "@/lib/contact";
 
-const SUBMIT_DELAY = 720;
-const SUCCESS_HOLD = 2800;
+export type ContactFormStatus = "idle" | "submitting" | "success" | "error";
+
+const INITIAL: ContactPayload = {
+  inquiry: "sales",
+  name: "",
+  email: "",
+  organization: "",
+  networkSize: "",
+  message: "",
+};
 
 export function useContactForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [values, setValues] = useState<ContactPayload>(INITIAL);
+  const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<ContactFormStatus>("idle");
+  const [error, setError] = useState<string | null>(null);
+  // Turnstile tokens are single-use; bumping this asks the widget for a new one.
+  const [tokenResetKey, setTokenResetKey] = useState(0);
 
-  const submit = (e: FormEvent) => {
+  const setField = <K extends keyof ContactPayload>(
+    key: K,
+    value: ContactPayload[K],
+  ) => {
+    setValues((v) => ({ ...v, [key]: value }));
+    if (status === "error") setStatus("idle");
+  };
+
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (status !== "idle") return;
-    if (!email.includes("@") || !name.trim() || !message.trim()) return;
+    if (status === "submitting") return;
+    if (!token) {
+      setStatus("error");
+      setError("Please complete the verification check above the button.");
+      return;
+    }
+
     setStatus("submitting");
-    window.setTimeout(() => {
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, turnstileToken: token }),
+      });
+      const data = (await res.json().catch(() => null)) as {
+        ok: boolean;
+        error?: string;
+      } | null;
+      if (!res.ok || !data?.ok) {
+        throw new Error(
+          data?.error ??
+            `Something went wrong. Please email ${CONTACT_EMAIL} directly.`,
+        );
+      }
       setStatus("success");
-      window.setTimeout(() => {
-        setStatus("idle");
-        setName("");
-        setEmail("");
-        setMessage("");
-      }, SUCCESS_HOLD);
-    }, SUBMIT_DELAY);
+    } catch (err) {
+      setStatus("error");
+      setError(
+        err instanceof Error && err.message !== "Failed to fetch"
+          ? err.message
+          : `We couldn't reach the server. Please email ${CONTACT_EMAIL} directly.`,
+      );
+      setTokenResetKey((k) => k + 1);
+    }
+  };
+
+  const reset = () => {
+    setValues((v) => ({ ...INITIAL, inquiry: v.inquiry }));
+    setStatus("idle");
+    setError(null);
+    setTokenResetKey((k) => k + 1);
   };
 
   return {
-    name,
-    setName,
-    email,
-    setEmail,
-    message,
-    setMessage,
+    values,
+    setField,
+    setToken,
+    tokenResetKey,
     status,
+    error,
     submit,
+    reset,
   };
 }
