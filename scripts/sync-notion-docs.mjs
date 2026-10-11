@@ -108,7 +108,31 @@ function escapeMdx(value = "") {
   return value.replace(/[\\`*_[\]{}<>#|~!]/g, "\\$&");
 }
 
-function richTextMdx(richText = []) {
+// Links come from Notion, so only allow ordinary web/mail/site links and
+// percent-encode anything that could end the Markdown URL early.
+function safeUrl(url = "") {
+  const trimmed = url.trim();
+  if (!/^(https?:|mailto:|\/|#)/i.test(trimmed)) return null;
+  return trimmed.replace(/[\s()<>{}`"\\]/g, (c) =>
+    `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, "0")}`,
+  );
+}
+
+// A backtick run longer than any inside the content, so the content can
+// never close its own code span or fence (and escape into live MDX).
+function backtickFence(content, minimum) {
+  const longest = Math.max(0, ...(content.match(/`+/g) ?? []).map((r) => r.length));
+  return "`".repeat(Math.max(minimum, longest + 1));
+}
+
+function inlineCode(content) {
+  const fence = backtickFence(content, 1);
+  const pad = content.startsWith("`") || content.endsWith("`") ? " " : "";
+  return `${fence}${pad}${content}${pad}${fence}`;
+}
+
+/** `lineBreak` lets table cells use <br /> instead of a Markdown hard break. */
+function richTextMdx(richText = [], { lineBreak = "  \n" } = {}) {
   return richText
     .map((item) => {
       const raw = item.plain_text ?? "";
@@ -118,17 +142,16 @@ function richTextMdx(richText = []) {
       const [, lead, core, trail] = raw.match(/^(\s*)([\s\S]*?)(\s*)$/);
       if (!core) return raw;
 
-      let value = annotations.code
-        ? `\`${core.replaceAll("`", "'")}\``
-        : escapeMdx(core);
+      let value = annotations.code ? inlineCode(core) : escapeMdx(core);
       if (annotations.bold) value = `**${value}**`;
       if (annotations.italic) value = `_${value}_`;
       if (annotations.strikethrough) value = `~~${value}~~`;
-      if (item.href) value = `[${value}](${item.href.replaceAll(")", "%29")})`;
+      const href = item.href ? safeUrl(item.href) : null;
+      if (href) value = `[${value}](${href})`;
       return `${lead}${value}${trail}`;
     })
     .join("")
-    .replace(/\n/g, "  \n");
+    .replace(/\n/g, lineBreak);
 }
 
 function extensionFromContentType(contentType = "") {
@@ -238,18 +261,20 @@ async function renderBlocks(blocks, state) {
         out.push(`**${text}**`);
         break;
       case "code": {
-        const language = (data.language ?? "").replace(/[^a-z0-9+#-]/gi, "");
-        out.push(
-          "```" + (language === "plain text" ? "" : language) + "\n" +
-            richTextPlain(data.rich_text) + "\n```",
-        );
+        const code = richTextPlain(data.rich_text);
+        const language =
+          data.language === "plain text"
+            ? ""
+            : (data.language ?? "").replace(/[^a-z0-9+#-]/gi, "");
+        const fence = backtickFence(code, 3);
+        out.push(`${fence}${language}\n${code}\n${fence}`);
         break;
       }
       case "divider":
         out.push("---");
         break;
       case "image": {
-        const src = await localizeImage(data, block.id);
+        const src = safeUrl((await localizeImage(data, block.id)) ?? "");
         const caption = richTextPlain(data.caption);
         if (src) out.push(`![${escapeMdx(caption)}](${src})`);
         break;
@@ -257,13 +282,17 @@ async function renderBlocks(blocks, state) {
       case "bookmark":
       case "embed":
       case "link_preview":
-        if (data.url) out.push(`<${data.url}>`);
+        // MDX has no <autolinks>; "<https://…>" would be parsed as JSX.
+        if (data.url && safeUrl(data.url)) {
+          out.push(`[${escapeMdx(data.url)}](${safeUrl(data.url)})`);
+        }
         break;
       case "table": {
         const rows = await listBlockChildren(block.id);
         const cells = rows.map((row) =>
           (row.table_row?.cells ?? []).map((cell) =>
-            richTextMdx(cell) || " ", // escapeMdx already escapes "|"
+            // A newline would end the Markdown table row; escapeMdx already escapes "|".
+            richTextMdx(cell, { lineBreak: "<br />" }) || " ",
           ),
         );
         if (cells.length) {
