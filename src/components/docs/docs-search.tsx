@@ -24,7 +24,11 @@ let indexPromise: Promise<SearchItem[]> | null = null;
 
 const fetchIndex = (): Promise<SearchItem[]> => {
   indexPromise ??= fetch("/api/search.json")
-    .then((res) => (res.ok ? (res.json() as Promise<SearchItem[]>) : []))
+    .then((res) => {
+      // Don't cache a failure: the next open retries.
+      if (!res.ok) throw new Error("Couldn't load the docs index.");
+      return res.json() as Promise<SearchItem[]>;
+    })
     .catch(() => {
       indexPromise = null;
       return [];
@@ -110,6 +114,19 @@ export const DocsSearch = ({ hotkey = true, className }: DocsSearchProps) => {
 
   useEffect(() => setActive(0), [query]);
 
+  // Keep the selection valid when results change (e.g. the index loads).
+  useEffect(() => {
+    setActive((i) => Math.max(0, Math.min(i, rowCount - 1)));
+  }, [rowCount]);
+
+  // Keep the keyboard selection visible.
+  useEffect(() => {
+    if (!open) return;
+    document
+      .querySelector(`[data-search-row="${active}"]`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [active, open]);
+
   const askAi = () => {
     setOpen(false);
     openAskAi(trimmed);
@@ -118,13 +135,14 @@ export const DocsSearch = ({ hotkey = true, className }: DocsSearchProps) => {
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActive((i) => Math.min(i + 1, rowCount - 1));
+      setActive((i) => Math.max(0, Math.min(i + 1, rowCount - 1)));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActive((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter" && rowCount > 0) {
       e.preventDefault();
-      if (active < results.length) window.location.href = results[active].url;
+      const row = Math.max(0, Math.min(active, rowCount - 1));
+      if (row < results.length) window.location.href = results[row].url;
       else askAi();
     }
   };
@@ -186,6 +204,7 @@ export const DocsSearch = ({ hotkey = true, className }: DocsSearchProps) => {
                     href={item.url}
                     onClick={() => setOpen(false)}
                     onMouseEnter={() => setActive(i)}
+                    data-search-row={i}
                     className={cn(
                       "flex flex-col gap-1 border-b px-4 py-3 text-sm transition-colors",
                       active === i && "bg-muted",
@@ -211,6 +230,7 @@ export const DocsSearch = ({ hotkey = true, className }: DocsSearchProps) => {
                     type="button"
                     onClick={askAi}
                     onMouseEnter={() => setActive(results.length)}
+                    data-search-row={results.length}
                     className={cn(
                       "flex w-full items-center gap-2 px-4 py-3 text-left text-sm transition-colors",
                       active === results.length && "bg-muted",

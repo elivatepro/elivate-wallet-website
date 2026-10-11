@@ -1,6 +1,12 @@
 "use client";
 
-import { type FormEvent, type ReactNode, useEffect, useRef, useState } from "react";
+import {
+  type FormEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { Sparkles, X } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
@@ -139,10 +145,8 @@ export const AskAi = () => {
     if (!q || busy) return;
     setInput("");
     setBusy(true);
-    const history = turns
-      .filter((t) => t.answer)
-      .slice(-3)
-      .map((t) => ({ question: t.question, answer: t.answer! }));
+    // Earlier questions give the model context; answers stay server-side.
+    const history = turns.slice(-3).map((t) => t.question);
     setTurns((t) => [...t, { question: q }]);
     try {
       const res = await fetch("/api/ask", {
@@ -190,8 +194,13 @@ export const AskAi = () => {
       const question = (e as CustomEvent<{ question?: string }>).detail
         ?.question;
       setOpen(true);
-      if (question) void ask(question);
-      else setTimeout(() => inputRef.current?.focus(), 30);
+      if (question && !busy) {
+        void ask(question);
+      } else {
+        // Still answering the last one: keep the new question ready to send.
+        if (question) setInput(question);
+        setTimeout(() => inputRef.current?.focus(), 30);
+      }
     };
     window.addEventListener(OPEN_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_EVENT, onOpen);
@@ -201,13 +210,26 @@ export const AskAi = () => {
     endRef.current?.scrollIntoView({ block: "end" });
   }, [turns, busy]);
 
-  // Restore the reader's last width.
+  // Restore the reader's last width, and re-clamp it when the window
+  // shrinks so the panel never squeezes the chapter out.
   useEffect(() => {
     const saved = Number(localStorage.getItem(WIDTH_KEY));
     const initial = clampWidth(saved || DEFAULT_WIDTH);
     setWidth(initial);
     applyWidth(initial);
+    const onResize = () =>
+      setWidth((w) => {
+        const next = clampWidth(w);
+        applyWidth(next);
+        return next;
+      });
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // Stop any drag in progress if the panel unmounts.
+  const endResizeRef = useRef<(() => void) | null>(null);
+  useEffect(() => () => endResizeRef.current?.(), []);
 
   // Drag the left edge to resize, within MIN_WIDTH..MAX_WIDTH.
   const startResize = (e: React.PointerEvent) => {
@@ -219,6 +241,7 @@ export const AskAi = () => {
       setWidth(next);
       applyWidth(next);
     };
+    // Ends on pointerup, on a cancelled touch/pen gesture, or on unmount.
     const onUp = () => {
       setResizing(false);
       document.documentElement.classList.remove("ask-ai-resizing");
@@ -228,9 +251,13 @@ export const AskAi = () => {
       });
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      endResizeRef.current = null;
     };
+    endResizeRef.current = onUp;
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   };
 
   const nudgeWidth = (delta: number) => {
@@ -367,7 +394,10 @@ export const AskAi = () => {
             <div ref={endRef} />
           </div>
 
-          <form onSubmit={onSubmit} className="flex flex-col gap-2 border-t p-3">
+          <form
+            onSubmit={onSubmit}
+            className="flex flex-col gap-2 border-t p-3"
+          >
             <div className="flex items-end gap-2">
               <textarea
                 ref={inputRef}
