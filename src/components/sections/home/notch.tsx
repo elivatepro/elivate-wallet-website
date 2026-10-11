@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 
 import { ElivateFrame } from "@/components/layout/elivate-frame";
+import { SCREEN_INSET } from "@/components/mockups/app-screen";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
@@ -182,34 +183,30 @@ const Phone = ({ active }: { active: Activity }) => (
         "drop-shadow(0 50px 80px oklch(from var(--foreground) l c h / 0.35)) drop-shadow(0 20px 30px oklch(from var(--foreground) l c h / 0.25))",
     }}
   >
-    <div className="absolute inset-[10px] z-0 overflow-hidden rounded-[36px] bg-[#f6f1e8] text-[#1c1c1e]">
-      <div className="absolute inset-x-[8%] top-[9%]">
-        <div className="text-[10px] font-semibold tracking-[0.12em] uppercase opacity-55">
-          Elivate Wallet
-        </div>
-        <div className="mt-8 text-[11px] opacity-55">Your balance</div>
-        <div className="font-display mt-1 text-4xl leading-none tracking-tighter">₦84,250</div>
-
-        <div className="mt-8 border-t border-black/10 pt-5">
-          <div className="flex items-center justify-between text-[10px] opacity-55">
-            <span>Recent activity</span>
-            <span>{active.label}</span>
-          </div>
-          <div className="mt-3 rounded-md border border-black/10 bg-white/55 p-3">
-            <div className="text-[11px] font-semibold">+₦12,600</div>
-            <div className="mt-1 text-[9px] opacity-60">Income recorded</div>
-          </div>
-          <div className="mt-2 rounded-md border border-black/10 bg-white/35 p-3">
-            <div className="text-[10px] font-medium">Withdrawal request</div>
-            <div className="mt-1 text-[9px] opacity-60">Pending review</div>
-          </div>
-        </div>
-      </div>
+    <div
+      className="absolute z-0 overflow-hidden bg-[#111314]"
+      style={SCREEN_INSET}
+    >
+      {ACTIVITIES.map((item) => (
+        <img
+          key={item.id}
+          src={`/images/phone/${item.id}.png`}
+          alt=""
+          width={780}
+          height={1688}
+          loading="lazy"
+          decoding="async"
+          className={cn(
+            "absolute inset-0 size-full object-cover object-top transition-opacity duration-500",
+            item.id === active.id ? "opacity-100" : "opacity-0",
+          )}
+        />
+      ))}
     </div>
 
     <img
       src="/images/home/iphone-16-pro-bezel.png"
-      alt="Elivate Wallet mobile view"
+      alt={`Elivate Wallet mobile app — ${active.label.toLowerCase()} screen`}
       width={1350}
       height={2760}
       className="pointer-events-none relative z-10 w-full select-none"

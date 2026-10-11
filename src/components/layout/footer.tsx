@@ -33,7 +33,7 @@ const fadeUp: Variants = {
   },
 };
 
-const LOGO_TEXT = "Elivate.";
+const LOGO_TEXT = "Elivate Wallet.";
 
 const SCATTER = [
   { x: "-180%", y: "-80%", r: -16 },
@@ -47,7 +47,8 @@ const SCATTER = [
   { x: "-50%", y: "180%", r: -5 },
 ] as const;
 
-const LETTER_STAGGER = 0.04;
+// Spread the stagger over the whole word so the last letter still lands on time.
+const LETTER_STAGGER = 0.28 / (LOGO_TEXT.length - 1);
 const LETTER_SPAN = 0.7;
 
 const Letter = ({
@@ -59,7 +60,7 @@ const Letter = ({
   i: number;
   progress: MotionValue<number>;
 }) => {
-  const scatter = SCATTER[i];
+  const scatter = SCATTER[i % SCATTER.length];
   const start = i * LETTER_STAGGER;
   const end = Math.min(start + LETTER_SPAN, 1);
   const range = [start, end];
@@ -76,7 +77,7 @@ const Letter = ({
       aria-hidden
       className="inline-block will-change-transform"
     >
-      {char}
+      {char === " " ? "\u00a0" : char}
     </motion.span>
   );
 };
@@ -139,8 +140,8 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
         <h2
           ref={logoRef}
           aria-label={LOGO_TEXT}
-          className="font-display mt-16 text-center leading-[0.9] tracking-tighter md:mt-24"
-          style={{ fontSize: "clamp(6rem, 22vw, 22rem)" }}
+          className="font-display mt-16 text-center leading-[0.9] tracking-tighter whitespace-nowrap md:mt-24"
+          style={{ fontSize: "clamp(2.75rem, 13.5vw, 13.5rem)" }}
         >
           {LOGO_TEXT.split("").map((char, i) => (
             <Letter key={i} i={i} char={char} progress={scrollYProgress} />
@@ -167,8 +168,8 @@ const Footer = ({ copyrightYear }: { copyrightYear: number }) => {
             onChange={(e) => setEmail(e.target.value)}
             disabled={state !== "idle"}
             autoComplete="email"
-            placeholder="Work email"
-            aria-label="Work email"
+            placeholder="Email address"
+            aria-label="Email address"
             className="bg-background/30 focus-visible:bg-background/50 backdrop-blur-md sm:flex-1"
           />
 

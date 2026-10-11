@@ -10,10 +10,7 @@ import {
 
 import { AnimatePresence, motion, type Variants } from "motion/react";
 
-import Console from "@/components/mockups/console";
-import LogStream from "@/components/mockups/log-stream";
-import PostMortem from "@/components/mockups/post-mortem";
-import WatchAlert from "@/components/mockups/watch-alert";
+import { AppWindow, PhoneFrame } from "@/components/mockups/app-screen";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -73,14 +70,38 @@ const STEPS: {
 ];
 
 const MOCKUPS: Record<StepId, ReactNode> = {
-  detect: <Console />,
-  page: <WatchAlert />,
-  draft: (
-    <div className="mx-auto w-full max-w-xl">
-      <PostMortem />
-    </div>
+  page: (
+    <AppWindow
+      src="/images/app/record-income.png"
+      alt="Recording income for a member in Elivate Wallet"
+      width={2240}
+      height={1320}
+      className="mx-auto w-full max-w-xl"
+    />
   ),
-  resolve: <LogStream />,
+  detect: (
+    <PhoneFrame
+      src="/images/phone/balance.png"
+      alt="A member's balance on the Elivate Wallet mobile home"
+      className="mx-auto w-[220px] md:w-[250px]"
+    />
+  ),
+  draft: (
+    <PhoneFrame
+      src="/images/phone/withdrawal.png"
+      alt="A member's withdrawal requests in Elivate Wallet"
+      className="mx-auto w-[220px] md:w-[250px]"
+    />
+  ),
+  resolve: (
+    <AppWindow
+      src="/images/app/review-payout.png"
+      alt="Reviewing a withdrawal and recording the payout"
+      width={2240}
+      height={1740}
+      className="mx-auto w-full max-w-xl"
+    />
+  ),
 };
 
 const useRafScroll = (callback: () => void) => {

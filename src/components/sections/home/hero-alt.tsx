@@ -2,7 +2,6 @@
 
 import { useCallback, useRef } from "react";
 
-import Dashboard from "@/components/mockups/dashboard";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -90,7 +89,17 @@ const HeroAlt = ({ className, asHero = true }: HeroAltProps) => {
             >
               <div className="relative size-full [perspective-origin:100%_0] [perspective:4000px] [transform-style:preserve-3d]">
                 <div className="pointer-events-auto absolute inset-0 mx-auto mt-[11.25rem] h-[160rem] w-[120rem] [transform-origin:top_left] [transform:scale(.7)_rotateX(47deg)_rotateY(21deg)_rotate(330deg)] rounded-xl after:pointer-events-none after:absolute after:-top-px after:-right-px after:bottom-0 after:block after:w-full after:bg-[linear-gradient(to_right,var(--color-transparent)_80%,var(--color-background)_90%)] after:content-[''] md:mt-[17.5rem] md:[transform:translateX(2%)_scale(1.2)_rotateX(47deg)_rotateY(31deg)_rotate(324deg)]">
-                  <Dashboard />
+                  <div className="w-[90rem] overflow-hidden rounded-sm border border-neutral-700 bg-[#111314] shadow-2xl select-none">
+                    <img
+                      src="/images/app/overview-desktop.png"
+                      alt="Elivate Wallet network overview on desktop"
+                      width={2880}
+                      height={1920}
+                      decoding="async"
+                      draggable={false}
+                      className="block h-auto w-full"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
