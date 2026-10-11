@@ -130,10 +130,10 @@ const Rift = () => {
         </div>
 
         <div className="relative mt-10 md:mt-14 lg:mt-20">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-4 md:gap-8 lg:gap-12">
+          <div className="flex flex-col gap-4 md:gap-8 lg:gap-12">
             <motion.div
               style={{ y: leftShift }}
-              className="will-change-transform sm:shrink-0"
+              className="will-change-transform"
             >
               <p className="text-meta opacity-60">Financial activity</p>
               <h2 className="mt-4 text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
@@ -141,7 +141,7 @@ const Rift = () => {
               </h2>
             </motion.div>
 
-            <div className="relative h-12 sm:flex-1 sm:self-center md:h-40">
+            <div className="relative h-12 md:h-40">
               <svg
                 aria-hidden
                 viewBox="0 0 600 40"
@@ -173,7 +173,7 @@ const Rift = () => {
                         <span>{entry.type}</span>
                       </div>
                       <div className="mt-1.5 flex items-baseline gap-2">
-                        <span className="font-display text-lg leading-none tracking-tighter">
+                        <span className="font-display text-lg leading-none tracking-tighter whitespace-nowrap">
                           {entry.amount}
                         </span>
                         <span className="text-meta-xs opacity-70">
@@ -188,7 +188,7 @@ const Rift = () => {
 
             <motion.div
               style={{ y: rightShift }}
-              className="text-right will-change-transform sm:shrink-0"
+              className="text-right will-change-transform"
             >
               <p className="text-meta opacity-60">Elivate Wallet</p>
               <h2 className="mt-4 text-4xl leading-[0.95] tracking-tighter text-balance md:text-6xl lg:text-[5.5rem]">
