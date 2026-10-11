@@ -33,7 +33,7 @@ export async function getAllDocs(): Promise<DocNavEntry[]> {
     .sort((a, b) => a.order - b.order);
 }
 
-const GROUP_ORDER = ["Foundations", "Pipelines", "Workflows", "Reference"];
+const GROUP_ORDER = ["Foundations", "Workflows", "Reference"];
 
 export async function getDocNav(): Promise<DocNavGroup[]> {
   const all = await getAllDocs();

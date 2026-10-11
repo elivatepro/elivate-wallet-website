@@ -3,6 +3,7 @@ export const NAV = [
   { label: "Features", href: "/features" },
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
+  { label: "Docs", href: "/docs" },
 ] as const;
 
 export const FOOTER_NAV = {
@@ -11,7 +12,10 @@ export const FOOTER_NAV = {
     { label: "Pricing", href: "/pricing" },
     { label: "Contact", href: "/contact" },
   ],
-  resources: [{ label: "Blog", href: "/blog" }],
+  resources: [
+    { label: "Blog", href: "/blog" },
+    { label: "Docs", href: "/docs" },
+  ],
 } as const;
 
 // Public social profiles are intentionally omitted until Elivate confirms them.

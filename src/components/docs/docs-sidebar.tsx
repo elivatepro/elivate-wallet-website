@@ -70,15 +70,15 @@ const SidebarBrand = () => <BrandLogo />;
 const WorkspaceCard = () => (
   <div className="bg-card flex items-center gap-2.5 border p-2.5">
     <div className="border-foreground bg-foreground font-display text-background flex size-7 shrink-0 items-center justify-center border text-xs leading-none tracking-tight">
-      M.
+      E.
     </div>
     <div className="min-w-0 flex-1">
-      <div className="text-meta-xs text-muted-foreground">Workspace</div>
+      <div className="text-meta-xs text-muted-foreground">Docs</div>
       <div className="font-display truncate text-sm leading-tight tracking-tight">
-        acme-prod
+        Help center
       </div>
     </div>
-    <div className="text-meta-xs text-muted-foreground tabular-nums">v1.4</div>
+    <div className="text-meta-xs text-muted-foreground tabular-nums">v2.0</div>
   </div>
 );
 
@@ -157,12 +157,9 @@ const SidebarLink = ({ href, active, label }: SidebarLinkProps) => (
 const Footer = () => (
   <div className="mt-2 border-t pt-3">
     <div className="text-meta-xs text-muted-foreground flex items-center justify-between">
-      <span>Edition MMXXVI</span>
-      <a
-        href="https://github.com"
-        className="hover:text-foreground transition-colors"
-      >
-        Source
+      <span>Elivate Wallet</span>
+      <a href="/contact" className="hover:text-foreground transition-colors">
+        Support
       </a>
     </div>
   </div>

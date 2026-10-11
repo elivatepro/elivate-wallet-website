@@ -1,0 +1,155 @@
+---
+import { getCollection, render } from "astro:content";
+
+import { ArticleHero } from "@/components/docs/article-hero";
+import { DocsSidebar } from "@/components/docs/docs-sidebar";
+import { DocsToc } from "@/components/docs/docs-toc";
+import { DottedBackdrop } from "@/components/layout/dotted-backdrop";
+import { getDocsMdxComponents } from "@/components/mdx/mdx-components";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { getDocNav, getTableOfContents } from "@/lib/docs";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("docs");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const nav = await getDocNav();
+
+const data = entry.data;
+const toc = getTableOfContents(headings);
+const flat = nav.flatMap((g) => g.entries);
+const idx = flat.findIndex((e) => e.slug === entry.id);
+const prev = idx > 0 ? flat[idx - 1] : null;
+const next = idx >= 0 && idx < flat.length - 1 ? flat[idx + 1] : null;
+const groupOf = nav.find((g) =>
+  g.entries.some((e) => e.slug === entry.id),
+)?.group;
+
+const mdxComponents = getDocsMdxComponents();
+---
+
+<DefaultLayout
+  title={`${data.title} · Docs`}
+  description={data.description}
+>
+  <div class="flex w-full">
+    <aside
+      aria-label="Docs sidebar"
+      class="hidden h-svh w-[286px] shrink-0 border-r md:sticky md:top-0 md:block md:overflow-y-auto"
+    >
+      <div class="px-5 pt-6 pb-10">
+        <DocsSidebar nav={nav} client:load />
+      </div>
+    </aside>
+
+    <div class="relative min-w-0 flex-1">
+      <DottedBackdrop />
+      <div class="relative mx-auto flex w-full max-w-[1280px]">
+        <main class="min-w-0 flex-1">
+          <article class="hero-padding relative px-6 md:px-10 lg:px-14">
+            <nav
+              aria-label="Breadcrumb"
+              class="text-meta text-muted-foreground flex items-center justify-between border-b pb-4"
+            >
+              <a
+                href="/docs"
+                class="group/back text-foreground inline-flex items-center gap-2 transition-colors hover:opacity-70"
+              >
+                <span
+                  class="inline-block transition-transform duration-300 group-hover/back:-translate-x-0.5"
+                >
+                  ←
+                </span>
+                Manual
+              </a>
+              <span class="hidden md:inline">
+                {groupOf ?? "Reference"} · Chapter{" "}
+                {String(idx + 1).padStart(2, "0")}
+              </span>
+            </nav>
+
+            <div class="mt-10 md:mt-14 lg:mt-20">
+              <ArticleHero
+                group={groupOf ?? "Reference"}
+                title={data.title}
+                description={data.description}
+                client:load
+              />
+            </div>
+
+            <div class="text-foreground/90 mt-6 text-base leading-relaxed">
+              <Content components={mdxComponents} />
+            </div>
+
+            <nav
+              aria-label="Adjacent chapters"
+              class="mt-20 grid grid-cols-1 gap-3 border-t pt-8 md:grid-cols-2"
+            >
+              {
+                prev ? (
+                  <a
+                    href={`/docs/${prev.slug}`}
+                    class="group/nav hover:bg-muted/40 relative block overflow-hidden border p-5 transition-colors"
+                  >
+                    <div class="text-meta-xs text-muted-foreground flex items-center gap-2">
+                      <span class="inline-block transition-transform duration-300 group-hover/nav:-translate-x-1">
+                        ←
+                      </span>
+                      Previous
+                    </div>
+                    <div class="font-display mt-2 text-lg tracking-tight">
+                      {prev.title}
+                    </div>
+                    <span
+                      aria-hidden
+                      class="bg-foreground/40 pointer-events-none absolute bottom-0 left-0 h-px w-full origin-right scale-x-0 transition-transform duration-500 group-hover/nav:origin-left group-hover/nav:scale-x-100"
+                    />
+                  </a>
+                ) : (
+                  <div class="hidden md:block" />
+                )
+              }
+              {
+                next && (
+                  <a
+                    href={`/docs/${next.slug}`}
+                    class="group/nav hover:bg-muted/40 relative block overflow-hidden border p-5 text-right transition-colors"
+                  >
+                    <div class="text-meta-xs text-muted-foreground flex items-center justify-end gap-2">
+                      Next
+                      <span class="inline-block transition-transform duration-300 group-hover/nav:translate-x-1">
+                        →
+                      </span>
+                    </div>
+                    <div class="font-display mt-2 text-lg tracking-tight">
+                      {next.title}
+                    </div>
+                    <span
+                      aria-hidden
+                      class="bg-foreground/40 pointer-events-none absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 transition-transform duration-500 group-hover/nav:scale-x-100"
+                    />
+                  </a>
+                )
+              }
+            </nav>
+          </article>
+        </main>
+
+        <aside
+          aria-label="Table of contents"
+          class="hidden h-svh w-[286px] shrink-0 xl:sticky xl:top-0 xl:block xl:overflow-y-auto"
+        >
+          <div class="flex h-full flex-col ps-2 pe-4 pt-20 pb-2">
+            <DocsToc toc={toc} client:visible />
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
