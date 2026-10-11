@@ -14,9 +14,12 @@ interface Props {
   hideNavbar?: boolean;
   /** Docs pages use Ask AI and the contact form instead of the chat widget. */
   hideChat?: boolean;
+  /** Docs pages end with their own prev/next and support links. */
+  hideFooter?: boolean;
 }
 
-const { title, description, image, noindex, hideNavbar, hideChat } = Astro.props;
+const { title, description, image, noindex, hideNavbar, hideChat, hideFooter } =
+  Astro.props;
 
 const copyrightYear = new Date().getFullYear();
 const isHome = Astro.url.pathname === "/";
@@ -38,7 +41,7 @@ const isHome = Astro.url.pathname === "/";
     <main>
       <slot />
     </main>
-    <Footer copyrightYear={copyrightYear} client:idle />
+    {!hideFooter && <Footer copyrightYear={copyrightYear} client:idle />}
 
     {!hideChat && <Chatwoot />}
   </body>

@@ -40,6 +40,7 @@ const mdxComponents = getDocsMdxComponents();
   description={data.description}
   hideNavbar
   hideChat
+  hideFooter
 >
   <DocsHeader nav={nav} client:load />
   <div class="flex w-full">
@@ -87,7 +88,7 @@ const mdxComponents = getDocsMdxComponents();
               />
             </div>
 
-            <div class="text-foreground/90 mt-6 text-base leading-relaxed">
+            <div class="docs-body text-foreground/90 mt-6 text-base leading-relaxed">
               <Content components={mdxComponents} />
             </div>
 

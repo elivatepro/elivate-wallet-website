@@ -7,6 +7,9 @@
 // Write a paragraph containing exactly `[[image:<marker>]]` where the image
 // should go, then run this. The paragraph is replaced by the uploaded image,
 // which the docs sync copies into /docs-media at build time.
+//
+// To swap an image that's already in the chapter, pass `caption:<start of
+// its caption>` as the marker instead; that image block is replaced.
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -35,7 +38,11 @@ async function notion(pathname, init = {}) {
   return res.json();
 }
 
-const placeholder = `[[image:${marker}]]`;
+const byCaption = marker.startsWith("caption:")
+  ? marker.slice("caption:".length).trim()
+  : null;
+const placeholder = byCaption ? `image captioned "${byCaption}…"` : `[[image:${marker}]]`;
+const plain = (rich = []) => rich.map((t) => t.plain_text).join("").trim();
 
 // Find the placeholder paragraph among the page's top-level blocks.
 let target = null;
@@ -44,15 +51,14 @@ do {
   const qs = new URLSearchParams({ page_size: "100" });
   if (cursor) qs.set("start_cursor", cursor);
   const page = await notion(`/blocks/${pageId}/children?${qs}`);
-  target = page.results.find(
-    (b) =>
-      b.type === "paragraph" &&
-      b.paragraph.rich_text.map((t) => t.plain_text).join("").trim() ===
-        placeholder,
+  target = page.results.find((b) =>
+    byCaption
+      ? b.type === "image" && plain(b.image.caption).startsWith(byCaption)
+      : b.type === "paragraph" && plain(b.paragraph.rich_text) === placeholder,
   );
   cursor = !target && page.has_more ? page.next_cursor : undefined;
 } while (cursor);
-if (!target) throw new Error(`No paragraph "${placeholder}" on page ${pageId}.`);
+if (!target) throw new Error(`No ${placeholder} on page ${pageId}.`);
 
 // 1. Create a file upload, 2. send the bytes, 3. insert it as an image block.
 const ext = path.extname(file).toLowerCase();

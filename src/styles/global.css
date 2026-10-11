@@ -380,3 +380,15 @@ html.theme-transition::view-transition-new(root) {
     display: none;
   }
 }
+
+/* Docs images: app screens and diagrams. Tall phone screens are capped so
+ * they don't fill the page; everything is centred with a soft frame. */
+.docs-body img {
+  display: block;
+  max-width: 100%;
+  max-height: 720px;
+  width: auto;
+  height: auto;
+  margin: 1.75rem auto 0;
+  border-radius: 14px;
+}
