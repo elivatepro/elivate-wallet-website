@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { motion } from "motion/react";
 
+import { ElivateMark } from "@/components/layout/elivate-mark";
 import { usePathname } from "@/hooks/use-pathname";
 import { cn } from "@/lib/utils";
 
@@ -154,8 +155,24 @@ export function PersistentBrand({
         ref={brandRef}
         href="/"
         aria-label="Elivate Wallet — home"
-        className="font-display pointer-events-auto inline-flex shrink-0 origin-center items-center text-3xl leading-none tracking-tight whitespace-nowrap text-white will-change-transform"
+        className="font-display pointer-events-auto inline-flex shrink-0 origin-center items-center gap-[0.3em] text-3xl leading-none tracking-tight whitespace-nowrap text-white will-change-transform"
       >
+        {showContent ? (
+          <motion.span
+            initial={{ opacity: 0, filter: "blur(8px)", scale: 0.92 }}
+            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+            transition={{
+              duration: reduced ? 0.3 : 0.5,
+              ease: SOFT_EASE,
+              delay: reduced ? 0 : LETTER_DELAY,
+            }}
+            className="inline-flex"
+          >
+            {/* The wrapper blends with mix-blend-difference, so the light-mode
+                fill is the inverse of the brand orange to land on #FF7F4F. */}
+            <ElivateMark className="h-[1.05em] w-auto text-[#0080B0] dark:text-[#FF7F4F]" />
+          </motion.span>
+        ) : null}
         {showContent ? (
           <span>
             {letters.map((char, i) => (
@@ -166,7 +183,7 @@ export function PersistentBrand({
                 transition={{
                   duration: reduced ? 0.3 : 0.5,
                   ease: SOFT_EASE,
-                  delay: reduced ? 0 : LETTER_DELAY + i * LETTER_STAGGER,
+                  delay: reduced ? 0 : LETTER_DELAY + (i + 1) * LETTER_STAGGER,
                 }}
                 className="inline-block"
               >
