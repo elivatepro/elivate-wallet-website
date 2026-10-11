@@ -15,7 +15,7 @@ export const BrandLogo = ({ surface, className, ...rest }: BrandLogoProps) => (
     href="/"
     aria-label="Elivate Wallet — home"
     className={cn(
-      "font-display inline-flex items-center gap-[0.3em] text-2xl leading-none tracking-tight md:text-3xl",
+      "font-display inline-flex items-center gap-[0.3em] text-2xl leading-none tracking-tight whitespace-nowrap md:text-3xl",
       surface === "dark" && "text-white",
       surface === "auto" && "dark:text-white",
       className,

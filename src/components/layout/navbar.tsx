@@ -155,9 +155,10 @@ const Navbar = ({
               <BrandLogo className="pl-2" />
               <div className="flex items-center gap-1">
                 <ThemeToggle />
+                {/* Phones: Contact us lives in the menu so the logo keeps one line. */}
                 <a
                   href="/contact"
-                  className="text-meta bg-background text-foreground inline-flex items-center rounded-[2px] px-4 py-2 transition-opacity hover:opacity-90"
+                  className="text-meta bg-background text-foreground hidden items-center rounded-[2px] px-4 py-2 whitespace-nowrap transition-opacity hover:opacity-90 sm:inline-flex"
                 >
                   Contact us
                 </a>
@@ -213,6 +214,13 @@ const Navbar = ({
                       );
                     })}
                   </ul>
+                  <a
+                    href="/contact"
+                    onClick={() => setOpen(false)}
+                    className="text-meta bg-background text-foreground mx-3.5 mb-3.5 flex items-center justify-center rounded-[2px] py-3 transition-opacity hover:opacity-90 sm:hidden"
+                  >
+                    Contact us
+                  </a>
                 </motion.nav>
               )}
             </AnimatePresence>
