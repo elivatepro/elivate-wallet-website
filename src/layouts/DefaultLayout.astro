@@ -40,10 +40,8 @@ const isHome = Astro.url.pathname === "/";
       // Chatwoot inbox itself; these settings only control the launcher.
       window.chatwootSettings = {
         position: "right",
-        // Phones get the small round launcher: the wide pill covers content.
-        type: window.matchMedia("(max-width: 767px)").matches
-          ? "standard"
-          : "expanded_bubble",
+        // Phones see it as a round button (brand.css), so it follows rotation.
+        type: "expanded_bubble",
         launcherTitle: "Chat with our team",
         locale: "en",
         darkMode: "light",

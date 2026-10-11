@@ -231,3 +231,21 @@ a[aria-current="page"] [aria-hidden="true"] {
     animation: none !important;
   }
 }
+
+/* Chatwoot launcher: on phones the "Chat with our team" pill covers page
+   content, so it shrinks to a round button. CSS (not the widget's type
+   setting) so it follows rotation; `body` outranks the widget's own !important rules. */
+@media (max-width: 767px) {
+  body .woot-widget-bubble.woot-widget--expanded {
+    width: 56px !important;
+    height: 56px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+  body .woot-widget-bubble.woot-widget--expanded #woot-widget--expanded__text {
+    display: none !important;
+  }
+  body .woot-widget-bubble.woot-widget--expanded svg {
+    margin: 0 !important;
+  }
+}
