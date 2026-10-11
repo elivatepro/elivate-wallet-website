@@ -21,7 +21,9 @@ jobs:
         run: npm ci
 
       - name: Validate Notion sync script syntax
-        run: node --check scripts/sync-notion-blog.mjs
+        run: |
+          node --check scripts/sync-notion-blog.mjs
+          node --check scripts/sync-notion-docs.mjs
 
       - name: Create empty CMS fixture
         run: |

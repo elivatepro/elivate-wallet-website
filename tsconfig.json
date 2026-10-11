@@ -12,5 +12,5 @@
     "allowJs": true
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["node_modules", ".vercel", ".netlify", "dist"]
+  "exclude": ["node_modules", ".vercel", ".netlify", "dist", "worker"]
 }
