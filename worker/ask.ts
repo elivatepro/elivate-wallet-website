@@ -110,7 +110,8 @@ export async function handleAsk(
               : question,
           },
         ],
-        max_tokens: 700,
+        // GLM reasons before answering; a tight budget can end before the answer.
+        max_tokens: 2000,
         temperature: 0.2,
       } as never,
     )) as unknown;
