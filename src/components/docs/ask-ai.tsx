@@ -191,10 +191,11 @@ export const AskAi = () => {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="bg-background/70 fixed inset-0 z-50 backdrop-blur-sm" />
+        <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 fixed inset-0 z-50 bg-black/30" />
+        {/* A sheet that slides in from the right edge, so the page stays visible. */}
         <DialogPrimitive.Content
           aria-describedby="ask-ai-note"
-          className="bg-card text-foreground fixed top-[8vh] left-[50%] z-50 flex max-h-[84vh] w-[94vw] max-w-2xl translate-x-[-50%] flex-col border shadow-2xl"
+          className="bg-card text-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l shadow-2xl duration-300 sm:w-[440px] lg:w-[480px]"
         >
           <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
             <DialogPrimitive.Title className="flex items-center gap-2 text-sm font-medium">
