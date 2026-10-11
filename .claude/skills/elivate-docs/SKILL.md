@@ -83,22 +83,54 @@ generated from Notion on every build (`scripts/sync-notion-docs.mjs`).
 
 ## Visuals (Paper)
 
-Draw diagrams in Paper for concepts (flows, structures, "what the numbers mean"); use real app screenshots for "where to click".
+**Real app screens first.** A reader should see exactly what they'll see in the app.
+Draw a diagram only for a concept no single screen shows (a lifecycle, a hierarchy, a
+decision flow) — and then it must look like it belongs to the app. Never ship a rough or
+off-brand illustration; no image is better than a weak one.
 
-1. Open the Paper file above, page **Docs — Visual guides**. Load the Paper guide first (`get_guide` → `paper-mcp-instructions`) and match the existing artboards:
-   - Artboard **1600px wide**, `backgroundColor: var(--color-light-canvas)`, padding `72px 80px`, height `fit-content`.
-   - Header: mono eyebrow (JetBrains Mono 16px, `#B74725`, uppercase) + title (Space Grotesk 500, 48px, `#212628`).
-   - Cards: white, 2px `#D8DDDE` border, 16–20px radius; the one key element in brand orange (`#FFF0EA` fill, `#FF7F4F` border, `#B74725` text). Body text DM Sans ≥ 17px so it stays readable when scaled down.
-   - Status colours from the design tokens: success `#167D55`, warning `#8A5C00`, danger `#B4433C`.
-   - Name the artboard `Guide · <Topic> → docs`. Synthetic data only.
-2. Screenshot and review it (spacing, contrast, accuracy) before exporting.
-3. Export PNG at `1.5x` (`mcp__paper__export`).
-4. In the Notion chapter, put a paragraph containing exactly `[[image:<marker>]]` where it belongs, then run:
-   ```
-   node --env-file=.env scripts/notion-docs-image.mjs <page-id> <marker> <file.png> "<caption>"
-   ```
-   The caption is also the alt text — describe what the image shows, including key numbers.
-5. Screenshots: `![Caption.](https://elivatewallet.com/images/app/queue.png)` in the Notion content.
+Everything lives in the Paper file above, page **Docs — Visual guides**. Load the Paper
+guide first (`get_guide` → `paper-mcp-instructions`). Never edit the source screen
+artboards; only clone from them.
+
+### Screen plates (preferred)
+
+1. Find the current screen: newest approved version first (Website page `Site src · …`
+   and `Navigation v5` are the latest; then `App — Screens v4`, `v3`; `Statements &
+   reports v1` for exports). Avoid DRAFT/archive unless nothing else exists, and skip
+   screens with outdated navigation where the sidebar would be visible.
+2. Make an artboard `Plate · <slug> · <what>`: background `#0B0D0E`, padding 56px, the
+   screen inside a frame with radius 16px (phones 28px), `1px solid #2A2F31`, shadow
+   `0 30px 80px rgba(0,0,0,0.45)`. Clone the screen with `<x-paper-clone node-id=…>`.
+   - Desktop: crop to the part the chapter is about (a panel, form or dialog), cutting
+     only at natural edges — never through text, a card or a button. ~1300–1600px wide.
+   - Phones: 1:1, one or two side by side (two for consecutive steps).
+3. Screenshot and critique before exporting. Export PNG: desktop `1x`, phones `2x`.
+
+### Diagrams (only when needed)
+
+Match the redrawn diagrams (`Guide v2 · …`): background `#0B0D0E`; content in an app card
+(`#1A1D1E`, `1px #2A2F31`, radius 24px); **Lexend** (the app's typeface), title 46px/600,
+body 17–21px; the app's status chips (rounded 8px, tinted background) and colours — info
+`#82B8E8`/`#17283A`, success `#43C48B`/`#16301F`, warning `#F2B85E`/`#33291A`, danger
+`#F57875`/`#3A1E1E`, brand `#FF7F4F`; mono eyebrow (JetBrains Mono 15px, `#FF7F4F`).
+Reuse real UI pieces (the four-segment withdrawal bar, chips, buttons) so the diagram
+reads like the product. Align everything to a grid and check the screenshot at 0.5×.
+Export PNG at `1x` (1600px wide).
+
+### Putting images in a chapter
+
+```
+node --env-file=.env scripts/notion-docs-image.mjs <page-id> <target> <file.png> "<caption>"
+```
+
+`<target>` is one of:
+- `[[image:<marker>]]` placeholder: write a paragraph `[[image:<marker>]]` and pass `<marker>`;
+- `after:<start of a paragraph, list item, heading or image caption>` to insert after it;
+- `caption:<start of an existing image's caption>` to replace that image.
+
+Inserting twice after the same block puts the second image first — chain with
+`after:<previous caption>` instead. The caption is also the alt text: say what the
+image shows, using the on-screen names.
 
 ## Verify
 

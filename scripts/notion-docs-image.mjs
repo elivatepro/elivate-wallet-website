@@ -10,6 +10,8 @@
 //
 // To swap an image that's already in the chapter, pass `caption:<start of
 // its caption>` as the marker instead; that image block is replaced.
+// To add an image without a placeholder, pass `after:<start of a block's
+// text>`; it goes right after that paragraph, list item or heading.
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -41,8 +43,17 @@ async function notion(pathname, init = {}) {
 const byCaption = marker.startsWith("caption:")
   ? marker.slice("caption:".length).trim()
   : null;
-const placeholder = byCaption ? `image captioned "${byCaption}…"` : `[[image:${marker}]]`;
+const afterText = marker.startsWith("after:")
+  ? marker.slice("after:".length).trim()
+  : null;
+const placeholder = byCaption
+  ? `image captioned "${byCaption}…"`
+  : afterText
+    ? `block starting "${afterText}…"`
+    : `[[image:${marker}]]`;
 const plain = (rich = []) => rich.map((t) => t.plain_text).join("").trim();
+const blockText = (b) =>
+  b.type === "image" ? plain(b.image.caption) : plain(b[b.type]?.rich_text);
 
 // Find the placeholder paragraph among the page's top-level blocks.
 let target = null;
@@ -54,7 +65,9 @@ do {
   target = page.results.find((b) =>
     byCaption
       ? b.type === "image" && plain(b.image.caption).startsWith(byCaption)
-      : b.type === "paragraph" && plain(b.paragraph.rich_text) === placeholder,
+      : afterText
+        ? blockText(b).startsWith(afterText)
+        : b.type === "paragraph" && plain(b.paragraph.rich_text) === placeholder,
   );
   cursor = !target && page.has_more ? page.next_cursor : undefined;
 } while (cursor);
@@ -96,6 +109,6 @@ await notion(`/blocks/${pageId}/children`, {
     ],
   }),
 });
-await notion(`/blocks/${target.id}`, { method: "DELETE" });
+if (!afterText) await notion(`/blocks/${target.id}`, { method: "DELETE" });
 
 console.log(`[docs] Inserted ${path.basename(file)} at ${placeholder}.`);

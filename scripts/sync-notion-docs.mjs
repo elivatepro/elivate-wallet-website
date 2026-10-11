@@ -6,6 +6,8 @@ import { createHash } from "node:crypto";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import sharp from "sharp";
+
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 if (!NOTION_API_KEY) {
   throw new Error(
@@ -198,11 +200,20 @@ async function localizeImage(data, blockId) {
   if (!response.ok) {
     throw new Error(`Failed to download Notion image (${response.status})`);
   }
-  const bytes = Buffer.from(await response.arrayBuffer());
+  let bytes = Buffer.from(await response.arrayBuffer());
   const hash = createHash("sha256").update(blockId).digest("hex").slice(0, 20);
-  const extension = extensionFromContentType(
+  let extension = extensionFromContentType(
     response.headers.get("content-type") ?? "",
   );
+  // Screenshots and diagrams arrive as large PNGs; ship them as WebP, no
+  // wider than 2000px (2x the docs column), which is a fraction of the size.
+  if ([".png", ".jpg", ".webp", ".avif"].includes(extension)) {
+    bytes = await sharp(bytes)
+      .resize({ width: 2000, withoutEnlargement: true })
+      .webp({ quality: 84 })
+      .toBuffer();
+    extension = ".webp";
+  }
   const filename = `${hash}${extension}`;
   pendingMedia.push({ filename, bytes });
   return `/docs-media/${filename}`;

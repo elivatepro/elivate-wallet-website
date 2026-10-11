@@ -157,4 +157,40 @@ const mdxComponents = getDocsMdxComponents();
       </div>
     </div>
   </div>
+
+  <script>
+    // Click any screen or diagram to see it full size; click or Esc closes.
+    const open = (img: HTMLImageElement) => {
+      const overlay = document.createElement("div");
+      overlay.className = "docs-zoom";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-label", img.alt || "Image");
+      const big = img.cloneNode() as HTMLImageElement;
+      big.removeAttribute("loading");
+      overlay.append(big);
+      const close = () => {
+        overlay.remove();
+        document.removeEventListener("keydown", onKey);
+        img.focus();
+      };
+      const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+      overlay.addEventListener("click", close);
+      document.addEventListener("keydown", onKey);
+      document.body.append(overlay);
+    };
+
+    for (const img of document.querySelectorAll<HTMLImageElement>(
+      ".docs-body img",
+    )) {
+      img.tabIndex = 0;
+      img.addEventListener("click", () => open(img));
+      img.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open(img);
+        }
+      });
+    }
+  </script>
 </DefaultLayout>
