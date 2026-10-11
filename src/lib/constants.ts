@@ -4,6 +4,7 @@ export const NAV = [
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
   { label: "Docs", href: "/docs" },
+  { label: "Login", href: "https://app.elivatewallet.com" },
 ] as const;
 
 export const FOOTER_NAV = {
