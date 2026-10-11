@@ -362,3 +362,18 @@ html.theme-transition::view-transition-new(root) {
   z-index: 9999;
   animation: theme-reveal 0.55s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
+
+/* Ask AI docks on the right on wide screens; the docs move over to sit
+ * beside it rather than being covered (src/components/docs/ask-ai.tsx). */
+@media (min-width: 1024px) {
+  body {
+    transition: padding-right 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  html.ask-ai-open body {
+    padding-right: 480px;
+  }
+  /* The article needs the room more than the "On this page" column. */
+  html.ask-ai-open aside[aria-label="Table of contents"] {
+    display: none;
+  }
+}

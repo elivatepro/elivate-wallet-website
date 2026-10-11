@@ -183,19 +183,26 @@ export const AskAi = () => {
     endRef.current?.scrollIntoView({ block: "end" });
   }, [turns, busy]);
 
+  // On wide screens the panel docks: the page makes room beside it (see
+  // html.ask-ai-open in global.css) instead of being covered.
+  useEffect(() => {
+    document.documentElement.classList.toggle("ask-ai-open", open);
+    return () => document.documentElement.classList.remove("ask-ai-open");
+  }, [open]);
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     void ask(input);
   };
 
   return (
-    <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
+    <DialogPrimitive.Root open={open} onOpenChange={setOpen} modal={false}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 fixed inset-0 z-50 bg-black/30" />
-        {/* A sheet that slides in from the right edge, so the page stays visible. */}
+        {/* Docked panel on the right; the page stays usable beside it. */}
         <DialogPrimitive.Content
           aria-describedby="ask-ai-note"
-          className="bg-card text-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l shadow-2xl duration-300 sm:w-[440px] lg:w-[480px]"
+          onInteractOutside={(e) => e.preventDefault()}
+          className="bg-card text-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l shadow-2xl duration-300 sm:w-[440px] lg:w-[480px] lg:shadow-none"
         >
           <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
             <DialogPrimitive.Title className="flex items-center gap-2 text-sm font-medium">
