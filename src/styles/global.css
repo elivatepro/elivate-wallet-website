@@ -370,7 +370,10 @@ html.theme-transition::view-transition-new(root) {
     transition: padding-right 300ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   html.ask-ai-open body {
-    padding-right: 480px;
+    padding-right: var(--ask-ai-width, 480px);
+  }
+  html.ask-ai-resizing body {
+    transition: none;
   }
   /* The article needs the room more than the "On this page" column. */
   html.ask-ai-open aside[aria-label="Table of contents"] {

@@ -9,6 +9,22 @@ import { cn } from "@/lib/utils";
 
 const OPEN_EVENT = "docs:ask-ai";
 
+// Resizable width (wide screens only). The page reads --ask-ai-width to make
+// room for the panel; see html.ask-ai-open in global.css.
+const WIDTH_KEY = "elivate-ask-ai-width";
+const MIN_WIDTH = 360;
+const MAX_WIDTH = 720;
+const DEFAULT_WIDTH = 480;
+
+const clampWidth = (width: number) =>
+  Math.round(
+    Math.min(MAX_WIDTH, window.innerWidth * 0.55, Math.max(MIN_WIDTH, width)),
+  );
+
+function applyWidth(width: number) {
+  document.documentElement.style.setProperty("--ask-ai-width", `${width}px`);
+}
+
 /** Open the Ask AI panel from anywhere (search dialog, buttons), optionally pre-asking. */
 export function openAskAi(question = "") {
   window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: { question } }));
@@ -113,6 +129,8 @@ export const AskAi = () => {
   const [input, setInput] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
+  const [width, setWidth] = useState(DEFAULT_WIDTH);
+  const [resizing, setResizing] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -183,6 +201,45 @@ export const AskAi = () => {
     endRef.current?.scrollIntoView({ block: "end" });
   }, [turns, busy]);
 
+  // Restore the reader's last width.
+  useEffect(() => {
+    const saved = Number(localStorage.getItem(WIDTH_KEY));
+    const initial = clampWidth(saved || DEFAULT_WIDTH);
+    setWidth(initial);
+    applyWidth(initial);
+  }, []);
+
+  // Drag the left edge to resize, within MIN_WIDTH..MAX_WIDTH.
+  const startResize = (e: React.PointerEvent) => {
+    e.preventDefault();
+    setResizing(true);
+    document.documentElement.classList.add("ask-ai-resizing");
+    const onMove = (ev: PointerEvent) => {
+      const next = clampWidth(window.innerWidth - ev.clientX);
+      setWidth(next);
+      applyWidth(next);
+    };
+    const onUp = () => {
+      setResizing(false);
+      document.documentElement.classList.remove("ask-ai-resizing");
+      setWidth((w) => {
+        localStorage.setItem(WIDTH_KEY, String(w));
+        return w;
+      });
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  };
+
+  const nudgeWidth = (delta: number) => {
+    const next = clampWidth(width + delta);
+    setWidth(next);
+    applyWidth(next);
+    localStorage.setItem(WIDTH_KEY, String(next));
+  };
+
   // On wide screens the panel docks: the page makes room beside it (see
   // html.ask-ai-open in global.css) instead of being covered.
   useEffect(() => {
@@ -202,8 +259,38 @@ export const AskAi = () => {
         <DialogPrimitive.Content
           aria-describedby="ask-ai-note"
           onInteractOutside={(e) => e.preventDefault()}
-          className="bg-card text-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l shadow-2xl duration-300 sm:w-[440px] lg:w-[480px] lg:shadow-none"
+          className={cn(
+            "bg-card text-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l shadow-2xl duration-300 sm:w-[440px] lg:w-[var(--ask-ai-width,480px)] lg:shadow-none",
+            resizing && "select-none",
+          )}
         >
+          {/* Drag handle (wide screens): arrow keys also resize it. */}
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize Ask AI panel"
+            aria-valuemin={MIN_WIDTH}
+            aria-valuemax={MAX_WIDTH}
+            aria-valuenow={width}
+            tabIndex={0}
+            onPointerDown={startResize}
+            onDoubleClick={() => nudgeWidth(DEFAULT_WIDTH - width)}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowLeft") nudgeWidth(24);
+              if (e.key === "ArrowRight") nudgeWidth(-24);
+            }}
+            className={cn(
+              "group/resize absolute inset-y-0 -left-1.5 z-10 hidden w-3 cursor-col-resize outline-none lg:block",
+            )}
+          >
+            <span
+              className={cn(
+                "bg-border absolute inset-y-0 left-1/2 w-px -translate-x-1/2 transition-colors",
+                "group-hover/resize:bg-[var(--brand)] group-focus-visible/resize:bg-[var(--brand)]",
+                resizing && "bg-[var(--brand)]",
+              )}
+            />
+          </div>
           <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
             <DialogPrimitive.Title className="flex items-center gap-2 text-sm font-medium">
               <Sparkles className="text-brand size-4" />
