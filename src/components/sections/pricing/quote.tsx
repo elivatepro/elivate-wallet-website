@@ -7,6 +7,7 @@ import { motion, type Variants } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
+import { APPLY_URL } from "@/lib/constants";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -197,8 +198,18 @@ const PricingQuote = () => {
             </div>
 
             <div className="mt-8 flex flex-col gap-3">
-              <Button size="lg">{hasExtras ? "Request a quote" : "Get started"}</Button>
-              <Button size="lg" variant="ghost">Talk to us</Button>
+              <Button asChild size="lg">
+                {hasExtras ? (
+                  <a href="/contact">Request a quote</a>
+                ) : (
+                  <a href={APPLY_URL} target="_blank" rel="noopener noreferrer">
+                    Get started
+                  </a>
+                )}
+              </Button>
+              <Button asChild size="lg" variant="ghost">
+                <a href="/contact">Talk to us</a>
+              </Button>
             </div>
           </div>
         </motion.div>

@@ -3,6 +3,7 @@
 import { motion, type Variants } from "motion/react";
 
 import { Button } from "@/components/ui/button";
+import { APPLY_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -32,7 +33,7 @@ type Tier = {
   name: string;
   auth: string;
   tagline: string;
-  cta: { label: string; variant: "default" | "ghost" };
+  cta: { label: string; href: string; variant: "default" | "ghost" };
   includes: readonly string[];
   totals: readonly LineItem[];
   totalDue: { value: string; suffix?: string };
@@ -47,7 +48,7 @@ const TIERS: readonly Tier[] = [
     name: "400",
     auth: "EW-400",
     tagline: "For networks with up to 400 members.",
-    cta: { label: "Get started", variant: "ghost" },
+    cta: { label: "Get started", href: APPLY_URL, variant: "ghost" },
     includes: [
       "Up to 400 users",
       "Member balances & history",
@@ -69,7 +70,7 @@ const TIERS: readonly Tier[] = [
     name: "1,000",
     auth: "EW-1000",
     tagline: "For growing networks with up to 1,000 members.",
-    cta: { label: "Get started", variant: "default" },
+    cta: { label: "Get started", href: APPLY_URL, variant: "default" },
     includes: [
       "Up to 1,000 users",
       "Member balances & history",
@@ -92,7 +93,7 @@ const TIERS: readonly Tier[] = [
     name: "1,500+",
     auth: "EW-1500",
     tagline: "For larger networks with 1,500+ members.",
-    cta: { label: "Talk to us", variant: "ghost" },
+    cta: { label: "Talk to us", href: "/contact", variant: "ghost" },
     includes: [
       "1,500+ users",
       "Member balances & history",
@@ -276,8 +277,15 @@ const TicketCard = ({ tier }: { tier: Tier }) => {
         <Barcode className="mt-5" inverted={tier.featured} />
 
         <div className="mt-8 flex justify-center">
-          <Button size="lg" variant={tier.cta.variant}>
-            {tier.cta.label}
+          <Button asChild size="lg" variant={tier.cta.variant}>
+            <a
+              href={tier.cta.href}
+              {...(tier.cta.href.startsWith("http")
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+            >
+              {tier.cta.label}
+            </a>
           </Button>
         </div>
 
