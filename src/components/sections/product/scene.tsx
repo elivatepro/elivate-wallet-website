@@ -12,6 +12,7 @@ import Console from "@/components/mockups/console";
 import LogStream from "@/components/mockups/log-stream";
 import WatchAlert from "@/components/mockups/watch-alert";
 import { Button } from "@/components/ui/button";
+import { APPLY_URL } from "@/lib/constants";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
@@ -406,9 +407,13 @@ const ProductScene = () => {
                 Keep the record clear across your network.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3 md:mt-10">
-                <Button size="lg">Get started</Button>
-                <Button variant="ghost" size="lg">
-                  See all features
+                <Button asChild size="lg">
+                  <a href={APPLY_URL} target="_blank" rel="noopener noreferrer">
+                    Get started
+                  </a>
+                </Button>
+                <Button asChild variant="ghost" size="lg">
+                  <a href="#core-views">See all features</a>
                 </Button>
               </div>
             </motion.div>
@@ -464,7 +469,7 @@ const ProductScene = () => {
         </div>
       </motion.section>
 
-      <section className="section-padding relative">
+      <section id="core-views" className="section-padding relative scroll-mt-24">
         <DottedBackdrop opacity={0.03} />
 
         <div className="container">

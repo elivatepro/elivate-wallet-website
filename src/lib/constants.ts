@@ -7,6 +7,9 @@ export const NAV = [
   { label: "Login", href: "https://app.elivatewallet.com" },
 ] as const;
 
+/** Where "Get started" sends visitors: the app's sign-up application. */
+export const APPLY_URL = "https://app.elivatewallet.com/apply";
+
 export const FOOTER_NAV = {
   product: [
     { label: "Features", href: "/features" },

@@ -3,6 +3,7 @@
 import { useCallback, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
+import { APPLY_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface HeroAltProps {
@@ -74,9 +75,13 @@ const HeroAlt = ({ className, asHero = true }: HeroAltProps) => {
             </p>
           </div>
           <div className="flex flex-col items-center gap-3 py-4 md:flex-row">
-            <Button size="lg">Get started</Button>
-            <Button size="lg" variant="ghost">
-              Book a demo
+            <Button asChild size="lg">
+              <a href={APPLY_URL} target="_blank" rel="noopener noreferrer">
+                Get started
+              </a>
+            </Button>
+            <Button asChild size="lg" variant="ghost">
+              <a href="/contact">Book a demo</a>
             </Button>
           </div>
           <div

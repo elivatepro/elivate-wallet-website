@@ -4,6 +4,7 @@ import { motion, type Variants } from "motion/react";
 
 import { DottedBackdrop } from "@/components/layout/dotted-backdrop";
 import { Button } from "@/components/ui/button";
+import { APPLY_URL } from "@/lib/constants";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const DURATION = { base: 0.8 } as const;
@@ -112,9 +113,13 @@ const Bulletin = () => (
           Clear records as your network grows.
         </span>
         <div className="flex flex-wrap items-center gap-3">
-          <Button size="lg">Get started</Button>
-          <Button size="lg" variant="ghost">
-            See pricing
+          <Button asChild size="lg">
+            <a href={APPLY_URL} target="_blank" rel="noopener noreferrer">
+              Get started
+            </a>
+          </Button>
+          <Button asChild size="lg" variant="ghost">
+            <a href="/pricing">See pricing</a>
           </Button>
         </div>
       </div>

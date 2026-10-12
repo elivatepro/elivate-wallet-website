@@ -7,6 +7,7 @@ import { motion, type Variants } from "motion/react";
 import { Marquee } from "@/components/magicui/marquee";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { APPLY_URL } from "@/lib/constants";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -104,7 +105,11 @@ const ProductCTA = () => (
             variants={fadeUp}
             className="mt-8 flex flex-wrap items-center gap-3 md:mt-10"
           >
-            <Button size="lg">Get started</Button>
+            <Button asChild size="lg">
+              <a href={APPLY_URL} target="_blank" rel="noopener noreferrer">
+                Get started
+              </a>
+            </Button>
             <Button asChild variant="ghost" size="lg">
               <a href="/contact">Talk to us</a>
             </Button>
